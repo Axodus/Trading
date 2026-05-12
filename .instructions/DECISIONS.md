@@ -114,6 +114,59 @@ CONFIRMED
 
 ---
 
+## Trading Infrastructure as a Service
+
+Decision:
+Trading is a product economy layer as well as sovereign execution infrastructure.
+
+Axodus provides:
+- orchestration
+- automation
+- intelligence
+- tooling
+- governed infrastructure access
+
+Users retain:
+- their own capital
+- their own wallets
+- their own exchange accounts
+- their own execution credentials
+
+Status:
+CONFIRMED
+
+---
+
+## Treasury Trading and User Trading
+
+Decision:
+Treasury Trading and User Trading share one `TradingCore`, but must remain distinct execution domains with separate policy, risk, compliance, and permission boundaries.
+
+Status:
+CONFIRMED
+
+---
+
+## Product Economy Boundaries
+
+Decision:
+Phase 0 must formalize first-class product boundaries for marketplace, access, runtime, billing, credential vault, and disclosure acceptance.
+
+Status:
+CONFIRMED
+
+---
+
+## Free Strategy Monetization
+
+Decision:
+Free or no-commission strategies may still support revenue and token utility through token gating, staking, subscriptions, premium telemetry, marketplace upgrades, access tiers, and runtime quotas.
+
+Status:
+CONFIRMED
+
+---
+
 # Pending Decisions
 
 ## Canonical Exchange Priority Strategy

@@ -1,22 +1,23 @@
 # Trading Roadmap
 
-# Phase 0 — Trading Architecture
+# Phase 0 - Trading Architecture and Product Economy
 
 Status: IN PROGRESS
 
 Objectives:
-- define trading architecture
-- define risk systems
-- define exchange abstraction
-- define telemetry systems
-- define orchestration boundaries
+- define sovereign trading architecture
+- define product economy architecture
+- define treasury versus user execution boundaries
+- define runtime, access, billing, credential vault, and disclosure boundaries
+- define telemetry and event foundations
 
 Deliverables:
-- trading architecture specification
-- risk architecture
-- exchange layer model
-- telemetry model
-- orchestration boundaries
+- trading core architecture specification
+- product economy specification
+- runtime/security/compliance specifications
+- shared contract package
+- scaffolded core and product services
+- Phase 0 event model
 
 ---
 

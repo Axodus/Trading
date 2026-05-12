@@ -72,6 +72,8 @@ Governance Layer
     ↓
 Federation Layer
     ↓
+Trading Product Layer
+    ↓
 Risk & Constitutional Layer
     ↓
 Intelligence Layer
@@ -115,7 +117,22 @@ Responsible for:
 
 ---
 
-# 3. Risk Layer
+# 3. Trading Product Layer
+
+Responsible for:
+- strategy products
+- access plans
+- runtime provisioning boundaries
+- marketplace publication
+- monetization and entitlement state
+- token-gated access
+- runtime quota policies
+
+The product layer sells access to infrastructure, not trading signals.
+
+---
+
+# 4. Risk Layer
 
 Responsible for:
 - exposure controls
@@ -126,7 +143,7 @@ Responsible for:
 
 ---
 
-# 4. Intelligence Layer
+# 5. Intelligence Layer
 
 Responsible for:
 - AI agents
@@ -137,7 +154,7 @@ Responsible for:
 
 ---
 
-# 5. Trading Core
+# 6. Trading Core
 
 Responsible for:
 - order management
@@ -148,7 +165,7 @@ Responsible for:
 
 ---
 
-# 6. Connector Layer
+# 7. Connector Layer
 
 Responsible for:
 - exchange APIs

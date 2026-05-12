@@ -1,22 +1,30 @@
-# Trading Roadmap
+# Trading Tasks
 
-# Phase 0 — Trading Architecture
+# Phase 0 - Trading Architecture and Product Economy
 
 Status: IN PROGRESS
 
 Objectives:
-- define trading architecture
-- define risk systems
-- define exchange abstraction
-- define telemetry systems
-- define orchestration boundaries
+- define sovereign Trading Core architecture
+- define Trading Product Layer architecture
+- separate Treasury Trading from User Trading
+- define product, marketplace, access, runtime, billing, security, and compliance boundaries
+- define risk ownership and execution-domain gates
+- define event model and shared TypeScript contracts
 
 Deliverables:
-- trading architecture specification
-- risk architecture
-- exchange layer model
-- telemetry model
-- orchestration boundaries
+- `TRADING_CORE_PLAN.md`
+- `TRADING_CORE_ARCHITECTURE.md`
+- `TRADING_PRODUCT_ECONOMY.md`
+- `TRADING_MONETIZATION.md`
+- `TRADING_RUNTIME_MODEL.md`
+- `TRADING_SECURITY_MODEL.md`
+- `TRADING_COMPLIANCE_MODEL.md`
+- `trading-core/packages/trading-contracts`
+- `trading-core/services/trading-core`
+- `trading-core/services/trading-product`
+- event contracts for execution, product, runtime, security, and compliance
+- documented non-goals for deep Hummingbot runtime work
 
 ---
 

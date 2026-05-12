@@ -16,8 +16,10 @@ Establish core architecture and infrastructure.
 - workspace architecture
 - shared types
 - event bus
-- authentication
-- wallet integration
+- Trading Product Layer boundaries
+- Treasury Trading versus User Trading model
+- access, billing, runtime, credential vault, and disclosure contracts
+- wallet runtime binding model
 - telemetry foundation
 
 ## Status
