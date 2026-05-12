@@ -1,0 +1,15 @@
+[submodule "condor"]
+	path = condor
+	url = https://github.com/Axodus/condor.git
+[submodule "hummingbot-api"]
+	path = hummingbot-api
+	url = https://github.com/Axodus/hummingbot-api.git
+[submodule "mcp"]
+	path = mcp
+	url = https://github.com/Axodus/mcp.git
+[submodule "quants-lab"]
+	path = quants-lab
+	url = https://github.com/Axodus/quants-lab.git
+[submodule "tradingbot"]
+	path = tradingbot
+	url = https://github.com/Axodus/tradingbot.git
