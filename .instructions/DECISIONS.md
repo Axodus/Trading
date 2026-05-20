@@ -167,6 +167,44 @@ CONFIRMED
 
 ---
 
+## First Execution Provider
+
+Decision:
+The first functional execution flow must run against `SimulationProvider`.
+
+Hummingbot must not be introduced as a deep runtime dependency until the provider abstraction, gate ordering, event flow, and risk/provider boundaries are proven independently.
+
+Status:
+CONFIRMED
+
+---
+
+## Product Gate Implementation
+
+Decision:
+User execution must pass through ProductExecutionGate before risk and provider access.
+
+Phase 1B uses mocked local evaluators for strategy access, entitlement, token policy, runtime quota, and DAO membership. External billing, chain, staking, NFT, and wallet integrations remain out of scope.
+
+Status:
+CONFIRMED
+
+---
+
+## Sovereign Protection Pipeline
+
+Decision:
+Treasury execution must pass through constitutional, federation, treasury policy, global risk, and treasury risk evaluation before provider access.
+
+User execution must remain separated from treasury permissions and pass through product access plus user runtime risk evaluation.
+
+Phase 1C uses deterministic local evaluators only.
+
+Status:
+CONFIRMED
+
+---
+
 # Pending Decisions
 
 ## Canonical Exchange Priority Strategy

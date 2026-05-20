@@ -6,6 +6,7 @@ export type ExecutionDomain = 'treasury' | 'user';
 export interface RuntimeQuota {
   maxActiveStrategies: number;
   maxConcurrentRuntimes: number;
+  maxDailyExecutions?: number;
   maxMonthlyExecutions?: number;
   maxProviderConnections?: number;
 }
@@ -40,7 +41,7 @@ export interface UserRuntimeInstance {
   strategyProductId: string;
   providerId: string;
   executionDomain: 'user';
-  status: 'provisioning' | 'active' | 'paused' | 'stopped' | 'failed';
+  status: 'provisioning' | 'active' | 'paused' | 'suspended' | 'stopped' | 'failed';
   createdAt: string;
   updatedAt: string;
 }

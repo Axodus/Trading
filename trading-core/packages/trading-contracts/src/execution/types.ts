@@ -35,6 +35,21 @@ export interface ExecutionResult {
   status: 'accepted' | 'submitted' | 'rejected' | 'failed';
   submittedAt?: string;
   reason?: string;
+  fills?: ExecutionFill[];
+}
+
+export interface ExecutionFill {
+  fillId: string;
+  providerOrderId: string;
+  market: string;
+  side: 'buy' | 'sell';
+  quantity: string;
+  price: string;
+  fee?: {
+    asset: string;
+    amount: string;
+  };
+  filledAt: string;
 }
 
 export interface CancelOrderRequest {

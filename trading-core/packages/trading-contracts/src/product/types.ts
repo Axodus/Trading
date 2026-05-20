@@ -6,7 +6,7 @@ export interface StrategyProduct {
   id: string;
   name: string;
   description?: string;
-  visibility: 'public' | 'token-gated' | 'dao-only' | 'premium';
+  visibility: 'public' | 'token-gated' | 'dao-only' | 'premium' | 'trial-enabled';
   accessPolicy: StrategyAccessPolicy;
   runtimeLimits: RuntimeQuota;
   supportedProviders: ExecutionProviderType[];

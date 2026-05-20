@@ -48,7 +48,7 @@ export type TradingEventSource =
   | 'security'
   | 'compliance';
 
-export interface TradingEvent<TType extends TradingEventType = TradingEventType, TPayload = Record<string, unknown>> {
+export interface TradingEvent<TType extends TradingEventType = TradingEventType, TPayload = unknown> {
   id: string;
   type: TType;
   occurredAt: string;

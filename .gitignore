@@ -3,6 +3,8 @@ hummingbot-api
 mcp
 quants-lab
 tradingbot
+dist/
+dist-test/
 condor
 hummingbot-api
 mcp

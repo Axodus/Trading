@@ -30,20 +30,32 @@ Deliverables:
 
 # Phase 1 — Execution Foundation
 
-Status: PLANNED
+Status: IN PROGRESS
 
 Objectives:
-- implement execution infrastructure
-- implement exchange abstraction
-- implement telemetry systems
-- implement portfolio tracking
+- implement the first functional Trading Core execution skeleton
+- prove execution gate ordering before provider calls
+- route approved executions to `SimulationProvider`
+- preserve `correlationId` through the flow
+- keep Hummingbot out of deep runtime scope
 
 Deliverables:
-- execution engine
-- exchange connectors
-- execution telemetry
-- portfolio visibility
-- accounting aggregation
+- `TradingCore`
+- `ExecutionOrchestrator`
+- `ExecutionProviderRegistry`
+- `SimulationProvider`
+- `ProductExecutionGate`
+- `StrategyAccessService`
+- `TokenGateEvaluator`
+- `EntitlementEvaluator`
+- `RuntimeQuotaEvaluator`
+- `GovernanceExecutionGuard` placeholder
+- `RiskGateway` placeholder
+- `TradingEventBus`
+- repository interfaces
+- gate-order tests for user, treasury, risk, provider lookup, correlation, and simulation execution
+- product access tests for missing entitlement, token gate failure, suspended runtime, quota exhaustion, expired trial, and DAO-only rejection
+- governance and sovereign risk tests for governance rejection, treasury policy rejection, emergency shutdown, domain separation, and federation strategy restrictions
 
 ---
 

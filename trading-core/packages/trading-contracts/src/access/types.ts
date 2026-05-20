@@ -16,12 +16,15 @@ export interface StrategyAccessPolicy {
   tokenPolicy?: TokenAccessPolicy;
   allowedSubscriptionTiers?: string[];
   trialRuntimeQuota?: RuntimeQuota;
+  trialExpiresAt?: string;
+  trialExecutionLimit?: number;
 }
 
 export interface EntitlementState {
-  status: 'eligible' | 'active' | 'expired' | 'suspended' | 'revoked';
+  status: 'eligible' | 'active' | 'trial' | 'expired' | 'suspended' | 'revoked';
   checkedAt: string;
   entitlementKeys: string[];
+  expiresAt?: string;
 }
 
 export interface UnlockCondition {
