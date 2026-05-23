@@ -5,6 +5,7 @@ quants-lab
 tradingbot
 dist/
 dist-test/
+node_modules/
 condor
 hummingbot-api
 mcp

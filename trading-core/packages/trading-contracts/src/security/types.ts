@@ -1,7 +1,17 @@
 import type { ExecutionProviderType } from '../execution/types.js';
 import type { Address } from '../runtime/types.js';
 
-export type CredentialScope = 'read-balances' | 'read-positions' | 'trade' | 'cancel-orders' | 'runtime-control';
+export type CredentialScope =
+  | 'read-only'
+  | 'spot-trading'
+  | 'futures-trading'
+  | 'account-info'
+  | 'telemetry-only'
+  | 'read-balances'
+  | 'read-positions'
+  | 'trade'
+  | 'cancel-orders'
+  | 'runtime-control';
 
 export interface CredentialVaultReference {
   id: string;
@@ -23,4 +33,19 @@ export interface WalletRuntimeBinding {
   walletAddress: Address;
   chainId: string;
   allowedProviders: ExecutionProviderType[];
+}
+
+export interface CredentialRotationPolicy {
+  rotateAfterDays?: number;
+  requireRotationAt?: string;
+  invalidatePreviousOnRotate: boolean;
+}
+
+export interface CredentialAccessDecision {
+  approved: boolean;
+  vaultRefId?: string;
+  runtimeInstanceId?: string;
+  providerId?: string;
+  allowedScopes: CredentialScope[];
+  reason?: string;
 }

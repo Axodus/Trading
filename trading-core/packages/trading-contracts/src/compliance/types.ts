@@ -2,7 +2,9 @@ import type { ExecutionDomain } from '../runtime/types.js';
 
 export type DisclosureRequirementTarget =
   | 'runtime-provisioning'
+  | 'runtime-resume'
   | 'execution-enable'
+  | 'provider-activation'
   | 'leveraged-strategy'
   | 'strategy-product';
 
@@ -14,7 +16,8 @@ export interface TradingRiskDisclosure {
     | 'automation-risk'
     | 'market-risk'
     | 'leverage-risk'
-    | 'strategy-specific';
+    | 'strategy-specific'
+    | 'runtime-provider';
   title: string;
   contentRef: string;
   requiredFor: DisclosureRequirementTarget[];
@@ -25,5 +28,6 @@ export interface UserRiskAcceptance {
   disclosureId: string;
   disclosureVersion: string;
   acceptedAt: string;
+  expiresAt?: string;
   executionDomain: Extract<ExecutionDomain, 'user'>;
 }

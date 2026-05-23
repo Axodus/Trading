@@ -41,7 +41,17 @@ export interface UserRuntimeInstance {
   strategyProductId: string;
   providerId: string;
   executionDomain: 'user';
-  status: 'provisioning' | 'active' | 'paused' | 'suspended' | 'stopped' | 'failed';
+  status:
+    | 'requested'
+    | 'provisioning'
+    | 'active'
+    | 'paused'
+    | 'suspended'
+    | 'degraded'
+    | 'recovering'
+    | 'stopped'
+    | 'failed'
+    | 'terminated';
   createdAt: string;
   updatedAt: string;
 }

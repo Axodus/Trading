@@ -7,7 +7,14 @@
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "tsc -p tsconfig.test.json && node --test test/*.test.mjs"
+    "test": "tsc -p tsconfig.test.json && node --test test/*.test.mjs",
+    "trading-db": "npm run build && node --experimental-strip-types scripts/trading-db.ts",
+    "db:bootstrap-local": "npm run build && node --experimental-strip-types scripts/bootstrap-local-db.ts",
+    "db:healthcheck": "npm run build && node --experimental-strip-types scripts/healthcheck-db.ts",
+    "db:seed-local": "npm run build && node --experimental-strip-types scripts/seed-local-trading.ts"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "typescript": "^5.8.3"

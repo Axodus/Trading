@@ -6,6 +6,7 @@ Status: IN PROGRESS
 
 Objectives:
 - define sovereign trading architecture
+- define Trading Core as headless operational infrastructure
 - define product economy architecture
 - define treasury versus user execution boundaries
 - define runtime, access, billing, credential vault, and disclosure boundaries
@@ -14,10 +15,28 @@ Objectives:
 Deliverables:
 - trading core architecture specification
 - product economy specification
+- headless core decision and frontend non-goals
 - runtime/security/compliance specifications
 - shared contract package
 - scaffolded core and product services
 - Phase 0 event model
+
+---
+
+# Phase 3A - Headless Core and Product Surface Alignment
+
+Status: IN PROGRESS
+
+Objectives:
+- keep Trading Core as a governed background nucleus
+- route user-facing interaction through Strategy Products, Marketplace, DeFi, DEX, Academy, Governance local tenant pages, and ACS tenant consoles
+- document that WhiteRabbit is the first user-facing Strategy Product
+- prevent generic public `/trading` frontend exposure by default
+
+Deliverables:
+- headless Trading Core architecture decision
+- AxodusAPP generic Trading route marked as non-goal
+- provider and Hummingbot controls restricted to internal/gated workflows
 
 ---
 
@@ -58,12 +77,21 @@ Deliverables:
 
 # Phase 3 — Risk Infrastructure
 
-Status: PLANNED
+Status: IN PROGRESS
 
 Objectives:
 - implement sovereign risk systems
+- establish authoritative trading state infrastructure
 
 Deliverables:
+- normalized state services
+- event-derived execution state
+- runtime lifecycle state
+- provider health state
+- audit history boundary
+- in-memory event persistence skeleton
+- correlation trace reconstruction
+- audit query layer
 - exposure limits
 - drawdown controls
 - emergency execution controls
@@ -74,12 +102,25 @@ Deliverables:
 
 # Phase 4 — ACS Integration
 
-Status: PLANNED
+Status: IN PROGRESS
 
 Objectives:
 - integrate AI-assisted execution
+- establish Tenant ACS operator boundary
+- prepare WhiteRabbit product surface contract
 
 Deliverables:
+- ACS trading intent contracts
+- ACS runtime command contracts
+- operator access service
+- normalized runtime inspection
+- recommendation intake without authorization
+- WhiteRabbit product read models
+- WhiteRabbit safe product surface service
+- Trinity recommendation engine
+- Trinity bounded cognitive operator events
+- Trinity autonomy policy
+- simulation-first governance policy
 - orchestration integration
 - execution recommendations
 - telemetry analysis
@@ -120,3 +161,348 @@ Autonomous systems must remain:
 - bounded
 - observable
 - governance-constrained
+
+---
+
+# Phase 5 — Credential, Compliance, and Runtime Authority
+
+Status: IN PROGRESS
+
+Objectives:
+- establish non-custodial credential authority
+- enforce disclosure/compliance before runtime enablement
+- formalize governed runtime provisioning
+
+Delivered:
+- Credential Vault skeleton
+- runtime credential binding service
+- provider-scoped credential policy
+- tenant credential isolation
+- compliance runtime gate
+- disclosure acceptance/version enforcement
+- runtime provisioning API
+- runtime lifecycle orchestration
+- runtime recovery skeleton
+- Postgres repository adapters
+- durable event store migration
+- persistent runtime/provider/order/fill/portfolio/position state boundaries
+- replay by correlation/runtime/strategy product/provider/tenant/event type
+
+Next deliverables:
+- reconciliation jobs
+- Hummingbot runtime session orchestration
+
+---
+
+# Phase 7A - Persistent State Authority
+
+Status: IMPLEMENTED
+
+Objectives:
+- make audit/event history durable
+- preserve append-only Trading event store
+- prepare runtime recovery from persisted state
+- keep provider side effects outside sovereign state authority
+
+Delivered:
+- initial Postgres migration
+- Postgres repository adapters
+- replay-capable event repository
+- in-memory Postgres-compatible test adapter
+- runtime recovery persistence hook
+- durability and replay tests
+
+---
+
+# Phase 7B - Provider Reconciliation Skeleton
+
+Status: IMPLEMENTED
+
+Objectives:
+- prepare provider/runtime divergence handling
+- detect provider drift before live Hummingbot execution
+- keep provider side effects bounded by reconciliation proposals
+- preserve sovereign state authority
+
+Delivered:
+- reconciliation contracts
+- provider drift detector
+- order reconciliation service
+- position reconciliation service
+- runtime reconciliation service
+- stale execution state detector
+- provider reconciliation orchestrator
+- reconciliation telemetry events
+- tests for divergence, stale/orphan runtime, proposal generation, isolation, and telemetry
+
+---
+
+# Phase 8A - Hummingbot Runtime Deep Adapter
+
+Status: IMPLEMENTED
+
+Objectives:
+- begin realistic Hummingbot runtime lifecycle integration
+- keep Hummingbot paper-first and non-sovereign
+- normalize runtime streams into Axodus contracts
+- emit lifecycle and degradation telemetry
+
+Delivered:
+- runtime boot/shutdown/restart/recovery skeleton
+- connector unavailable handling
+- runtime degradation handling
+- normalized fills/balances/positions/telemetry ingestion
+- Hummingbot lifecycle events
+- DTO isolation tests
+
+---
+
+# Phase 8B - WhiteRabbit Runtime Migration
+
+Status: IMPLEMENTED
+
+Objectives:
+- make WhiteRabbit the first runtime-native Strategy Product
+- introduce strategy state, signal pipeline, telemetry, and execution profile
+- keep lifecycle simulation-first and tenant-isolated
+- keep Trinity proposals bounded by governance and risk
+
+Delivered:
+- WhiteRabbit runtime engine
+- WhiteRabbit signal pipeline
+- WhiteRabbit execution profile
+- WhiteRabbit normalized strategy state
+- WhiteRabbit runtime telemetry service
+- signal and lifecycle events
+- runtime-native strategy tests
+
+---
+
+# Phase 9A - Trinity Market Intelligence
+
+Status: IMPLEMENTED
+
+Objectives:
+- make Trinity telemetry-aware
+- ingest deterministic market and runtime intelligence
+- improve recommendation quality without granting execution authority
+
+Delivered:
+- market intelligence service
+- market regime detector
+- volatility and spread analysis
+- provider quality scoring
+- strategy degradation analyzer
+- runtime telemetry ingestion
+- intelligence recommendation events
+- tests for intelligence recommendations and audit
+
+---
+
+# Phase 9B - Headless Trading API Boundary
+
+Status: IMPLEMENTED
+
+Objectives:
+- make Trading Core safely consumable by ACS and product surfaces
+- standardize read models, action requests, runtime inspection, and telemetry summaries
+- keep the core headless and provider-protected
+
+Delivered:
+- headless API gateway
+- read API
+- action request API
+- telemetry API
+- runtime inspection API
+- normalized API models
+- API boundary tests
+
+---
+
+# Phase 9C - WhiteRabbit Product Surface API
+
+Status: IMPLEMENTED
+
+Objectives:
+- make WhiteRabbit externally consumable as a Strategy Product
+- reinforce product economy layer
+- expose product-specific normalized read models and request-only actions
+
+Delivered:
+- WhiteRabbit surface API
+- WhiteRabbit query service
+- WhiteRabbit action request service
+- telemetry summary service
+- quota view service
+- product surface models
+- product API boundary tests
+
+---
+
+# Phase 10A - ACS / Trinity Command Orchestration API
+
+Status: IMPLEMENTED
+
+Objectives:
+- formalize ACS and Trinity command orchestration boundary
+- convert commands and recommendations into auditable workflow requests
+- preserve governance/risk/compliance/autonomy context
+- keep runtime/provider authority centralized behind Trading Core gates
+
+Delivered:
+- ACS command API
+- Trinity recommendation API
+- runtime supervision API
+- workflow request service
+- recommendation approval service
+- workflow command contracts
+- approval/rejection events
+- command orchestration tests
+
+---
+
+# Phase 10B - Postgres Bootstrap and Migration Runner
+
+Status: IMPLEMENTED
+
+Objectives:
+- operationalize the Postgres persistence boundary for local and future staging
+- standardize migrations, startup validation, health checks, and schema version inspection
+- preserve sovereign state boundaries while making repositories environment-ready
+
+Delivered:
+- Postgres bootstrap service
+- migration runner
+- database connection manager
+- database health service
+- database config contract
+- append-only migration history support
+- migration ordering/idempotency tests
+- normalized database health tests
+
+---
+
+# Phase 10C - Runtime Observability and Operational Telemetry
+
+Status: IMPLEMENTED
+
+Objectives:
+- make runtime, provider, strategy, and telemetry health measurable
+- produce normalized operational health scores
+- track runtime operational metrics
+- emit internal telemetry events for degraded/critical conditions
+- prepare richer Trinity telemetry analysis inputs
+
+Delivered:
+- runtime observability service
+- provider observability service
+- strategy telemetry aggregator
+- operational health scoring service
+- runtime metrics collector
+- execution latency tracker
+- operational telemetry contracts and events
+- observability tests
+
+---
+
+# Phase 11A - Local Infrastructure Runtime
+
+Status: IMPLEMENTED
+
+Objectives:
+- make Trading Core persistence runnable against local Postgres
+- provide local env example and isolated Docker Compose service
+- standardize bootstrap, healthcheck, and mock seed commands
+- keep local runtime explicitly non-production and simulation-only
+
+Delivered:
+- local Trading Docker Compose
+- local env example
+- database bootstrap script
+- database healthcheck script
+- mock seed script
+- local database config parser
+- service startup/teardown documentation
+- local infrastructure tests
+
+---
+
+# Phase 11B - Migration CLI and Operational Scripts
+
+Status: IMPLEMENTED
+
+Objectives:
+- expose Trading database migration and health services as repeatable CLI workflows
+- support local and future staging operational use
+- support JSON output for automation
+- keep migration logic centralized in `MigrationRunner`
+- keep local seed data simulation-only
+
+Delivered:
+- `trading-db` CLI
+- migrate/status/health/version/validate/seed-local commands
+- human output renderer
+- JSON output renderer
+- npm wrapper script
+- CLI tests
+
+---
+
+# Phase 11C - Real Postgres Client Adapter
+
+Status: IMPLEMENTED
+
+Objectives:
+- connect Trading persistence boundary to real local Postgres
+- keep repository interfaces unchanged
+- keep `pg` isolated inside the Postgres adapter boundary
+- make local bootstrap/health/seed/CLI commands use the real adapter
+
+Delivered:
+- real Node/Postgres client adapter
+- connection pool wrapper
+- error mapper
+- env config mapper
+- timeout and retry support
+- graceful shutdown support
+- local script integration
+- adapter tests
+
+---
+
+# Phase 12A - Observability Query API
+
+Status: IMPLEMENTED
+
+Objectives:
+- make Trading observability safely consumable by ACS and product surfaces
+- expose normalized read-only runtime/provider/strategy health
+- preserve tenant scope and prevent sensitive leakage
+- keep observability separate from execution authority
+
+Delivered:
+- observability contracts
+- trading observability API
+- tenant observability query service
+- observability access guard
+- observability read model tests
+
+---
+
+# Phase 12B - Trinity Observability Integration
+
+Status: IMPLEMENTED
+
+Objectives:
+- feed normalized observability snapshots into Trinity
+- generate telemetry-aware recommendations without execution authority
+- preserve tenant context and correlationId
+- record observability recommendation evidence and lifecycle in audit trail
+
+Delivered:
+- `TrinityObservabilityAdapter`
+- runtime, provider, strategy, latency recommendation services
+- observability recommendation audit service
+- observability evidence model
+- expanded Trinity recommendation types
+- tests for advisory-only recommendations and audit persistence

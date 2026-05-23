@@ -1,4 +1,5 @@
 import type { BalanceSnapshot, ExecutionFill, PositionSnapshot, TradingEvent, UserRuntimeInstance } from '../../../../packages/trading-contracts/src/index.js';
+import type { ProviderState } from '../state/StateTypes.js';
 
 export interface OrderRecord {
   providerOrderId: string;
@@ -41,4 +42,9 @@ export interface UserRuntimeRepository {
 export interface RuntimeRepository {
   save(runtime: UserRuntimeInstance): Promise<void>;
   findById(runtimeInstanceId: string): Promise<UserRuntimeInstance | undefined>;
+}
+
+export interface ProviderStateRepository {
+  save(providerState: ProviderState): Promise<void>;
+  findByProviderId(providerId: string): Promise<ProviderState | undefined>;
 }

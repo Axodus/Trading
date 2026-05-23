@@ -1,7 +1,7 @@
 import type { TradingEvent, TradingEventType } from '../../../../packages/trading-contracts/src/index.js';
 
 export interface EventBusRepository {
-  append(event: TradingEvent): void;
+  append(event: TradingEvent): void | Promise<void>;
   list(): TradingEvent[];
 }
 
@@ -41,7 +41,7 @@ export class TradingEventBus {
   }
 
   async publish<TType extends TradingEventType, TPayload>(event: TradingEvent<TType, TPayload>): Promise<void> {
-    this.repository.append(event);
+    await this.repository.append(event);
     for (const subscriber of [...this.subscribers]) {
       try {
         await subscriber(event);

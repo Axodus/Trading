@@ -1,0 +1,23 @@
+services:
+  axodus-trading-postgres:
+    image: postgres:16-alpine
+    container_name: axodus-trading-postgres-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${TRADING_DB_NAME:-axodus_trading_local}
+      POSTGRES_USER: ${TRADING_DB_USER:-axodus_trading}
+      POSTGRES_PASSWORD: ${TRADING_DB_PASSWORD:-axodus_trading_local_password}
+    ports:
+      - "${TRADING_DB_PORT:-55432}:5432"
+    volumes:
+      - axodus_trading_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TRADING_DB_USER:-axodus_trading} -d ${TRADING_DB_NAME:-axodus_trading_local}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  axodus_trading_postgres_data:
+    name: axodus_trading_postgres_data
