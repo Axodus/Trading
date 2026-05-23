@@ -21,6 +21,9 @@ export type ReconciliationFindingType =
 export type ReconciliationProposalReviewState =
   | 'created'
   | 'pending-review'
+  | 'under-risk-review'
+  | 'under-governance-review'
+  | 'approved-for-remediation'
   | 'approved'
   | 'rejected'
   | 'superseded'
@@ -129,4 +132,62 @@ export interface ReconciliationWorkerRunResult {
   proposalsCreated: number;
   proposals: ReconciliationProposal[];
   errors: string[];
+}
+
+export type ReconciliationRemediationRequestType =
+  | 'runtime-recovery-request'
+  | 'provider-resync-request'
+  | 'order-review-request'
+  | 'position-review-request'
+  | 'reconciliation-retry-request'
+  | 'manual-operator-review-request';
+
+export interface ReconciliationReviewPolicy {
+  requireRiskApproval: boolean;
+  requireGovernanceForTreasury: boolean;
+  requireTreasuryPolicyForTreasury: boolean;
+  allowUserRuntimeRemediation: boolean;
+}
+
+export interface AcsReconciliationReviewCommand {
+  id: string;
+  correlationId: string;
+  tenantId?: string;
+  proposalId: string;
+  requestedBy: 'acs' | 'governance' | 'risk' | 'reconciliation-worker' | string;
+  decisionIntent: 'approve-remediation' | 'reject';
+  riskApproved?: boolean;
+  governanceApproved?: boolean;
+  treasuryPolicyApproved?: boolean;
+  reason?: string;
+}
+
+export interface ReconciliationRemediationRequest {
+  id: string;
+  proposalId: string;
+  correlationId: string;
+  tenantId: string;
+  context: ReconciliationContext;
+  requestType: ReconciliationRemediationRequestType;
+  status: 'requested' | 'blocked';
+  reason?: string;
+  autoHealing: false;
+  mutatesProvider: false;
+  mutatesSovereignState: false;
+  createdAt: string;
+}
+
+export interface ReconciliationApprovalDecision {
+  id: string;
+  commandId: string;
+  proposalId: string;
+  correlationId: string;
+  tenantId?: string;
+  approved: boolean;
+  reviewState: ReconciliationProposalReviewState;
+  blockedBy?: 'tenant-context' | 'proposal-not-found' | 'tenant-mismatch' | 'risk' | 'governance' | 'treasury-policy' | 'worker-self-approval' | 'operator-rejection';
+  reason?: string;
+  remediationRequest?: ReconciliationRemediationRequest;
+  autoHealing: false;
+  createdAt: string;
 }

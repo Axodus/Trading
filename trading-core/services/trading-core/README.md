@@ -175,6 +175,7 @@ npm run trading-db -- validate
 npm run trading-db -- seed-local
 npm run db:smoke-local
 npm run db:reset-local
+npm run trading:local:e2e
 ```
 
 Every command supports JSON output:
@@ -184,6 +185,37 @@ npm run trading-db -- status --json
 ```
 
 The CLI never prints the database password and returns a non-zero exit code on failure.
+
+## Local CI-style Postgres Validation
+
+Phase 16B adds a repeatable local E2E command:
+
+```bash
+npm run trading:local:e2e
+```
+
+This command runs a local-only validation flow:
+
+```text
+docker compose up
+-> wait for Postgres
+-> trading-db migrate
+-> trading-db seed-local
+-> trading-db health
+-> trading-db validate
+-> db:smoke-local
+```
+
+Useful options:
+
+```bash
+npm run trading:local:e2e -- --json
+npm run trading:local:e2e -- --cleanup
+npm run trading:local:e2e -- --reset-local
+npm run trading:local:e2e -- --skip-docker
+```
+
+The command is local developer tooling only. It refuses production-like settings, redacts database passwords, seeds only mock/simulation data, and does not enable live trading, live Hummingbot sessions, live exchange connectivity, or treasury execution.
 
 ## Real Postgres Client
 

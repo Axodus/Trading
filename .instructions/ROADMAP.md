@@ -615,3 +615,90 @@ Delivered:
 - `PaperSessionAuditService`
 - paper session contracts and events
 - tests for lifecycle, rejection, persistence, observability, reconciliation, and tenant isolation
+
+---
+
+# Phase 15B - WhiteRabbit Paper Validation Workflow
+
+Status: IMPLEMENTED
+
+Objectives:
+- connect WhiteRabbit runtime engine to governed paper sessions
+- generate WhiteRabbit paper signals and normalized paper fills
+- produce tenant-scoped paper telemetry summaries
+- include reconciliation dry-run evidence
+- keep Trinity recommendations advisory
+- evaluate controlled resume eligibility without live authorization
+
+Delivered:
+- `WhiteRabbitPaperValidationService`
+- `WhiteRabbitPaperSessionAdapter`
+- `WhiteRabbitPaperTelemetrySummaryService`
+- `WhiteRabbitControlledResumeEvaluator`
+- paper validation contracts and events
+- tests for live rejection, gates, telemetry scope, evidence, reconciliation and Hummingbot DTO isolation
+
+---
+
+# Phase 15C - ACS Review Flow for Reconciliation Proposals
+
+Status: IMPLEMENTED
+
+Objectives:
+- close the reconciliation proposal review loop
+- require ACS review before remediation requests
+- enforce risk rejection and treasury governance rejection
+- preserve user/treasury tenant isolation
+- keep remediation request-only with no provider mutation
+- persist review and remediation audit events
+
+Delivered:
+- `ReconciliationProposalReviewService`
+- `ReconciliationProposalAuditService`
+- `ReconciliationRemediationEligibilityService`
+- `ReconciliationReviewPolicy`
+- review/remediation contracts and events
+- tests for tenant context, risk/governance blocks, approval request-only, rejection audit and worker self-approval block
+
+---
+
+# Phase 16A - Paper Observability Risk Loop
+
+Status: IMPLEMENTED
+
+Objectives:
+- convert paper telemetry into consultative risk evidence
+- evaluate fill quality, latency, slippage, health and reconciliation results
+- block controlled resume eligibility on critical evidence
+- preserve ACS/Risk workflow as approval boundary
+
+Delivered:
+- `PaperSessionRiskSignalService`
+- `PaperSessionHealthEvaluator`
+- `PaperExecutionQualityEvaluator`
+- `PaperControlledResumePolicy`
+- `PaperRiskDecisionService`
+- `PaperRiskAuditService`
+- tests for latency, runtime degradation, unresolved reconciliation, quality degradation, tenant isolation and no provider calls
+
+---
+
+# Phase 16B - Real Local Postgres CI Script
+
+Status: IMPLEMENTED
+
+Objectives:
+- expose one repeatable local E2E validation command
+- start local compose Postgres when requested
+- run migrate, seed, health, validate and smoke replay flow
+- support JSON output and cleanup/reset options
+- reject unsafe production-like environments
+- redact database secrets in diagnostics
+
+Delivered:
+- `npm run trading:local:e2e`
+- `TradingLocalE2eCommand`
+- `scripts/trading-local-e2e.ts`
+- `scripts/wait-for-postgres.ts`
+- `scripts/local-e2e-report.ts`
+- tests for safety, redaction, command sequencing and readable failure reporting

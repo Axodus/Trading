@@ -36,12 +36,17 @@ import {
   ObservabilityRiskAuditService,
   ObservabilityRiskBoundaryError,
   ObservabilityRiskDecisionService,
+  PaperRiskAuditService,
+  PaperRiskBoundaryError,
+  PaperRiskDecisionService,
   PaperTradingSessionService,
   ProductExecutionGate,
   ProviderObservabilityService,
   ProviderReconciliationService,
   ReconciliationCandidateDiscoveryService,
+  ReconciliationProposalAuditService,
   ReconciliationProposalRepository,
+  ReconciliationProposalReviewService,
   ReconciliationWorker,
   ReconciliationWorkerAuditService,
   RiskGateway,
@@ -76,8 +81,10 @@ import {
   TrinityObservabilityAdapter,
   TradingStateService,
   TenantObservabilityQueryService,
+  TradingLocalE2eCommand,
   StrategyTelemetryAggregator,
   createTrinityAutonomyProfile,
+  redactLocalE2eText,
   RecommendationApprovalService,
   TrinityRecommendationApi,
   TrinityRecommendationEngine,
@@ -86,6 +93,7 @@ import {
   WhiteRabbitActionRequestService,
   WhiteRabbitSurfaceApi,
   WhiteRabbitProductSurfaceService,
+  WhiteRabbitPaperValidationService,
   WhiteRabbitRuntimeEngine,
   WhiteRabbitStrategyProvider,
 } from '../../../../dist-test/trading-core/services/trading-core/src/index.js';
@@ -1103,6 +1111,124 @@ describe('Trading DB migration CLI', () => {
   });
 });
 
+describe('Trading local Postgres E2E command', () => {
+  function createLocalE2eHarness(overrides = {}) {
+    const calls = [];
+    const runner = {
+      async validateSafety() {
+        calls.push(['validateSafety']);
+        if (overrides.validateError) {
+          throw new Error(overrides.validateError);
+        }
+      },
+      async composeUp() {
+        calls.push(['composeUp']);
+        return overrides.composeUp ?? { exitCode: 0, stdout: 'compose up ok' };
+      },
+      async composeDown() {
+        calls.push(['composeDown']);
+        return overrides.composeDown ?? { exitCode: 0, stdout: 'compose down ok' };
+      },
+      async waitForPostgres() {
+        calls.push(['waitForPostgres']);
+        return overrides.waitForPostgres ?? { exitCode: 0, stdout: 'postgres ready' };
+      },
+      async runTradingDb(args) {
+        calls.push(['runTradingDb', args]);
+        const key = args[0];
+        return overrides.commands?.[key] ?? { exitCode: 0, stdout: `${key} ok` };
+      },
+      async runSmoke() {
+        calls.push(['runSmoke']);
+        return overrides.runSmoke ?? { exitCode: 0, stdout: 'smoke ok' };
+      },
+      async resetLocal() {
+        calls.push(['resetLocal']);
+        return overrides.resetLocal ?? { exitCode: 0, stdout: 'reset ok' };
+      },
+    };
+    return {
+      calls,
+      command: new TradingLocalE2eCommand(runner),
+    };
+  }
+
+  it('rejects production-like local E2E environment before commands run', async () => {
+    const harness = createLocalE2eHarness({
+      validateError: 'Local Trading seed data refused production-like database configuration password=prod-secret',
+    });
+
+    const report = await harness.command.run({
+      json: true,
+      cleanup: false,
+      reset: false,
+      skipDocker: true,
+      secrets: ['prod-secret'],
+    });
+
+    assert.equal(report.ok, false);
+    assert.equal(report.steps[0]?.name, 'local safety validation');
+    assert.equal(report.steps[0]?.status, 'failed');
+    assert.equal(JSON.stringify(report).includes('prod-secret'), false);
+    assert.deepEqual(harness.calls, [['validateSafety']]);
+  });
+
+  it('redacts secrets from local E2E diagnostics', () => {
+    const redacted = redactLocalE2eText(
+      'failed postgres://axodus:local-password@127.0.0.1:55432/db password=local-password TRADING_DB_PASSWORD=local-password',
+      ['local-password'],
+    );
+
+    assert.equal(redacted.includes('local-password'), false);
+    assert.equal(redacted.includes('[redacted]'), true);
+  });
+
+  it('calls migration seed health validation and replay smoke steps', async () => {
+    const harness = createLocalE2eHarness();
+
+    const report = await harness.command.run({
+      json: true,
+      cleanup: false,
+      reset: false,
+      skipDocker: true,
+      secrets: [],
+    });
+    const dbCommands = harness.calls
+      .filter((call) => call[0] === 'runTradingDb')
+      .map((call) => call[1][0]);
+
+    assert.equal(report.ok, true);
+    assert.deepEqual(dbCommands, ['migrate', 'seed-local', 'health', 'validate']);
+    assert.equal(harness.calls.some((call) => call[0] === 'runSmoke'), true);
+    assert.equal(report.liveTradingEnabled, false);
+    assert.equal(report.productionReady, false);
+  });
+
+  it('reports local E2E failures clearly and stops safely', async () => {
+    const harness = createLocalE2eHarness({
+      commands: {
+        'seed-local': { exitCode: 1, stderr: 'seed-local failed password=local-secret' },
+      },
+    });
+
+    const report = await harness.command.run({
+      json: true,
+      cleanup: false,
+      reset: false,
+      skipDocker: true,
+      secrets: ['local-secret'],
+    });
+    const dbCommands = harness.calls
+      .filter((call) => call[0] === 'runTradingDb')
+      .map((call) => call[1][0]);
+
+    assert.equal(report.ok, false);
+    assert.equal(report.failure.includes('seed-local failed'), true);
+    assert.equal(JSON.stringify(report).includes('local-secret'), false);
+    assert.deepEqual(dbCommands, ['migrate', 'seed-local']);
+  });
+});
+
 describe('NodePostgresClient adapter', () => {
   function createPool(overrides = {}) {
     const calls = [];
@@ -1671,6 +1797,172 @@ describe('Reconciliation worker skeleton', () => {
     assert.equal(typeof harness.worker.cancelOrder, 'undefined');
     assert.equal(typeof harness.worker.connectProvider, 'undefined');
     assert.equal(typeof harness.worker.healRuntime, 'undefined');
+  });
+});
+
+describe('ACS reconciliation proposal review flow', () => {
+  function reviewProposal(overrides = {}) {
+    return {
+      id: 'reconciliation-proposal-review-1',
+      correlationId: 'corr-reconciliation-review-1',
+      context: {
+        correlationId: 'corr-reconciliation-review-1',
+        executionDomain: 'user',
+        userId: 'alice',
+        strategyProductId: 'whiterabbit-scalper-futures',
+        runtimeInstanceId: 'runtime-review-1',
+        providerId: 'simulation',
+        strategyId: 'whiterabbit-v1',
+      },
+      state: 'reconciliation-required',
+      reviewState: 'pending-review',
+      findings: [{
+        type: 'runtime-drift',
+        state: 'reconciliation-required',
+        severity: 'critical',
+        message: 'Runtime drift requires governed remediation review.',
+        providerId: 'simulation',
+        runtimeInstanceId: 'runtime-review-1',
+      }],
+      recommendedActions: ['request-runtime-recovery'],
+      mutatesSovereignState: false,
+      createdAt: '2026-05-23T16:00:00.000Z',
+      ...overrides,
+    };
+  }
+
+  function reviewCommand(overrides = {}) {
+    return {
+      id: 'acs-reconciliation-review-1',
+      correlationId: 'corr-reconciliation-review-1',
+      tenantId: 'alice',
+      proposalId: 'reconciliation-proposal-review-1',
+      requestedBy: 'acs',
+      decisionIntent: 'approve-remediation',
+      riskApproved: true,
+      governanceApproved: true,
+      treasuryPolicyApproved: true,
+      ...overrides,
+    };
+  }
+
+  async function createReviewHarness(proposal = reviewProposal()) {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const proposals = new ReconciliationProposalRepository();
+    await proposals.save(proposal);
+    const service = new ReconciliationProposalReviewService({
+      proposals,
+      audit: new ReconciliationProposalAuditService(eventBus),
+    });
+    return { eventBus, proposals, repository, service };
+  }
+
+  it('requires tenant context on ACS review command', async () => {
+    const harness = await createReviewHarness();
+
+    const decision = await harness.service.review(reviewCommand({
+      id: 'acs-reconciliation-review-no-tenant',
+      tenantId: undefined,
+    }));
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'tenant-context');
+    assert.equal(decision.remediationRequest, undefined);
+    assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_BLOCKED').length, 1);
+  });
+
+  it('blocks remediation request when risk rejects review', async () => {
+    const harness = await createReviewHarness();
+
+    const decision = await harness.service.review(reviewCommand({
+      id: 'acs-reconciliation-review-risk-reject',
+      riskApproved: false,
+      reason: 'Risk review blocked runtime recovery.',
+    }));
+    const saved = await harness.proposals.get('reconciliation-proposal-review-1');
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'risk');
+    assert.equal(decision.reviewState, 'under-risk-review');
+    assert.equal(saved?.reviewState, 'under-risk-review');
+    assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_REQUESTED').length, 0);
+  });
+
+  it('blocks treasury remediation when governance rejects it', async () => {
+    const treasuryProposal = reviewProposal({
+      id: 'reconciliation-proposal-treasury-review-1',
+      correlationId: 'corr-reconciliation-treasury-review-1',
+      context: {
+        correlationId: 'corr-reconciliation-treasury-review-1',
+        executionDomain: 'treasury',
+        daoId: 'dao-review-1',
+        federationId: 'federation-review-1',
+        providerId: 'simulation',
+        strategyId: 'treasury-rebalance',
+      },
+    });
+    const harness = await createReviewHarness(treasuryProposal);
+
+    const decision = await harness.service.review(reviewCommand({
+      id: 'acs-reconciliation-review-governance-reject',
+      correlationId: 'corr-reconciliation-treasury-review-1',
+      tenantId: 'dao-review-1',
+      proposalId: 'reconciliation-proposal-treasury-review-1',
+      governanceApproved: false,
+    }));
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'governance');
+    assert.equal(decision.reviewState, 'under-governance-review');
+    assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_REQUESTED').length, 0);
+  });
+
+  it('creates remediation request only for approved proposal', async () => {
+    const harness = await createReviewHarness();
+
+    const decision = await harness.service.review(reviewCommand());
+    const saved = await harness.proposals.get('reconciliation-proposal-review-1');
+
+    assert.equal(decision.approved, true);
+    assert.equal(decision.reviewState, 'approved-for-remediation');
+    assert.equal(saved?.reviewState, 'approved-for-remediation');
+    assert.equal(decision.remediationRequest?.requestType, 'runtime-recovery-request');
+    assert.equal(decision.remediationRequest?.autoHealing, false);
+    assert.equal(decision.remediationRequest?.mutatesProvider, false);
+    assert.equal(decision.remediationRequest?.mutatesSovereignState, false);
+    assert.equal(typeof harness.service.executeOrder, 'undefined');
+    assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_REQUESTED').length, 1);
+  });
+
+  it('keeps rejected proposal auditable', async () => {
+    const harness = await createReviewHarness();
+
+    const decision = await harness.service.review(reviewCommand({
+      id: 'acs-reconciliation-review-reject',
+      decisionIntent: 'reject',
+      reason: 'Operator rejected remediation request.',
+    }));
+    const rejected = harness.repository.queryByType('RECONCILIATION_REVIEW_REJECTED');
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'operator-rejection');
+    assert.equal(rejected.length, 1);
+    assert.equal(rejected[0]?.payload.decision.reason, 'Operator rejected remediation request.');
+  });
+
+  it('prevents worker from auto-approving its own proposal', async () => {
+    const harness = await createReviewHarness();
+
+    const decision = await harness.service.review(reviewCommand({
+      id: 'worker-reconciliation-self-approval',
+      requestedBy: 'reconciliation-worker',
+    }));
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'worker-self-approval');
+    assert.equal(decision.remediationRequest, undefined);
+    assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_REQUESTED').length, 0);
   });
 });
 
@@ -2415,6 +2707,85 @@ describe('Observability risk feedback policy', () => {
   });
 });
 
+describe('Paper observability risk loop', () => {
+  function paperRiskInput(overrides = {}) {
+    return {
+      correlationId: 'corr-paper-risk-1',
+      tenantId: 'alice',
+      executionDomain: 'user',
+      userId: 'alice',
+      runtimeInstanceId: 'runtime-paper-risk-1',
+      providerId: 'simulation',
+      strategyId: 'whiterabbit-v1',
+      strategyProductId: 'whiterabbit-scalper-futures',
+      fills: [{ price: '100', quantity: '0.01', filledAt: '2026-05-23T17:00:00.000Z' }],
+      expectedPrice: '100',
+      averageLatencyMs: 100,
+      runtimeHealth: { state: 'healthy' },
+      providerHealth: { state: 'healthy' },
+      strategyHealth: { state: 'healthy' },
+      telemetryIngestionQuality: { state: 'healthy' },
+      unresolvedReconciliationProposals: 0,
+      ...overrides,
+    };
+  }
+
+  function createPaperRiskHarness() {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const service = new PaperRiskDecisionService({ audit: new PaperRiskAuditService(eventBus) });
+    return { repository, service };
+  }
+
+  it('creates risk signal when paper execution latency is high', async () => {
+    const harness = createPaperRiskHarness();
+    const decisions = await harness.service.evaluate(paperRiskInput({ correlationId: 'corr-paper-risk-latency-1', averageLatencyMs: 2500 }));
+    assert.equal(decisions.some((decision) => decision.decision === 'require-telemetry-review'), true);
+    assert.equal(decisions.every((decision) => decision.authorizedExecution === false), true);
+    assert.equal(harness.repository.queryByType('PAPER_RISK_SIGNAL_CREATED').length, 1);
+    assert.equal(harness.repository.queryByType('PAPER_CONTROLLED_RESUME_REVIEW_REQUIRED').length, 1);
+  });
+
+  it('blocks controlled resume eligibility when runtime is critical', async () => {
+    const harness = createPaperRiskHarness();
+    const decisions = await harness.service.evaluate(paperRiskInput({ correlationId: 'corr-paper-risk-runtime-critical-1', runtimeHealth: { state: 'critical' } }));
+    const rejection = decisions.find((decision) => decision.decision === 'reject-controlled-resume-eligibility');
+    assert.equal(rejection?.controlledResumeEligible, false);
+    assert.equal(rejection?.requiresRiskReview, true);
+    assert.equal(harness.repository.queryByType('PAPER_CONTROLLED_RESUME_REJECTED').length, 1);
+  });
+
+  it('blocks controlled resume when a review proposal is unresolved', async () => {
+    const harness = createPaperRiskHarness();
+    const decisions = await harness.service.evaluate(paperRiskInput({ correlationId: 'corr-paper-risk-review-open-1', unresolvedReconciliationProposals: 1 }));
+    assert.equal(decisions.some((decision) => decision.decision === 'require-reconciliation-review'), true);
+    assert.equal(decisions.every((decision) => decision.controlledResumeEligible === false), true);
+    assert.equal(harness.repository.queryByType('PAPER_CONTROLLED_RESUME_REVIEW_REQUIRED').length, 1);
+  });
+
+  it('requires simulation retry when paper execution quality is degraded', async () => {
+    const harness = createPaperRiskHarness();
+    const decisions = await harness.service.evaluate(paperRiskInput({ correlationId: 'corr-paper-risk-quality-1', fills: [{ price: '112', quantity: '0.01', filledAt: '2026-05-23T17:00:00.000Z' }], expectedPrice: '100' }));
+    assert.equal(decisions.some((decision) => decision.decision === 'require-simulation-retry'), true);
+    assert.equal(harness.repository.queryByType('PAPER_EXECUTION_QUALITY_DEGRADED').length, 1);
+    assert.equal(harness.repository.queryByType('PAPER_SIMULATION_RETRY_REQUIRED').length, 1);
+  });
+
+  it('preserves tenant isolation for paper telemetry risk', async () => {
+    const harness = createPaperRiskHarness();
+    await assert.rejects(() => harness.service.evaluate(paperRiskInput({ tenantId: 'alice', userId: 'bob' })), PaperRiskBoundaryError);
+  });
+
+  it('does not call providers during paper risk evaluation', async () => {
+    const harness = createPaperRiskHarness();
+    const decisions = await harness.service.evaluate(paperRiskInput({ correlationId: 'corr-paper-risk-no-provider-1', providerHealth: { state: 'degraded' } }));
+    assert.equal(decisions.some((decision) => decision.decision === 'recommend-pause'), true);
+    assert.equal(typeof harness.service.executeOrder, 'undefined');
+    assert.equal(typeof harness.service.cancelOrder, 'undefined');
+    assert.equal(typeof harness.service.connectProvider, 'undefined');
+    assert.equal(decisions.every((decision) => decision.mutatesProvider === false), true);
+  });
+});
 describe('HummingbotProvider', () => {
   it('boots a paper runtime lifecycle', async () => {
     const eventBus = new TradingEventBus();
@@ -4884,6 +5255,266 @@ describe('Paper trading runtime session', () => {
     assert.equal(userEvents.every((event) => event.userId === 'alice'), true);
     assert.equal(treasuryEvents.every((event) => event.daoId === 'dao-paper-1'), true);
     assert.equal(treasuryEvents.every((event) => event.userId === undefined), true);
+  });
+});
+
+describe('WhiteRabbit paper validation workflow', () => {
+  function whiteRabbitPaperContext(overrides = {}) {
+    return {
+      executionDomain: 'user',
+      userId: 'alice',
+      strategyProductId: 'whiterabbit-scalper-futures',
+      runtimeInstanceId: 'runtime-wr-paper-1',
+      providerId: 'simulation',
+      strategyId: 'whiterabbit-v1',
+      ...overrides,
+    };
+  }
+
+  function whiteRabbitPaperCandles() {
+    return [
+      { market: 'BTC-USDT', open: 100, high: 101, low: 99, close: 100, volume: 100, pattern: 'momentum', closedAt: '2026-05-23T15:00:00.000Z' },
+      { market: 'BTC-USDT', open: 100, high: 101, low: 99, close: 100, volume: 100, pattern: 'momentum', closedAt: '2026-05-23T15:01:00.000Z' },
+      { market: 'BTC-USDT', open: 100, high: 101, low: 79, close: 80, volume: 150, pattern: 'momentum', closedAt: '2026-05-23T15:02:00.000Z' },
+    ];
+  }
+
+  function whiteRabbitRuntimeConfig() {
+    return {
+      bollinger: { period: 3, standardDeviation: 1 },
+      atr: { period: 3, adaptationRate: 0.5, volatilityFloor: 0.01 },
+      rsi: { period: 3, buyBelow: 100, sellAbove: 101 },
+      volumeFilter: { enabled: false, minimumRelativeVolume: 1 },
+      candlestickFilter: { enabled: false, allowedPatterns: ['momentum'] },
+    };
+  }
+
+  function whiteRabbitPaperRequest(overrides = {}) {
+    const context = whiteRabbitPaperContext(overrides.context ?? {});
+    return {
+      id: 'wr-paper-validation-1',
+      correlationId: 'corr-wr-paper-validation-1',
+      tenantId: context.daoId ?? context.userId,
+      requestedBy: 'acs',
+      context,
+      connectorConfig: {
+        providerId: context.providerId,
+        providerType: context.providerId === 'hummingbot' ? 'hummingbot' : 'simulation',
+        mode: 'paper',
+        connectorName: context.providerId === 'hummingbot' ? 'binance_paper_trade' : 'simulation-paper',
+        market: 'BTC-USDT',
+      },
+      runtimeConfig: whiteRabbitRuntimeConfig(),
+      candles: whiteRabbitPaperCandles(),
+      ...overrides,
+    };
+  }
+
+  function whiteRabbitReconciliationCandidate() {
+    const request = {
+      context: {
+        correlationId: 'corr-wr-paper-validation-1',
+        executionDomain: 'user',
+        userId: 'alice',
+        strategyProductId: 'whiterabbit-scalper-futures',
+        runtimeInstanceId: 'runtime-wr-paper-1',
+        providerId: 'simulation',
+        strategyId: 'whiterabbit-v1',
+      },
+      sovereignSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: true,
+          mode: 'paper',
+          health: 'healthy',
+          checkedAt: '2026-05-23T15:00:00.000Z',
+        },
+        runtimes: [{
+          runtimeInstanceId: 'runtime-wr-paper-1',
+          status: 'active',
+          updatedAt: '2026-05-23T15:00:00.000Z',
+        }],
+        capturedAt: '2026-05-23T15:00:00.000Z',
+      },
+      providerSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: false,
+          mode: 'paper',
+          health: 'offline',
+          checkedAt: '2026-05-23T15:01:00.000Z',
+        },
+        runtimes: [],
+        capturedAt: '2026-05-23T15:01:00.000Z',
+      },
+      now: '2026-05-23T15:10:00.000Z',
+    };
+    return {
+      id: 'wr-paper-reconciliation-candidate-1',
+      tenantId: 'alice',
+      candidateType: 'provider-drift',
+      request,
+      discoveredAt: request.now,
+      reason: 'WhiteRabbit paper validation dry run',
+    };
+  }
+
+  function createWhiteRabbitPaperHarness({ provider = new SimulationProvider({ deterministicPrice: '100' }), reconciliationCandidate } = {}) {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const registry = new ExecutionProviderRegistry();
+    registry.register(provider);
+    const worker = reconciliationCandidate
+      ? new ReconciliationWorker({
+          discovery: new ReconciliationCandidateDiscoveryService([reconciliationCandidate]),
+          proposals: new ReconciliationProposalRepository(),
+          audit: new ReconciliationWorkerAuditService(eventBus),
+        })
+      : undefined;
+    const paperSessions = new PaperTradingSessionService({
+      registry,
+      eventBus,
+      observability: new RuntimeObservabilityService(eventBus),
+      reconciliationWorker: worker,
+    });
+    return {
+      eventBus,
+      provider,
+      repository,
+      service: new WhiteRabbitPaperValidationService({
+        paperSessions,
+        eventBus,
+      }),
+    };
+  }
+
+  it('rejects live config before WhiteRabbit paper validation starts', async () => {
+    const harness = createWhiteRabbitPaperHarness();
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest({
+      id: 'wr-paper-live-reject',
+      correlationId: 'corr-wr-paper-live-reject',
+      connectorConfig: {
+        providerId: 'simulation',
+        providerType: 'simulation',
+        mode: 'live',
+        market: 'BTC-USDT',
+      },
+    }));
+
+    assert.equal(decision.status, 'rejected');
+    assert.equal(decision.controlledResumeEligible, false);
+    assert.equal(decision.blockers.includes('WhiteRabbit paper validation rejects live execution config'), true);
+    assert.equal(harness.provider.receivedExecutions.length, 0);
+  });
+
+  it('requires runtime context and candles before paper validation', async () => {
+    const harness = createWhiteRabbitPaperHarness();
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest({
+      id: 'wr-paper-gate-reject',
+      correlationId: 'corr-wr-paper-gate-reject',
+      context: whiteRabbitPaperContext({ runtimeInstanceId: undefined }),
+      candles: [],
+    }));
+
+    assert.equal(decision.status, 'rejected');
+    assert.equal(decision.blockers.includes('runtimeInstanceId is required'), true);
+    assert.equal(decision.blockers.includes('paper validation requires candles for signal generation'), true);
+  });
+
+  it('keeps WhiteRabbit telemetry summary tenant-scoped', async () => {
+    const harness = createWhiteRabbitPaperHarness();
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest());
+    const trace = harness.repository.queryByCorrelationId('corr-wr-paper-validation-1');
+
+    assert.equal(decision.status, 'completed');
+    assert.equal(decision.telemetrySummary?.runtimeInstanceId, 'runtime-wr-paper-1');
+    assert.equal(decision.telemetrySummary?.sensitiveFieldsExcluded, true);
+    assert.equal(decision.fills.length, 1);
+    assert.equal(trace.every((event) => event.userId === undefined || event.userId === 'alice'), true);
+    assert.equal(JSON.stringify(decision).includes('rawApi'), false);
+  });
+
+  it('blocks controlled resume without required evidence', async () => {
+    const harness = createWhiteRabbitPaperHarness();
+    const decision = await harness.service.validate(whiteRabbitPaperRequest());
+    const withoutEvidence = harness.service.evaluateControlledResume({
+      ...decision,
+      evidence: undefined,
+      reconciliationProposals: [],
+    });
+
+    assert.equal(withoutEvidence.controlledResumeEligible, false);
+    assert.equal(withoutEvidence.blockers.includes('controlled resume evidence is required'), true);
+    assert.equal(withoutEvidence.approvalPath.liveExecutionAuthorized, false);
+  });
+
+  it('keeps Trinity recommendations advisory during paper validation', async () => {
+    const harness = createWhiteRabbitPaperHarness();
+    const recommendation = {
+      id: 'trinity-wr-paper-rec-1',
+      correlationId: 'corr-wr-paper-validation-1',
+      tenantId: 'alice',
+      producedByAgent: 'trinity',
+      context: whiteRabbitPaperContext(),
+      recommendationType: 'recommend-controlled-resume',
+      confidence: 0.82,
+      rationale: 'Paper telemetry can be reviewed by ACS before any controlled resume.',
+      createdAt: '2026-05-23T15:20:00.000Z',
+      requiresAcs: true,
+      authorizedExecution: false,
+    };
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest({ trinityRecommendations: [recommendation] }));
+    const eventTypes = harness.repository.queryByCorrelationId('corr-wr-paper-validation-1').map((event) => event.type);
+
+    assert.deepEqual(decision.evidence?.trinityRecommendationIds, ['trinity-wr-paper-rec-1']);
+    assert.equal(decision.approvalPath.liveExecutionAuthorized, false);
+    assert.equal(eventTypes.includes('USER_RUNTIME_RESUMED'), false);
+    assert.equal(eventTypes.includes('RUNTIME_STARTED'), false);
+  });
+
+  it('runs reconciliation dry-run without auto-healing', async () => {
+    const candidate = whiteRabbitReconciliationCandidate();
+    const harness = createWhiteRabbitPaperHarness({ reconciliationCandidate: candidate });
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest(), candidate);
+    const eventTypes = harness.repository.queryByCorrelationId('corr-wr-paper-validation-1').map((event) => event.type);
+
+    assert.equal(decision.reconciliationProposals.length, 1);
+    assert.equal(decision.reconciliationProposals[0]?.mutatesSovereignState, false);
+    assert.equal(decision.controlledResumeEligible, false);
+    assert.equal(decision.blockers.includes('unresolved reconciliation proposal requires review'), true);
+    assert.equal(eventTypes.includes('PAPER_RECONCILIATION_DRY_RUN_COMPLETED'), true);
+    assert.equal(typeof harness.service.healRuntime, 'undefined');
+  });
+
+  it('models Hummingbot paper-compatible validation without DTO leakage', async () => {
+    const harness = createWhiteRabbitPaperHarness({ provider: new HummingbotProvider() });
+
+    const decision = await harness.service.validate(whiteRabbitPaperRequest({
+      id: 'wr-paper-hummingbot',
+      correlationId: 'corr-wr-paper-hummingbot',
+      context: whiteRabbitPaperContext({ providerId: 'hummingbot', runtimeInstanceId: 'runtime-wr-hb-paper-1' }),
+      connectorConfig: {
+        providerId: 'hummingbot',
+        providerType: 'hummingbot',
+        mode: 'paper',
+        connectorName: 'binance_paper_trade',
+        market: 'BTC-USDT',
+      },
+    }));
+
+    const serialized = JSON.stringify(decision);
+    assert.equal(decision.status, 'completed');
+    assert.equal(decision.paperSession?.providerId, 'hummingbot');
+    assert.equal(serialized.includes('tradeType'), false);
+    assert.equal(serialized.includes('tradingPair'), false);
+    assert.equal(serialized.includes('HummingbotOrderDto'), false);
   });
 });
 

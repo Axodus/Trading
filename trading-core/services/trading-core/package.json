@@ -13,7 +13,8 @@
     "db:healthcheck": "npm run build && node --experimental-strip-types scripts/healthcheck-db.ts",
     "db:seed-local": "npm run build && node --experimental-strip-types scripts/seed-local-trading.ts",
     "db:smoke-local": "npm run build && node --experimental-strip-types scripts/smoke-local-postgres.ts",
-    "db:reset-local": "npm run build && node --experimental-strip-types scripts/reset-local-db.ts"
+    "db:reset-local": "npm run build && node --experimental-strip-types scripts/reset-local-db.ts",
+    "trading:local:e2e": "npm run build && node --experimental-strip-types scripts/trading-local-e2e.ts"
   },
   "dependencies": {
     "pg": "^8.13.1"

@@ -1054,17 +1054,120 @@ Validado:
 
 ## Phase 14C - WhiteRabbit Paper Validation Workflow
 
+Status: IMPLEMENTED
+
 Objetivo:
 conectar WhiteRabbit runtime engine a paper validation governada.
 
-Escopo:
+Entregue:
 
-- simulation request
-- backtest request placeholder
-- paper validation run
-- telemetry summary
-- controlled resume eligibility
-- Trinity recommendation intake
+- `WhiteRabbitPaperValidationService`
+- `WhiteRabbitPaperSessionAdapter`
+- `WhiteRabbitPaperTelemetrySummaryService`
+- `WhiteRabbitControlledResumeEvaluator`
+- `WhiteRabbitPaperValidationPolicy`
+- `WhiteRabbitPaperValidationDecision`
+- `WhiteRabbitSimulationEvidence`
+- eventos `WHITERABBIT_PAPER_VALIDATION_*` e `WHITERABBIT_CONTROLLED_RESUME_EVALUATED`
+
+Validado:
+
+- WhiteRabbit paper validation rejects live config
+- required runtime/candle gates enforced
+- telemetry summary tenant-scoped
+- controlled resume blocked without evidence
+- Trinity recommendation remains advisory
+- reconciliation dry-run creates proposal only
+- Hummingbot paper-compatible boundary does not leak DTOs
+
+## Phase 15C - ACS Review Flow for Reconciliation Proposals
+
+Status: IMPLEMENTED
+
+Objetivo:
+fechar o ciclo de reconciliation proposal por ACS review, risk/governance decisioning e remediation request controlado.
+
+Entregue:
+
+- `ReconciliationProposalReviewService`
+- `ReconciliationProposalAuditService`
+- `ReconciliationRemediationEligibilityService`
+- `ReconciliationReviewPolicy`
+- `AcsReconciliationReviewCommand`
+- `ReconciliationApprovalDecision`
+- `ReconciliationRemediationRequest`
+- eventos `RECONCILIATION_REVIEW_*` e `RECONCILIATION_REMEDIATION_*`
+
+Validado:
+
+- ACS review command requires tenant context
+- risk rejection blocks remediation request
+- governance rejection blocks treasury remediation
+- approved proposal creates remediation request only
+- rejected proposal remains in audit trail
+- worker cannot auto-approve own proposal
+
+
+## Phase 16A - Paper Observability Risk Loop
+
+Status: IMPLEMENTED
+
+Objetivo:
+usar paper session telemetry como evidencia consultiva de risco sem autorizar live execution.
+
+Entregue:
+
+- `PaperSessionRiskSignalService`
+- `PaperSessionHealthEvaluator`
+- `PaperExecutionQualityEvaluator`
+- `PaperControlledResumePolicy`
+- `PaperRiskDecisionService`
+- `PaperRiskAuditService`
+- eventos `PAPER_RISK_SIGNAL_CREATED`, `PAPER_EXECUTION_QUALITY_DEGRADED`, `PAPER_CONTROLLED_RESUME_REVIEW_REQUIRED`, `PAPER_CONTROLLED_RESUME_REJECTED`, `PAPER_SIMULATION_RETRY_REQUIRED`
+
+Validado:
+
+- high latency creates risk signal
+- critical runtime blocks controlled resume eligibility
+- unresolved reconciliation proposal blocks eligibility
+- poor paper quality requires simulation retry
+- tenant isolation preserved
+- no provider call occurs during risk evaluation
+
+## Phase 16B - Real Local Postgres CI Script
+
+Status: IMPLEMENTED
+
+Objetivo:
+criar um comando local CI-style para validar Postgres real de ponta a ponta.
+
+Entregue:
+
+- `npm run trading:local:e2e`
+- `TradingLocalE2eCommand`
+- `scripts/trading-local-e2e.ts`
+- `scripts/wait-for-postgres.ts`
+- `scripts/local-e2e-report.ts`
+- suporte a `--json`, `--cleanup`, `--reset-local` e `--skip-docker`
+
+Fluxo:
+
+```text
+docker compose up
+-> wait for Postgres
+-> trading-db migrate
+-> trading-db seed-local
+-> trading-db health
+-> trading-db validate
+-> db:smoke-local
+```
+
+Validado:
+
+- production-like env rejected
+- secrets redacted
+- migration/seed/health/validate/smoke sequence
+- readable failure diagnostics
 
 ---
 

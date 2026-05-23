@@ -91,3 +91,97 @@ export interface ObservabilityRiskDecision {
   approvalPath: 'ACS -> Trading Core -> Governance/Product/Compliance/Risk -> Runtime/Provider';
   createdAt: string;
 }
+
+export type PaperRiskSignalType =
+  | 'paper-fill-quality-degraded'
+  | 'paper-execution-latency-high'
+  | 'paper-slippage-high'
+  | 'paper-runtime-degraded'
+  | 'paper-provider-degraded'
+  | 'paper-strategy-degraded'
+  | 'paper-reconciliation-unresolved'
+  | 'paper-telemetry-ingestion-degraded';
+
+export type PaperRiskDecisionType =
+  | 'allow-continue-paper'
+  | 'require-simulation-retry'
+  | 'require-backtest'
+  | 'recommend-pause'
+  | 'require-telemetry-review'
+  | 'require-reconciliation-review'
+  | 'require-controlled-resume-approval'
+  | 'reject-controlled-resume-eligibility';
+
+export interface PaperRiskSignal {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  signalType: PaperRiskSignalType;
+  severity: 'info' | 'warning' | 'high' | 'critical';
+  providerId?: string;
+  runtimeInstanceId?: string;
+  strategyId?: string;
+  strategyProductId?: string;
+  userId?: string;
+  daoId?: string;
+  evidence: {
+    fillCount?: number;
+    averageLatencyMs?: number;
+    slippageBps?: number;
+    healthState?: string;
+    unresolvedReconciliationProposals?: number;
+    reasons: string[];
+  };
+  createdAt: string;
+}
+
+export interface PaperRiskDecision {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  decision: PaperRiskDecisionType;
+  status: 'allowed' | 'review-required' | 'retry-required' | 'rejected';
+  reason: string;
+  signal?: PaperRiskSignal;
+  requiresAcs: boolean;
+  requiresRiskReview: boolean;
+  authorizedExecution: false;
+  controlledResumeEligible: boolean;
+  mutatesRuntime: false;
+  mutatesProvider: false;
+  mutatesStrategy: false;
+  createdAt: string;
+}
+
+export interface PaperRiskEvaluationInput {
+  correlationId: string;
+  tenantId: string;
+  executionDomain: 'treasury' | 'user';
+  userId?: string;
+  daoId?: string;
+  federationId?: string;
+  runtimeInstanceId?: string;
+  providerId: string;
+  strategyId?: string;
+  strategyProductId?: string;
+  fills?: Array<{
+    price: string;
+    quantity: string;
+    filledAt: string;
+  }>;
+  expectedPrice?: string;
+  averageLatencyMs?: number;
+  runtimeHealth?: {
+    state: 'healthy' | 'degraded' | 'critical' | 'suspended' | 'offline' | string;
+  };
+  providerHealth?: {
+    state: 'healthy' | 'degraded' | 'critical' | 'suspended' | 'offline' | string;
+  };
+  strategyHealth?: {
+    state: 'healthy' | 'degraded' | 'critical' | 'suspended' | 'offline' | string;
+  };
+  telemetryIngestionQuality?: {
+    state: 'healthy' | 'degraded' | 'critical' | 'suspended' | 'offline' | string;
+  };
+  unresolvedReconciliationProposals?: number;
+}

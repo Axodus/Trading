@@ -624,6 +624,54 @@ CONFIRMED
 
 ---
 
+## WhiteRabbit Requires Paper Validation Before Controlled Resume Eligibility
+
+Decision:
+WhiteRabbit may use governed paper validation to produce simulation evidence, normalized fills, tenant-scoped telemetry summaries, reconciliation dry-run evidence, and controlled resume eligibility decisions.
+
+This workflow does not authorize live execution. Trinity recommendations remain advisory, ACS/Governance/Risk remain approval boundaries, and unresolved reconciliation proposals block controlled resume eligibility.
+
+Status:
+CONFIRMED
+
+---
+
+## Reconciliation Remediation Requires ACS Review
+
+Decision:
+Reconciliation proposals must be reviewed through ACS and risk/governance decisioning before any remediation request can be created.
+
+The review flow may create request-only remediation intents, but it must not auto-heal, mutate providers, cancel orders, close positions, overwrite sovereign state, or allow the reconciliation worker to approve its own proposal.
+
+Status:
+CONFIRMED
+
+---
+
+## Paper Observability Is Risk Evidence Only
+
+Decision:
+Paper session telemetry may produce paper risk signals and controlled resume eligibility decisions.
+
+Paper telemetry must not authorize live execution, mutate runtime, mutate strategy, call providers, bypass ACS/Risk/Governance, create performance claims.
+
+Status:
+CONFIRMED
+
+---
+
+## Local Postgres E2E Is Developer Validation Only
+
+Decision:
+Trading may expose a local CI-style Postgres validation command that starts local compose services, runs migrations, seeds mock data, checks health, validates schema, and executes repository readiness/replay smoke tests.
+
+This command is developer-local validation only. It must reject production-like environments, redact database secrets, use mock/simulation data only, and must not imply production CI/CD, live trading, live Hummingbot sessions, real exchange connectivity, or treasury execution.
+
+Status:
+CONFIRMED
+
+---
+
 # Pending Decisions
 
 ## Canonical Exchange Priority Strategy

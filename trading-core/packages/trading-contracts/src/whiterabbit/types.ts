@@ -1,7 +1,10 @@
 import type { EntitlementState } from '../access/types.js';
 import type { TradingRiskDisclosure } from '../compliance/types.js';
 import type { ExecutionMode } from '../execution/types.js';
+import type { ExecutionFill, ExecutionProviderType, PaperConnectorConfig, PaperTradingSessionState } from '../execution/types.js';
+import type { ReconciliationProposal } from '../reconciliation/types.js';
 import type { TradingActionRequest, TradingApiResponse } from '../api/types.js';
+import type { TradingRecommendation } from '../agents/types.js';
 import type { StrategySignal } from '../strategy/types.js';
 import type { TradingExecutionContext } from '../runtime/types.js';
 import type { CredentialScope } from '../security/types.js';
@@ -273,3 +276,59 @@ export type WhiteRabbitActionRequest = TradingActionRequest<{
   productId: 'whiterabbit-scalper-futures';
   runtimeInstanceId?: string;
 }>;
+
+export interface WhiteRabbitPaperValidationPolicy {
+  allowedProviders: ExecutionProviderType[];
+  requireTelemetrySummary: boolean;
+  requireReconciliationDryRun: boolean;
+  requireRiskReviewEligibility: boolean;
+  defaultPaperQuantity: string;
+}
+
+export interface WhiteRabbitPaperValidationRequest {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  requestedBy: 'acs' | 'product-surface' | 'trinity' | string;
+  context: TradingExecutionContext;
+  connectorConfig: PaperConnectorConfig;
+  runtimeConfig?: WhiteRabbitRuntimeConfig;
+  candles: WhiteRabbitMarketCandle[];
+  trinityRecommendations?: TradingRecommendation[];
+}
+
+export interface WhiteRabbitSimulationEvidence {
+  validationId: string;
+  paperSessionId: string;
+  runtimeInstanceId: string;
+  signalId: string;
+  signalAction: WhiteRabbitRuntimeSignal['action'];
+  normalizedFillCount: number;
+  telemetrySummaryPresent: boolean;
+  reconciliationProposals: number;
+  trinityRecommendationIds: string[];
+  generatedAt: string;
+  performanceClaim: false;
+}
+
+export interface WhiteRabbitPaperValidationDecision {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  context: TradingExecutionContext;
+  status: 'approved' | 'rejected' | 'completed';
+  paperSession?: PaperTradingSessionState;
+  signal?: WhiteRabbitRuntimeSignal;
+  fills: ExecutionFill[];
+  telemetrySummary?: WhiteRabbitTelemetrySummary;
+  reconciliationProposals: ReconciliationProposal[];
+  evidence?: WhiteRabbitSimulationEvidence;
+  controlledResumeEligible: boolean;
+  blockers: string[];
+  approvalPath: {
+    acsRequired: true;
+    governanceRequired: boolean;
+    riskReviewRequired: boolean;
+    liveExecutionAuthorized: false;
+  };
+}

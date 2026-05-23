@@ -858,6 +858,54 @@ Validation:
 
 ---
 
+# Phase 15B - WhiteRabbit Paper Validation Workflow
+
+Status: IMPLEMENTED
+
+Completed:
+- added WhiteRabbit paper validation contracts
+- added WhiteRabbit paper validation service
+- added paper session adapter for WhiteRabbit
+- added paper telemetry summary service
+- added controlled resume evaluator
+- connected WhiteRabbit signal generation to paper order/fill normalization
+- connected reconciliation dry-run evidence
+- included Trinity recommendation IDs as advisory evidence
+
+Validation:
+- live config rejected
+- required runtime/candle gates enforced
+- telemetry summary remains tenant-scoped
+- controlled resume blocked without evidence
+- Trinity recommendation does not mutate runtime
+- reconciliation dry-run remains proposal-only
+- Hummingbot paper-compatible validation does not leak DTOs
+
+---
+
+# Phase 15C - ACS Review Flow for Reconciliation Proposals
+
+Status: IMPLEMENTED
+
+Completed:
+- added reconciliation review contracts
+- added ACS reconciliation review service
+- added reconciliation remediation eligibility service
+- added reconciliation proposal audit service
+- added review policy defaults
+- added review/remediation events
+- mapped approved proposals to request-only remediation requests
+
+Validation:
+- ACS review command requires tenant context
+- risk rejection blocks remediation request
+- governance rejection blocks treasury remediation
+- approved proposal creates remediation request only
+- rejected proposal remains auditable
+- reconciliation worker cannot auto-approve its own proposal
+
+---
+
 # Phase 3 — Risk Infrastructure
 
 Status: PLANNED
@@ -922,3 +970,48 @@ Autonomous systems must remain:
 - bounded
 - observable
 - governance-constrained
+
+---
+
+# Phase 16A - Paper Observability Risk Loop
+
+Status: IMPLEMENTED
+
+Completed:
+- added paper risk signal contracts
+- added paper risk decision contracts
+- added paper execution quality evaluator
+- added paper session health evaluator
+- added paper controlled resume policy
+- added paper risk decision service
+- added paper risk audit events
+
+Validation:
+- high latency creates risk signal
+- critical runtime blocks controlled resume eligibility
+- unresolved reconciliation proposal blocks eligibility
+- poor paper quality requires simulation retry
+- tenant isolation preserved
+- no provider call occurs during risk evaluation
+
+---
+
+# Phase 16B - Real Local Postgres CI Script
+
+Status: IMPLEMENTED
+
+Completed:
+- added local E2E command runner
+- added `npm run trading:local:e2e`
+- added docker compose up/down orchestration
+- added wait-for-postgres script
+- reused `trading-db migrate`, `seed-local`, `health`, `validate`
+- reused local smoke script for repository readiness and replay
+- added JSON/human report formatting
+- added cleanup/reset/skip-docker options
+
+Validation:
+- production-like env rejected before execution
+- secrets redacted in diagnostics
+- migration, seed, health, validate and smoke steps are called
+- failure report is readable and stops safely
