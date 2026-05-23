@@ -1,5 +1,40 @@
 # Axodus Trading Workspace
 
+# Operational Source of Truth
+
+Keep this directory focused on current execution guidance.
+
+Current canonical files:
+- `README.md`
+- `WORKFLOW.md`
+- `DECISIONS.md`
+- `TASKS.md`
+- `ROADMAP.md`
+- `SECURITY.md`
+- `RISK.md`
+- `EXCHANGES.md`
+- `STRATEGIES.md`
+- `TRADING_AGENTS.md`
+- `TRADING_CORE_ARCHITECTURE.md`
+- `TRADING_PRODUCT_ECONOMY.md`
+- `TRADING_RUNTIME_MODEL.md`
+- `TRADING_SECURITY_MODEL.md`
+- `TRADING_COMPLIANCE_MODEL.md`
+- `TRADING_MONETIZATION.md`
+- `TRADING_CORE_PROGRESS_REPORT.md`
+- `TRADING_NEXT_PHASE_BOUNDARIES.md`
+- `TRADING_OPEN_RISKS.md`
+
+Processed sprint docs, older plans, duplicate architecture drafts, checkpoint inventories, and historical reports live in:
+
+```text
+.instructions/.processed/
+```
+
+Use processed files as historical documentation only. For implementation decisions, prefer the canonical files above.
+
+---
+
 # Purpose
 
 The Trading workspace is the strategic market execution layer of the Axodus ecosystem.
@@ -135,14 +170,13 @@ Avoid opaque automated trading systems.
 
 # Current Priority
 
-1. trading architecture
-2. risk management systems
-3. exchange abstraction layer
-4. execution telemetry
-5. strategy orchestration
-6. AI-assisted execution
-7. portfolio coordination
-8. treasury integration
+1. preserve headless Trading Core boundaries
+2. keep paper/simulation workflows non-live
+3. maintain ACS/Governance/Risk approval paths
+4. validate local Postgres with `trading:local:e2e`
+5. advance WhiteRabbit and reconciliation through governed request-only flows
+6. keep Credential Vault and compliance boundaries secret-blind
+7. avoid autonomous/live execution until explicitly approved
 
 ---
 
