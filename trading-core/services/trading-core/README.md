@@ -217,6 +217,44 @@ npm run trading:local:e2e -- --skip-docker
 
 The command is local developer tooling only. It refuses production-like settings, redacts database passwords, seeds only mock/simulation data, and does not enable live trading, live Hummingbot sessions, live exchange connectivity, or treasury execution.
 
+Phase 17B formalizes this command as the official durable local persistence validation workflow for Trading Core developers.
+
+Runbook:
+
+- `docs/LOCAL_POSTGRES_E2E.md`
+- `docs/LOCAL_POSTGRES_TROUBLESHOOTING.md`
+
+Expected successful output:
+
+```text
+Trading local E2E: PASSED
+Mode: local mock/simulation-only
+Live trading enabled: false
+
+Steps:
+- PASSED local safety validation
+- PASSED docker compose up
+- PASSED wait for postgres
+- PASSED run migrations
+- PASSED seed local data
+- PASSED database health
+- PASSED schema validation
+- PASSED repository readiness and replay smoke
+```
+
+JSON output is available for automation:
+
+```bash
+npm run trading:local:e2e -- --json
+```
+
+Use cleanup/reset modes explicitly:
+
+```bash
+npm run trading:local:e2e -- --cleanup
+npm run trading:local:e2e -- --reset-local
+```
+
 ## Real Postgres Client
 
 Local database commands use `NodePostgresClient`, a `pg`-backed adapter behind the existing `PostgresQueryClient` contract.
