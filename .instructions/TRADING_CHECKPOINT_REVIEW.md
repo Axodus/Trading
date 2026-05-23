@@ -12,19 +12,22 @@ This checkpoint covers changes across local persistence, observability risk, rec
 
 ## Repository State
 
-Current worktree status:
+Pre-checkpoint review observed:
 
-- review-ready but not clean
 - multiple modified tracked files
 - multiple untracked implementation and documentation files
-- no commit created by this checkpoint
-- no branch switch performed by this checkpoint
+
+Checkpoint result:
+
+- review-ready checkpoint created on `dev`
+- current worktree is clean after checkpoint
+- no branch switch was performed by this checkpoint
 
 This sprint intentionally does not implement new runtime behavior.
 
 ## Validation Summary
 
-Last validation run after Phase 14B:
+Validation run during Phase 15A:
 
 ```text
 npm run lint --prefix trading-core/services/trading-core
