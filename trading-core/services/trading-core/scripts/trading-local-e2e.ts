@@ -6,10 +6,10 @@ import {
   redactLocalE2eText,
   TradingLocalE2eCommand,
   type LocalE2eCommandResult,
-} from '../../../../dist/services/trading-core/services/trading-core/src/index.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/index.js';
 import {
   assertSafeLocalSeedConfig,
-} from '../../../../dist/services/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
 import { loadLocalRuntimeConfig } from './local-db-utils.ts';
 import { printLocalE2eReport } from './local-e2e-report.ts';
 import { waitForLocalPostgres } from './wait-for-postgres.ts';

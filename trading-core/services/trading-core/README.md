@@ -219,6 +219,12 @@ The command is local developer tooling only. It refuses production-like settings
 
 Phase 17B formalizes this command as the official durable local persistence validation workflow for Trading Core developers.
 
+Install service dependencies once before running local E2E:
+
+```bash
+npm install --prefix trading-core/services/trading-core
+```
+
 Runbook:
 
 - `docs/LOCAL_POSTGRES_E2E.md`

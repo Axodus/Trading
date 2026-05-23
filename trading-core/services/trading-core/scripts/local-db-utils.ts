@@ -1,16 +1,37 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { createLocalTradingDatabaseConfig } from '../../../../dist/services/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
-import { createNodePostgresEnvConfig } from '../../../../dist/services/trading-core/services/trading-core/src/config/PostgresEnvConfig.js';
-import { NodePostgresClient } from '../../../../dist/services/trading-core/services/trading-core/src/repositories/postgres/NodePostgresClient.js';
+import { createLocalTradingDatabaseConfig } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
+import { createNodePostgresEnvConfig } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/PostgresEnvConfig.js';
+import { NodePostgresClient } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/NodePostgresClient.js';
 
 export function loadLocalRuntimeConfig() {
+  loadWorkspaceEnvFile();
   return createLocalTradingDatabaseConfig(process.env, loadMigrations());
 }
 
 export async function createLocalNodePostgresClient() {
+  loadWorkspaceEnvFile();
   return NodePostgresClient.create(createNodePostgresEnvConfig(process.env));
+}
+
+export function loadWorkspaceEnvFile() {
+  const envFile = resolve(process.cwd(), '../../..', '.env');
+  if (!existsSync(envFile)) {
+    return;
+  }
+  const content = readFileSync(envFile, 'utf8');
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) {
+      continue;
+    }
+    const [key, ...valueParts] = trimmed.split('=');
+    if (!key || process.env[key] !== undefined) {
+      continue;
+    }
+    process.env[key] = valueParts.join('=').trim();
+  }
 }
 
 export function loadMigrations() {
@@ -25,7 +46,9 @@ export function loadMigrations() {
 }
 
 export class PsqlCliClient {
-  constructor(private readonly connection) {}
+  constructor(connection) {
+    this.connection = connection;
+  }
 
   async query(sql, params = []) {
     const materialized = materializeSql(sql, params);

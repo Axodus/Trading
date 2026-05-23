@@ -5,7 +5,7 @@ import {
   PostgresBootstrapService,
   PostgresTradingEventRepository,
   runTradingDbCli,
-} from '../../../../dist/services/trading-core/services/trading-core/src/index.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/index.js';
 import { createLocalNodePostgresClient, loadLocalRuntimeConfig } from './local-db-utils.ts';
 
 const runtime = loadLocalRuntimeConfig();

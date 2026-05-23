@@ -1,5 +1,5 @@
 import { createLocalNodePostgresClient, loadLocalRuntimeConfig, printJson } from './local-db-utils.ts';
-import { assertSafeLocalSeedConfig } from '../../../../dist/services/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
+import { assertSafeLocalSeedConfig } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
 
 export interface WaitForPostgresOptions {
   timeoutMs?: number;
