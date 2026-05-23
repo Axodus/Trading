@@ -93,6 +93,8 @@ import {
   WhiteRabbitActionRequestService,
   WhiteRabbitSurfaceApi,
   WhiteRabbitProductSurfaceService,
+  WhiteRabbitPaperScenarioReportService,
+  WhiteRabbitPaperScenarioRunner,
   WhiteRabbitPaperValidationService,
   WhiteRabbitRuntimeEngine,
   WhiteRabbitStrategyProvider,
@@ -5515,6 +5517,111 @@ describe('WhiteRabbit paper validation workflow', () => {
     assert.equal(serialized.includes('tradeType'), false);
     assert.equal(serialized.includes('tradingPair'), false);
     assert.equal(serialized.includes('HummingbotOrderDto'), false);
+  });
+});
+
+describe('WhiteRabbit paper validation operational scenario', () => {
+  it('runs with deterministic fixtures and produces a normalized scenario report', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run();
+
+    assert.equal(result.report.status, 'completed');
+    assert.equal(result.report.deterministic, true);
+    assert.equal(result.report.signalTrace.action, 'buy');
+    assert.equal(result.report.signalTrace.normalized, true);
+    assert.equal(result.report.paperExecution.normalizedFillCount, 1);
+    assert.equal(result.report.paperExecution.sensitiveFieldsExcluded, true);
+    assert.equal(result.report.telemetry.summaryPresent, true);
+    assert.equal(result.report.productionApproval, false);
+    assert.equal(result.report.liveExecutionAuthorized, false);
+  });
+
+  it('preserves correlationId from signal to fills and event trace', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run({ correlationId: 'corr-wr-paper-scenario-trace' });
+
+    assert.equal(result.report.correlationId, 'corr-wr-paper-scenario-trace');
+    assert.equal(result.report.trace.correlationIdPreserved, true);
+    assert.equal(result.decision.fills.every((fill) => fill.fillId.includes('wr-paper-scenario-1')), true);
+    assert.equal(result.repository.queryByCorrelationId('corr-wr-paper-scenario-trace').every((event) => event.correlationId === 'corr-wr-paper-scenario-trace'), true);
+  });
+
+  it('runs reconciliation dry-run as proposal-only and blocks controlled resume until reviewed', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run();
+
+    assert.equal(result.report.reconciliation.dryRunExecuted, true);
+    assert.equal(result.report.reconciliation.proposalsCreated, 1);
+    assert.equal(result.report.reconciliation.proposalOnly, true);
+    assert.equal(result.report.reconciliation.unresolvedProposalBlocksEligibility, true);
+    assert.equal(result.report.controlledResume.eligible, false);
+    assert.equal(result.report.trace.eventTypes.includes('PAPER_RECONCILIATION_DRY_RUN_COMPLETED'), true);
+  });
+
+  it('blocks controlled resume eligibility when paper telemetry is critical', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run({
+      includeReconciliationCandidate: false,
+      paperRiskOverrides: {
+        runtimeHealth: { state: 'critical' },
+      },
+    });
+
+    assert.equal(result.paperRiskDecisions.some((decision) => decision.decision === 'reject-controlled-resume-eligibility'), true);
+    assert.equal(result.report.paperRisk.blocksControlledResume, true);
+    assert.equal(result.report.controlledResume.eligible, false);
+  });
+
+  it('keeps controlled resume blocked when evidence is missing', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+    const result = await runner.run({ includeReconciliationCandidate: false });
+    const report = new WhiteRabbitPaperScenarioReportService().create({
+      id: 'wr-paper-scenario-missing-evidence-report',
+      decision: {
+        ...result.decision,
+        evidence: undefined,
+        controlledResumeEligible: false,
+        blockers: ['controlled resume evidence is required'],
+      },
+      paperRiskDecisions: [],
+      trinityRecommendations: [],
+      events: result.repository.queryByCorrelationId(result.decision.correlationId),
+    });
+
+    assert.equal(report.controlledResume.eligible, false);
+    assert.equal(report.controlledResume.blockers.includes('controlled resume evidence is required'), true);
+  });
+
+  it('keeps Trinity recommendations advisory and unable to mutate runtime', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run();
+
+    assert.equal(result.report.trinity.recommendationIds.length > 0, true);
+    assert.equal(result.report.trinity.requiresAcs, true);
+    assert.equal(result.report.trinity.authorizedExecution, false);
+    assert.equal(result.report.trinity.mutatesRuntime, false);
+    assert.equal(result.report.runtimeMutatedByTrinity, false);
+    assert.equal(result.report.trace.eventTypes.includes('USER_RUNTIME_RESUMED'), false);
+  });
+
+  it('preserves tenant isolation across the scenario trace', async () => {
+    const runner = new WhiteRabbitPaperScenarioRunner();
+
+    const result = await runner.run({
+      userId: 'bob',
+      tenantId: 'bob',
+      runtimeInstanceId: 'runtime-wr-paper-scenario-bob',
+      correlationId: 'corr-wr-paper-scenario-bob',
+    });
+
+    assert.equal(result.report.tenantId, 'bob');
+    assert.equal(result.report.trace.tenantIsolationPreserved, true);
+    assert.equal(result.repository.queryByCorrelationId('corr-wr-paper-scenario-bob').every((event) => event.userId === undefined || event.userId === 'bob'), true);
   });
 });
 
