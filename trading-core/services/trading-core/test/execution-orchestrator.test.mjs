@@ -47,8 +47,11 @@ import {
   ReconciliationProposalAuditService,
   ReconciliationProposalRepository,
   ReconciliationProposalReviewService,
+  ReconciliationRemediationAuditService,
   ReconciliationWorker,
   ReconciliationWorkerAuditService,
+  ReconciliationRemediationWorkflowRepository,
+  ReconciliationRemediationWorkflowService,
   RiskGateway,
   RuntimeComplianceValidator,
   RuntimeSupervisionApi,
@@ -1965,6 +1968,198 @@ describe('ACS reconciliation proposal review flow', () => {
     assert.equal(decision.blockedBy, 'worker-self-approval');
     assert.equal(decision.remediationRequest, undefined);
     assert.equal(harness.repository.queryByType('RECONCILIATION_REMEDIATION_REQUESTED').length, 0);
+  });
+});
+
+describe('Reconciliation remediation workflow skeleton', () => {
+  function workflowProposal(overrides = {}) {
+    return {
+      id: 'reconciliation-workflow-proposal-1',
+      correlationId: 'corr-reconciliation-workflow-1',
+      context: {
+        correlationId: 'corr-reconciliation-workflow-1',
+        executionDomain: 'user',
+        userId: 'alice',
+        strategyProductId: 'whiterabbit-scalper-futures',
+        runtimeInstanceId: 'runtime-workflow-1',
+        providerId: 'simulation',
+        strategyId: 'whiterabbit-v1',
+      },
+      state: 'reconciliation-required',
+      reviewState: 'pending-review',
+      findings: [{
+        type: 'runtime-drift',
+        state: 'reconciliation-required',
+        severity: 'critical',
+        message: 'Runtime recovery should be routed as request-only workflow.',
+        providerId: 'simulation',
+        runtimeInstanceId: 'runtime-workflow-1',
+      }],
+      recommendedActions: ['request-runtime-recovery'],
+      mutatesSovereignState: false,
+      createdAt: '2026-05-23T17:00:00.000Z',
+      ...overrides,
+    };
+  }
+
+  function workflowCommand(overrides = {}) {
+    return {
+      id: 'acs-reconciliation-workflow-1',
+      correlationId: 'corr-reconciliation-workflow-1',
+      tenantId: 'alice',
+      proposalId: 'reconciliation-workflow-proposal-1',
+      requestedBy: 'acs',
+      decisionIntent: 'approve-remediation',
+      riskApproved: true,
+      governanceApproved: true,
+      treasuryPolicyApproved: true,
+      ...overrides,
+    };
+  }
+
+  async function createWorkflowHarness(proposal = workflowProposal()) {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const proposals = new ReconciliationProposalRepository();
+    await proposals.save(proposal);
+    const review = new ReconciliationProposalReviewService({
+      proposals,
+      audit: new ReconciliationProposalAuditService(eventBus),
+    });
+    const workflows = new ReconciliationRemediationWorkflowRepository();
+    const workflow = new ReconciliationRemediationWorkflowService({
+      workflows,
+      audit: new ReconciliationRemediationAuditService(eventBus),
+    });
+    return { repository, proposals, review, workflows, workflow };
+  }
+
+  it('creates request-only remediation workflow from approved reconciliation proposal', async () => {
+    const harness = await createWorkflowHarness();
+
+    const decision = await harness.review.review(workflowCommand());
+    const workflow = await harness.workflow.start(decision);
+
+    assert.equal(decision.approved, true);
+    assert.equal(workflow.state, 'completed-as-request-only');
+    assert.equal(workflow.requestOnly, true);
+    assert.equal(workflow.autoHealing, false);
+    assert.equal(workflow.mutatesProvider, false);
+    assert.equal(workflow.mutatesRuntime, false);
+    assert.equal(workflow.mutatesSovereignState, false);
+    assert.equal(workflow.runtimeRecoveryRequest?.runtimeInstanceId, 'runtime-workflow-1');
+    assert.equal(workflow.runtimeRecoveryRequest?.mutatesRuntime, false);
+    assert.equal(harness.repository.queryByType('REMEDIATION_WORKFLOW_REQUESTED').length, 1);
+    assert.equal(harness.repository.queryByType('REMEDIATION_WORKFLOW_APPROVED').length, 1);
+    assert.equal(harness.repository.queryByType('RUNTIME_RECOVERY_REQUEST_ROUTED').length, 1);
+  });
+
+  it('does not create executable remediation workflow from rejected proposal review', async () => {
+    const harness = await createWorkflowHarness();
+
+    const decision = await harness.review.review(workflowCommand({
+      id: 'acs-reconciliation-workflow-rejected',
+      decisionIntent: 'reject',
+      reason: 'Operator rejected remediation workflow.',
+    }));
+    const workflow = await harness.workflow.start(decision);
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.remediationRequest, undefined);
+    assert.equal(workflow.state, 'blocked');
+    assert.equal(workflow.requestOnly, true);
+    assert.equal(workflow.autoHealing, false);
+    assert.equal(workflow.runtimeRecoveryRequest, undefined);
+    assert.equal(harness.repository.queryByType('REMEDIATION_WORKFLOW_BLOCKED').length, 1);
+    assert.equal(harness.repository.queryByType('RUNTIME_RECOVERY_REQUEST_ROUTED').length, 0);
+  });
+
+  it('requires governance context before treasury remediation workflow can start', async () => {
+    const treasuryProposal = workflowProposal({
+      id: 'reconciliation-workflow-treasury-1',
+      correlationId: 'corr-reconciliation-workflow-treasury-1',
+      context: {
+        correlationId: 'corr-reconciliation-workflow-treasury-1',
+        executionDomain: 'treasury',
+        daoId: 'dao-workflow-1',
+        federationId: 'federation-workflow-1',
+        providerId: 'simulation',
+        strategyId: 'treasury-rebalance',
+      },
+      recommendedActions: ['request-provider-health-review'],
+    });
+    const harness = await createWorkflowHarness(treasuryProposal);
+
+    const decision = await harness.review.review(workflowCommand({
+      id: 'acs-reconciliation-workflow-treasury-reject',
+      correlationId: 'corr-reconciliation-workflow-treasury-1',
+      tenantId: 'dao-workflow-1',
+      proposalId: 'reconciliation-workflow-treasury-1',
+      governanceApproved: false,
+    }));
+    const workflow = await harness.workflow.start(decision);
+
+    assert.equal(decision.approved, false);
+    assert.equal(decision.blockedBy, 'governance');
+    assert.equal(workflow.state, 'blocked');
+    assert.equal(workflow.providerResyncRequest, undefined);
+    assert.equal(harness.repository.queryByType('PROVIDER_RESYNC_REQUEST_ROUTED').length, 0);
+  });
+
+  it('preserves user tenant and runtime context in remediation workflow', async () => {
+    const harness = await createWorkflowHarness();
+
+    const decision = await harness.review.review(workflowCommand());
+    const workflow = await harness.workflow.start(decision);
+    const saved = await harness.workflows.get(workflow.id);
+
+    assert.equal(saved?.tenantId, 'alice');
+    assert.equal(saved?.executionDomain, 'user');
+    assert.equal(saved?.remediationRequest.context.runtimeInstanceId, 'runtime-workflow-1');
+    assert.equal(saved?.runtimeRecoveryRequest?.tenantId, 'alice');
+    assert.equal(saved?.runtimeRecoveryRequest?.providerId, 'simulation');
+  });
+
+  it('routes provider resync and manual operator review as request-only models', async () => {
+    const providerProposal = workflowProposal({
+      id: 'reconciliation-workflow-provider-1',
+      recommendedActions: ['request-provider-health-review'],
+    });
+    const providerHarness = await createWorkflowHarness(providerProposal);
+    const providerDecision = await providerHarness.review.review(workflowCommand({
+      proposalId: 'reconciliation-workflow-provider-1',
+    }));
+    const providerWorkflow = await providerHarness.workflow.start(providerDecision);
+
+    assert.equal(providerWorkflow.providerResyncRequest?.requestOnly, true);
+    assert.equal(providerWorkflow.providerResyncRequest?.providerMutationAllowed, false);
+    assert.equal(providerWorkflow.providerResyncRequest?.rawProviderPayloadIncluded, false);
+    assert.equal(providerHarness.repository.queryByType('PROVIDER_RESYNC_REQUEST_ROUTED').length, 1);
+
+    const manualProposal = workflowProposal({
+      id: 'reconciliation-workflow-manual-1',
+      recommendedActions: ['record-audit'],
+    });
+    const manualHarness = await createWorkflowHarness(manualProposal);
+    const manualDecision = await manualHarness.review.review(workflowCommand({
+      proposalId: 'reconciliation-workflow-manual-1',
+      reason: 'Manual operator review required.',
+    }));
+    const manualWorkflow = await manualHarness.workflow.start(manualDecision);
+
+    assert.equal(manualWorkflow.manualOperatorReviewRequest?.requestOnly, true);
+    assert.equal(manualWorkflow.manualOperatorReviewRequest?.autoApprovalAllowed, false);
+    assert.equal(manualHarness.repository.queryByType('MANUAL_OPERATOR_REVIEW_REQUESTED').length, 1);
+  });
+
+  it('does not expose provider execution or runtime mutation methods', async () => {
+    const harness = await createWorkflowHarness();
+
+    assert.equal(typeof harness.workflow.executeOrder, 'undefined');
+    assert.equal(typeof harness.workflow.cancelOrder, 'undefined');
+    assert.equal(typeof harness.workflow.closePosition, 'undefined');
+    assert.equal(typeof harness.workflow.healRuntime, 'undefined');
+    assert.equal(typeof harness.workflow.connectProvider, 'undefined');
   });
 });
 

@@ -140,7 +140,28 @@ export type ReconciliationRemediationRequestType =
   | 'order-review-request'
   | 'position-review-request'
   | 'reconciliation-retry-request'
-  | 'manual-operator-review-request';
+  | 'manual-operator-review-request'
+  | 'paper-validation-retry-request'
+  | 'controlled-resume-review-request';
+
+export type ReconciliationRemediationWorkflowState =
+  | 'requested'
+  | 'pending-risk-review'
+  | 'pending-governance-review'
+  | 'approved'
+  | 'rejected'
+  | 'blocked'
+  | 'expired'
+  | 'completed-as-request-only';
+
+export interface RemediationWorkflowPolicy {
+  requireRiskApproval: boolean;
+  requireGovernanceForTreasury: boolean;
+  requireTreasuryPolicyForTreasury: boolean;
+  allowUserRuntimeRemediation: boolean;
+  requireRuntimeContextForUser: boolean;
+  expiresAfterMs?: number;
+}
 
 export interface ReconciliationReviewPolicy {
   requireRiskApproval: boolean;
@@ -175,6 +196,61 @@ export interface ReconciliationRemediationRequest {
   mutatesProvider: false;
   mutatesSovereignState: false;
   createdAt: string;
+}
+
+export interface ProviderResyncRequestModel {
+  id: string;
+  remediationRequestId: string;
+  correlationId: string;
+  tenantId: string;
+  providerId: string;
+  executionDomain: 'treasury' | 'user';
+  requestOnly: true;
+  providerMutationAllowed: false;
+  rawProviderPayloadIncluded: false;
+}
+
+export interface ManualOperatorReviewRequestModel {
+  id: string;
+  remediationRequestId: string;
+  correlationId: string;
+  tenantId: string;
+  executionDomain: 'treasury' | 'user';
+  reason: string;
+  requestOnly: true;
+  autoApprovalAllowed: false;
+}
+
+export interface RuntimeRecoveryRequestModel {
+  id: string;
+  remediationRequestId: string;
+  correlationId: string;
+  tenantId: string;
+  runtimeInstanceId: string;
+  providerId: string;
+  executionDomain: 'treasury' | 'user';
+  requestOnly: true;
+  mutatesRuntime: false;
+}
+
+export interface ReconciliationRemediationWorkflow {
+  id: string;
+  remediationRequest: ReconciliationRemediationRequest;
+  correlationId: string;
+  tenantId: string;
+  executionDomain: 'treasury' | 'user';
+  state: ReconciliationRemediationWorkflowState;
+  reason?: string;
+  providerResyncRequest?: ProviderResyncRequestModel;
+  manualOperatorReviewRequest?: ManualOperatorReviewRequestModel;
+  runtimeRecoveryRequest?: RuntimeRecoveryRequestModel;
+  requestOnly: true;
+  autoHealing: false;
+  mutatesProvider: false;
+  mutatesRuntime: false;
+  mutatesSovereignState: false;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ReconciliationApprovalDecision {
