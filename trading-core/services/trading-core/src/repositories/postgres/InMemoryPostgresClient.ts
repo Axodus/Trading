@@ -39,6 +39,12 @@ export class InMemoryPostgresClient implements PostgresQueryClient {
     if (normalized.startsWith('create table') || normalized.startsWith('create index')) {
       return { rows: [] };
     }
+    if (normalized.startsWith('alter table')) {
+      return { rows: [] };
+    }
+    if (normalized.includes('from information_schema.tables')) {
+      return { rows: this.selectInformationSchema(params) as T[] };
+    }
     if (normalized.startsWith('insert into trading_schema_migrations')) {
       this.insertMigration(params);
       return { rows: [] };
@@ -169,14 +175,15 @@ export class InMemoryPostgresClient implements PostgresQueryClient {
       strategy_product_id: params[9],
       runtime_instance_id: params[10],
       provider_id: params[11],
-      payload: params[12],
+      tenant_id: params[12],
+      payload: params[13],
     });
   }
 
   private selectEvents(sql: string, params: unknown[]): Row[] {
     let rows = [...this.storage.trading_events];
     if (sql.includes('where tenant_id')) {
-      rows = rows.filter((row) => row.user_id === params[0] || row.dao_id === params[0]);
+      rows = rows.filter((row) => row.tenant_id === params[0]);
     } else if (sql.includes('where correlation_id')) {
       rows = rows.filter((row) => row.correlation_id === params[0]);
     } else if (sql.includes('where runtime_instance_id')) {
@@ -196,6 +203,13 @@ export class InMemoryPostgresClient implements PostgresQueryClient {
       const timeOrder = Date.parse(String(left.occurred_at)) - Date.parse(String(right.occurred_at));
       return timeOrder || String(left.id).localeCompare(String(right.id));
     });
+  }
+
+  private selectInformationSchema(params: unknown[]): Row[] {
+    const required = Array.isArray(params[0]) ? params[0] as string[] : [];
+    return required
+      .filter((table) => table in this.storage)
+      .map((table) => ({ table_name: table }));
   }
 
   private latestByOwner(rows: Row[], ownerId: unknown): Row[] {

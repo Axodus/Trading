@@ -96,6 +96,7 @@ export class ProviderReconciliationService {
       correlationId: request.context.correlationId,
       context: request.context,
       state,
+      reviewState: 'created',
       findings,
       recommendedActions: [...actions],
       mutatesSovereignState: false,

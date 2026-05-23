@@ -18,6 +18,21 @@ export type ReconciliationFindingType =
   | 'stale-execution-state'
   | 'orphan-runtime';
 
+export type ReconciliationProposalReviewState =
+  | 'created'
+  | 'pending-review'
+  | 'approved'
+  | 'rejected'
+  | 'superseded'
+  | 'expired';
+
+export type ReconciliationCandidateType =
+  | 'stale-runtime'
+  | 'provider-drift'
+  | 'orphan-runtime'
+  | 'order-divergence'
+  | 'position-divergence';
+
 export interface ReconciliationContext extends TradingExecutionContext {
   correlationId: string;
 }
@@ -73,6 +88,7 @@ export interface ReconciliationProposal {
   correlationId: string;
   context: ReconciliationContext;
   state: ReconciliationState;
+  reviewState: ReconciliationProposalReviewState;
   findings: ReconciliationFinding[];
   recommendedActions: Array<
     | 'record-audit'
@@ -92,4 +108,25 @@ export interface ReconciliationRequest {
   providerSnapshot: ProviderSideEffectSnapshot;
   staleAfterMs?: number;
   now?: string;
+}
+
+export interface ReconciliationWorkerCandidate {
+  id: string;
+  tenantId: string;
+  candidateType: ReconciliationCandidateType;
+  request: ReconciliationRequest;
+  discoveredAt: string;
+  reason: string;
+}
+
+export interface ReconciliationWorkerRunResult {
+  id: string;
+  correlationId: string;
+  status: 'completed' | 'failed';
+  startedAt: string;
+  completedAt: string;
+  candidatesScanned: number;
+  proposalsCreated: number;
+  proposals: ReconciliationProposal[];
+  errors: string[];
 }

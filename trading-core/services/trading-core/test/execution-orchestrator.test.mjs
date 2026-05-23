@@ -7,8 +7,10 @@ import {
   assertSafeLocalSeedConfig,
   AutonomousActionBoundary,
   ComplianceGate,
+  CredentialGrantLifecycleService,
   CredentialLifecycleService,
   CredentialVaultService,
+  CredentialVaultAdapterRegistry,
   DisclosureAcceptanceService,
   ExecutionBlockedError,
   ExecutionLatencyTracker,
@@ -28,11 +30,20 @@ import {
   InMemoryHummingbotRuntimeClient,
   MigrationError,
   MigrationRunner,
+  MockEncryptedCredentialVaultAdapter,
   NodePostgresClient,
   ObservabilityRecommendationAuditService,
+  ObservabilityRiskAuditService,
+  ObservabilityRiskBoundaryError,
+  ObservabilityRiskDecisionService,
+  PaperTradingSessionService,
   ProductExecutionGate,
   ProviderObservabilityService,
   ProviderReconciliationService,
+  ReconciliationCandidateDiscoveryService,
+  ReconciliationProposalRepository,
+  ReconciliationWorker,
+  ReconciliationWorkerAuditService,
   RiskGateway,
   RuntimeComplianceValidator,
   RuntimeSupervisionApi,
@@ -1438,6 +1449,231 @@ describe('Provider reconciliation skeleton', () => {
   });
 });
 
+describe('Reconciliation worker skeleton', () => {
+  function reconciliationRequest(overrides = {}) {
+    return {
+      context: {
+        correlationId: 'corr-reconcile-worker-1',
+        executionDomain: 'user',
+        userId: 'alice',
+        strategyProductId: 'whiterabbit-scalper-futures',
+        runtimeInstanceId: 'runtime-worker-1',
+        providerId: 'simulation',
+        strategyId: 'whiterabbit-v1',
+      },
+      sovereignSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: true,
+          mode: 'paper',
+          health: 'healthy',
+          checkedAt: '2026-05-23T12:00:00.000Z',
+        },
+        orders: [{
+          providerOrderId: 'order-worker-1',
+          requestId: 'request-worker-1',
+          market: 'BTC-USDT',
+          status: 'submitted',
+          updatedAt: '2026-05-23T12:00:00.000Z',
+        }],
+        positions: {
+          providerId: 'simulation',
+          capturedAt: '2026-05-23T12:00:00.000Z',
+          positions: [{
+            market: 'BTC-USDT',
+            side: 'long',
+            quantity: '1',
+            entryPrice: '100',
+          }],
+        },
+        runtimes: [{
+          runtimeInstanceId: 'runtime-worker-1',
+          status: 'active',
+          updatedAt: '2026-05-23T12:00:00.000Z',
+        }],
+        capturedAt: '2026-05-23T12:00:00.000Z',
+      },
+      providerSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: true,
+          mode: 'paper',
+          health: 'healthy',
+          checkedAt: '2026-05-23T12:00:02.000Z',
+        },
+        orders: [{
+          providerOrderId: 'order-worker-1',
+          requestId: 'request-worker-1',
+          market: 'BTC-USDT',
+          status: 'submitted',
+          updatedAt: '2026-05-23T12:00:02.000Z',
+        }],
+        positions: {
+          providerId: 'simulation',
+          capturedAt: '2026-05-23T12:00:02.000Z',
+          positions: [{
+            market: 'BTC-USDT',
+            side: 'long',
+            quantity: '1',
+            entryPrice: '100',
+          }],
+        },
+        runtimes: [{
+          runtimeInstanceId: 'runtime-worker-1',
+          status: 'active',
+          updatedAt: '2026-05-23T12:00:02.000Z',
+        }],
+        capturedAt: '2026-05-23T12:00:02.000Z',
+      },
+      now: '2026-05-23T12:00:10.000Z',
+      staleAfterMs: 300000,
+      ...overrides,
+    };
+  }
+
+  function candidate(id, candidateType, request = reconciliationRequest()) {
+    return {
+      id,
+      tenantId: request.context.daoId ?? request.context.userId ?? 'tenant:unknown',
+      candidateType,
+      request,
+      discoveredAt: request.now ?? new Date().toISOString(),
+      reason: `${candidateType} candidate`,
+    };
+  }
+
+  function createWorkerHarness(candidates) {
+    const repository = new InMemoryTradingEventRepository();
+    const proposals = new ReconciliationProposalRepository();
+    const worker = new ReconciliationWorker({
+      discovery: new ReconciliationCandidateDiscoveryService(candidates),
+      proposals,
+      audit: new ReconciliationWorkerAuditService(new TradingEventBus(repository)),
+    });
+    return { proposals, repository, worker };
+  }
+
+  it('creates proposal from stale runtime scan candidate', async () => {
+    const request = reconciliationRequest({
+      now: '2026-05-23T12:10:01.000Z',
+      staleAfterMs: 300000,
+    });
+    const harness = createWorkerHarness([candidate('candidate-stale-runtime-1', 'stale-runtime', request)]);
+
+    const result = await harness.worker.run({ correlationId: 'corr-worker-stale-run-1', tenantId: 'alice' });
+    const saved = await harness.proposals.listByTenant('alice');
+
+    assert.equal(result.status, 'completed');
+    assert.equal(result.proposalsCreated, 1);
+    assert.equal(saved[0]?.reviewState, 'pending-review');
+    assert.equal(saved[0]?.findings.some((finding) => finding.type === 'stale-execution-state'), true);
+    assert.equal(harness.repository.queryByType('RECONCILIATION_PROPOSAL_CREATED').length, 1);
+  });
+
+  it('creates proposal from provider drift scan candidate', async () => {
+    const request = reconciliationRequest({
+      providerSnapshot: {
+        ...reconciliationRequest().providerSnapshot,
+        providerStatus: {
+          ...reconciliationRequest().providerSnapshot.providerStatus,
+          connected: false,
+          health: 'offline',
+        },
+      },
+    });
+    const harness = createWorkerHarness([candidate('candidate-provider-drift-1', 'provider-drift', request)]);
+
+    const result = await harness.worker.run({ correlationId: 'corr-worker-provider-run-1', tenantId: 'alice' });
+
+    assert.equal(result.proposals[0]?.findings.some((finding) => finding.type === 'provider-state-drift'), true);
+    assert.equal(result.proposals[0]?.mutatesSovereignState, false);
+    assert.equal(harness.repository.queryByType('RECONCILIATION_PROPOSAL_REVIEW_REQUIRED').length, 1);
+  });
+
+  it('creates proposal from orphan runtime candidate', async () => {
+    const request = reconciliationRequest({
+      providerSnapshot: {
+        ...reconciliationRequest().providerSnapshot,
+        runtimes: [],
+      },
+    });
+    const harness = createWorkerHarness([candidate('candidate-orphan-runtime-1', 'orphan-runtime', request)]);
+
+    const result = await harness.worker.run({ correlationId: 'corr-worker-orphan-run-1', tenantId: 'alice' });
+
+    assert.equal(result.proposals[0]?.state, 'orphaned');
+    assert.equal(result.proposals[0]?.recommendedActions.includes('request-runtime-recovery'), true);
+  });
+
+  it('preserves tenant context on reconciliation proposals', async () => {
+    const userRequest = reconciliationRequest({
+      context: {
+        ...reconciliationRequest().context,
+        correlationId: 'corr-worker-user-tenant-1',
+        userId: 'alice',
+        daoId: undefined,
+      },
+      now: '2026-05-23T12:10:01.000Z',
+    });
+    const treasuryRequest = reconciliationRequest({
+      context: {
+        ...reconciliationRequest().context,
+        correlationId: 'corr-worker-treasury-tenant-1',
+        executionDomain: 'treasury',
+        userId: undefined,
+        daoId: 'dao-1',
+        runtimeInstanceId: undefined,
+        strategyProductId: undefined,
+      },
+      now: '2026-05-23T12:10:01.000Z',
+    });
+    const harness = createWorkerHarness([
+      candidate('candidate-user-tenant-1', 'stale-runtime', userRequest),
+      candidate('candidate-treasury-tenant-1', 'stale-runtime', treasuryRequest),
+    ]);
+
+    await harness.worker.run({ correlationId: 'corr-worker-user-run', tenantId: 'alice' });
+    await harness.worker.run({ correlationId: 'corr-worker-treasury-run', tenantId: 'dao-1' });
+
+    const userProposals = await harness.proposals.listByTenant('alice');
+    const treasuryProposals = await harness.proposals.listByTenant('dao-1');
+
+    assert.equal(userProposals.every((proposal) => proposal.context.userId === 'alice'), true);
+    assert.equal(treasuryProposals.every((proposal) => proposal.context.daoId === 'dao-1'), true);
+    assert.equal(treasuryProposals.every((proposal) => proposal.context.userId === undefined), true);
+  });
+
+  it('emits safe audit event when worker discovery fails', async () => {
+    class FailingDiscovery {
+      async discover() {
+        throw new Error('discovery unavailable');
+      }
+    }
+    const repository = new InMemoryTradingEventRepository();
+    const worker = new ReconciliationWorker({
+      discovery: new FailingDiscovery(),
+      audit: new ReconciliationWorkerAuditService(new TradingEventBus(repository)),
+    });
+
+    const result = await worker.run({ correlationId: 'corr-worker-failure-1', tenantId: 'alice' });
+
+    assert.equal(result.status, 'failed');
+    assert.equal(result.errors.some((error) => error.includes('discovery unavailable')), true);
+    assert.equal(repository.queryByType('RECONCILIATION_WORKER_COMPLETED')[0]?.payload.status, 'failed');
+  });
+
+  it('does not expose provider execution or auto-healing methods', async () => {
+    const harness = createWorkerHarness([candidate('candidate-no-provider-call-1', 'provider-drift')]);
+
+    assert.equal(typeof harness.worker.executeOrder, 'undefined');
+    assert.equal(typeof harness.worker.cancelOrder, 'undefined');
+    assert.equal(typeof harness.worker.connectProvider, 'undefined');
+    assert.equal(typeof harness.worker.healRuntime, 'undefined');
+  });
+});
+
 describe('SimulationProvider', () => {
   it('returns normalized fills and emits execution events', async () => {
     const eventBus = new TradingEventBus();
@@ -1981,6 +2217,201 @@ describe('Trinity observability integration', () => {
     assert.equal(trace.some((event) => event.type === 'TRINITY_OBSERVABILITY_EVIDENCE_RECORDED'), true);
     assert.equal(trace.some((event) => event.type === 'TRINITY_OBSERVABILITY_RECOMMENDATION_CREATED'), true);
     assert.equal(audit.some((record) => record.eventType === 'TRINITY_OBSERVABILITY_RECOMMENDATION_CREATED'), true);
+  });
+});
+
+describe('Observability risk feedback policy', () => {
+  function riskContext(overrides = {}) {
+    return {
+      tenantId: 'tenant-risk-observability-1',
+      requestedBy: 'risk-service',
+      correlationId: 'corr-risk-observability-1',
+      executionDomain: 'user',
+      userId: 'alice',
+      runtimeInstanceId: 'runtime-risk-observability-1',
+      providerId: 'simulation',
+      strategyId: 'whiterabbit-v1',
+      strategyProductId: 'whiterabbit-scalper-futures',
+      ...overrides,
+    };
+  }
+
+  function health(state, overrides = {}) {
+    return {
+      state,
+      score: state === 'critical' ? 0.2 : state === 'degraded' ? 0.55 : 1,
+      reasons: state === 'healthy' ? [] : [`${state} observability state`],
+      measuredAt: '2026-05-23T10:00:00.000Z',
+      ...overrides,
+    };
+  }
+
+  function snapshot(overrides = {}) {
+    const context = riskContext();
+    return {
+      tenantId: context.tenantId,
+      providerHealth: {
+        tenantId: context.tenantId,
+        providerId: context.providerId,
+        health: health('healthy'),
+        advisoryOnly: true,
+      },
+      runtimeHealth: {
+        tenantId: context.tenantId,
+        runtimeInstanceId: context.runtimeInstanceId,
+        providerId: context.providerId,
+        strategyProductId: context.strategyProductId,
+        health: health('healthy'),
+        metrics: {
+          tenantId: context.tenantId,
+          runtimeInstanceId: context.runtimeInstanceId,
+          providerId: context.providerId,
+          strategyProductId: context.strategyProductId,
+          uptimeMs: 1000,
+          restartCount: 0,
+          recoveryCount: 0,
+          degradedPeriods: 0,
+          failedExecutions: 0,
+          averageLatencyMs: 100,
+          executionDriftFrequency: 0,
+          updatedAt: '2026-05-23T10:00:00.000Z',
+        },
+        advisoryOnly: true,
+      },
+      strategyHealth: {
+        tenantId: context.tenantId,
+        strategyKey: context.strategyProductId,
+        health: health('healthy'),
+        advisoryOnly: true,
+      },
+      telemetryIngestionQuality: health('healthy'),
+      executionLatency: {
+        runtimeInstanceId: context.runtimeInstanceId,
+        averageLatencyMs: 100,
+      },
+      degraded: false,
+      critical: false,
+      advisoryOnly: true,
+      generatedAt: '2026-05-23T10:00:00.000Z',
+      ...overrides,
+    };
+  }
+
+  function createRiskObservabilityHarness() {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const state = new TradingStateService();
+    eventBus.subscribe((event) => state.applyEvent(event));
+    const service = new ObservabilityRiskDecisionService({
+      audit: new ObservabilityRiskAuditService(eventBus),
+    });
+    return { repository, service, state };
+  }
+
+  it('generates provider block proposal for critical provider without direct block mutation', async () => {
+    const harness = createRiskObservabilityHarness();
+    const decisions = await harness.service.evaluate(riskContext({ correlationId: 'corr-risk-provider-critical-1' }), snapshot({
+      providerHealth: {
+        tenantId: 'tenant-risk-observability-1',
+        providerId: 'simulation',
+        health: health('critical'),
+        advisoryOnly: true,
+      },
+      critical: true,
+    }));
+    const decision = decisions.find((entry) => entry.decision === 'recommend-block');
+
+    assert.equal(decision?.status, 'proposal');
+    assert.equal(decision?.authorizedExecution, false);
+    assert.equal(decision?.mutatesProvider, false);
+    assert.equal(typeof harness.service.blockProvider, 'undefined');
+    assert.equal(harness.repository.queryByType('PROVIDER_BLOCK_RECOMMENDED').length, 1);
+  });
+
+  it('generates recovery-required decision for critical runtime', async () => {
+    const harness = createRiskObservabilityHarness();
+    const decisions = await harness.service.evaluate(riskContext({ correlationId: 'corr-risk-runtime-critical-1' }), snapshot({
+      runtimeHealth: {
+        ...snapshot().runtimeHealth,
+        health: health('critical'),
+      },
+      critical: true,
+    }));
+
+    assert.equal(decisions.some((decision) => decision.decision === 'require-recovery'), true);
+    assert.equal(harness.repository.queryByType('RUNTIME_RECOVERY_REQUIRED').length, 1);
+  });
+
+  it('requires strategy revalidation for degraded strategy health', async () => {
+    const harness = createRiskObservabilityHarness();
+    const decisions = await harness.service.evaluate(riskContext({ correlationId: 'corr-risk-strategy-degraded-1' }), snapshot({
+      strategyHealth: {
+        tenantId: 'tenant-risk-observability-1',
+        strategyKey: 'whiterabbit-scalper-futures',
+        health: health('degraded'),
+        advisoryOnly: true,
+      },
+      degraded: true,
+    }));
+
+    assert.equal(decisions.some((decision) => decision.decision === 'require-simulation'), true);
+    assert.equal(harness.repository.queryByType('STRATEGY_REVALIDATION_REQUIRED').length, 1);
+  });
+
+  it('rejects cross-tenant observability risk signals', async () => {
+    const harness = createRiskObservabilityHarness();
+
+    await assert.rejects(
+      () => harness.service.evaluate(riskContext(), snapshot({
+        providerHealth: {
+          tenantId: 'tenant-other',
+          providerId: 'simulation',
+          health: health('critical'),
+          advisoryOnly: true,
+        },
+      })),
+      ObservabilityRiskBoundaryError,
+    );
+  });
+
+  it('preserves tenantId and correlationId in risk decisions and audit trail', async () => {
+    const harness = createRiskObservabilityHarness();
+    const decisions = await harness.service.evaluate(riskContext({ correlationId: 'corr-risk-audit-1' }), snapshot({
+      executionLatency: {
+        runtimeInstanceId: 'runtime-risk-observability-1',
+        averageLatencyMs: 1500,
+      },
+    }));
+    const trace = harness.repository.queryByCorrelationId('corr-risk-audit-1');
+    const audit = harness.state.audit.listByCorrelationId('corr-risk-audit-1');
+
+    assert.equal(decisions.some((decision) => decision.decision === 'require-review'), true);
+    assert.equal(decisions.every((decision) => decision.tenantId === 'tenant-risk-observability-1'), true);
+    assert.equal(decisions.every((decision) => decision.correlationId === 'corr-risk-audit-1'), true);
+    assert.equal(trace.some((event) => event.type === 'OBSERVABILITY_RISK_SIGNAL_CREATED'), true);
+    assert.equal(audit.some((record) => record.eventType === 'OBSERVABILITY_RISK_REVIEW_REQUIRED'), true);
+  });
+
+  it('keeps the normal risk gateway as final execution authority', async () => {
+    const harness = createRiskObservabilityHarness();
+    const decisions = await harness.service.evaluate(riskContext({ correlationId: 'corr-risk-final-authority-1' }), snapshot({
+      providerHealth: {
+        tenantId: 'tenant-risk-observability-1',
+        providerId: 'simulation',
+        health: health('critical'),
+        advisoryOnly: true,
+      },
+      critical: true,
+    }));
+    const gateway = new RiskGateway(false);
+    const result = await gateway.check(userIntent({
+      id: 'intent-risk-final-authority',
+      correlationId: 'corr-risk-final-authority-1',
+    }));
+
+    assert.equal(decisions[0]?.authorizedExecution, false);
+    assert.equal(result.status, 'rejected');
+    assert.equal(result.violations.includes('Risk approval required before provider execution'), true);
   });
 });
 
@@ -3709,6 +4140,137 @@ describe('Credential vault and runtime credential authority', () => {
     assert.equal(serialized.includes('apiKey'), false);
     assert.equal(serialized.includes('apiSecret'), false);
   });
+
+  it('blocks provider access when ephemeral grant is expired', async () => {
+    const { repository, registered } = await createCredential();
+    const grants = new CredentialGrantLifecycleService(repository);
+    const created = await grants.createGrant({
+      context: credentialContext(),
+      vaultRefId: registered.reference.id,
+      requiredScopes: ['futures-trading'],
+      purpose: 'paper-trading',
+      policy: {
+        ttlMs: 1000,
+        allowedScopes: ['futures-trading'],
+      },
+      now: '2026-05-23T13:00:00.000Z',
+    });
+
+    const validation = await grants.validateGrant(created.grant.id, credentialContext(), '2026-05-23T13:00:02.000Z');
+
+    assert.equal(created.approved, true);
+    assert.equal(validation.approved, false);
+    assert.equal(validation.reason, 'Credential grant is expired.');
+    assert.equal(grants.getGrant(created.grant.id)?.status, 'expired');
+  });
+
+  it('blocks provider access when ephemeral grant is revoked', async () => {
+    const { repository, registered } = await createCredential();
+    const grants = new CredentialGrantLifecycleService(repository);
+    const created = await grants.createGrant({
+      context: credentialContext(),
+      vaultRefId: registered.reference.id,
+      requiredScopes: ['futures-trading'],
+      purpose: 'paper-trading',
+      policy: {
+        ttlMs: 60000,
+        allowedScopes: ['futures-trading'],
+      },
+    });
+
+    await grants.revokeGrant(created.grant.id, 'corr-grant-revoked-1');
+    const validation = await grants.validateGrant(created.grant.id, credentialContext());
+
+    assert.equal(validation.approved, false);
+    assert.equal(validation.reason, 'Credential grant is revoked.');
+  });
+
+  it('rejects ephemeral grant creation with withdrawal-like scope', async () => {
+    const { repository, registered } = await createCredential(['read-only', 'withdraw']);
+    const grants = new CredentialGrantLifecycleService(repository);
+
+    const created = await grants.createGrant({
+      context: credentialContext(),
+      vaultRefId: registered.reference.id,
+      requiredScopes: ['withdraw'],
+      purpose: 'paper-trading',
+      policy: {
+        ttlMs: 60000,
+        allowedScopes: ['withdraw'],
+      },
+    });
+
+    assert.equal(created.approved, false);
+    assert.equal(created.reason?.includes('Forbidden credential scope'), true);
+    assert.equal(created.grant, undefined);
+  });
+
+  it('enforces tenant runtime and provider scope on ephemeral grants', async () => {
+    const { repository, registered } = await createCredential();
+    const grants = new CredentialGrantLifecycleService(repository);
+    const created = await grants.createGrant({
+      context: credentialContext(),
+      vaultRefId: registered.reference.id,
+      requiredScopes: ['futures-trading'],
+      purpose: 'paper-trading',
+      policy: {
+        ttlMs: 60000,
+        allowedScopes: ['futures-trading'],
+      },
+    });
+
+    const wrongTenant = await grants.validateGrant(created.grant.id, credentialContext({ userId: 'bob' }));
+    const wrongRuntime = await grants.validateGrant(created.grant.id, credentialContext({ runtimeInstanceId: 'runtime-other' }));
+    const wrongProvider = await grants.validateGrant(created.grant.id, credentialContext({ providerId: 'simulation' }));
+
+    assert.equal(wrongTenant.approved, false);
+    assert.equal(wrongRuntime.approved, false);
+    assert.equal(wrongProvider.approved, false);
+    assert.equal(wrongProvider.reason, 'Credential grant scope does not match runtime context.');
+  });
+
+  it('resolves mock encrypted credential vault adapter through registry', async () => {
+    const { registered } = await createCredential();
+    const registry = new CredentialVaultAdapterRegistry();
+    const adapter = new MockEncryptedCredentialVaultAdapter();
+    registry.register(adapter);
+
+    const resolved = registry.resolve('mock-encrypted');
+    const envelope = await resolved.registerEnvelope(registered.reference, 'trading-local-key');
+
+    assert.equal(resolved, adapter);
+    assert.equal(envelope.vaultRefId, registered.reference.id);
+    assert.equal(envelope.redacted, true);
+    assert.equal(envelope.keyRef.keyAlias, 'trading-local-key');
+  });
+
+  it('serializes encrypted envelope metadata without sensitive values', async () => {
+    const repository = new InMemoryCredentialVaultRepository();
+    const eventRepository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(eventRepository);
+    const adapter = new MockEncryptedCredentialVaultAdapter();
+    const vault = new CredentialVaultService(repository, eventBus, adapter);
+    const registered = await vault.registerExchangeCredential({
+      ownerUserId: 'alice',
+      providerId: 'hummingbot',
+      exchange: 'binance',
+      scopes: ['read-only'],
+      secretMaterial: {
+        apiKey: 'raw-api-key-must-not-leak',
+        apiSecret: 'raw-api-secret-must-not-leak',
+      },
+    });
+
+    const envelope = await vault.registerEncryptedEnvelope(registered.reference, 'trading-local-key');
+    const serialized = JSON.stringify(envelope);
+    const eventPayload = JSON.stringify(eventRepository.queryByType('CREDENTIAL_ENVELOPE_REGISTERED')[0]?.payload);
+
+    assert.equal(serialized.includes('raw-api-key-must-not-leak'), false);
+    assert.equal(serialized.includes('raw-api-secret-must-not-leak'), false);
+    assert.equal(serialized.includes('apiSecret'), false);
+    assert.equal(eventPayload.includes('raw-api'), false);
+    assert.equal(eventPayload.includes('keyAlias'), true);
+  });
 });
 
 describe('Compliance runtime enforcement and disclosure gate', () => {
@@ -4075,6 +4637,253 @@ describe('Runtime provisioning API and lifecycle orchestration', () => {
     assert.equal(reference?.status, 'revoked');
     assert.equal(harness.lifecycle.get(decision.runtime.id)?.runtime.status, 'terminated');
     assert.deepEqual(eventTypes, ['CREDENTIAL_BINDING_REVOKED', 'RUNTIME_TERMINATED']);
+  });
+});
+
+describe('Paper trading runtime session', () => {
+  function paperContext(overrides = {}) {
+    return {
+      executionDomain: 'user',
+      userId: 'alice',
+      strategyProductId: 'whiterabbit-scalper-futures',
+      runtimeInstanceId: 'runtime-paper-1',
+      providerId: 'simulation',
+      strategyId: 'whiterabbit-v1',
+      ...overrides,
+    };
+  }
+
+  function paperRequest(overrides = {}) {
+    const context = paperContext(overrides.context ?? {});
+    return {
+      id: 'paper-session-1',
+      correlationId: 'corr-paper-session-1',
+      tenantId: context.daoId ?? context.userId,
+      requestedBy: 'acs',
+      context,
+      connectorConfig: {
+        providerId: context.providerId,
+        providerType: context.providerId === 'hummingbot' ? 'hummingbot' : 'simulation',
+        mode: 'paper',
+        connectorName: 'simulation-paper',
+        market: 'BTC-USDT',
+      },
+      ...overrides,
+    };
+  }
+
+  function createPaperHarness({ provider = new SimulationProvider(), observability = true, reconciliationCandidate } = {}) {
+    const repository = new InMemoryTradingEventRepository();
+    const eventBus = new TradingEventBus(repository);
+    const registry = new ExecutionProviderRegistry();
+    registry.register(provider);
+    const runtimeObservability = observability ? new RuntimeObservabilityService(eventBus) : undefined;
+    const worker = reconciliationCandidate
+      ? new ReconciliationWorker({
+          discovery: new ReconciliationCandidateDiscoveryService([reconciliationCandidate]),
+          proposals: new ReconciliationProposalRepository(),
+          audit: new ReconciliationWorkerAuditService(eventBus),
+        })
+      : undefined;
+    return {
+      eventBus,
+      provider,
+      registry,
+      repository,
+      runtimeObservability,
+      service: new PaperTradingSessionService({
+        registry,
+        eventBus,
+        observability: runtimeObservability,
+        reconciliationWorker: worker,
+      }),
+      worker,
+    };
+  }
+
+  function reconciliationCandidateForPaper() {
+    const request = {
+      context: {
+        correlationId: 'corr-paper-session-1',
+        executionDomain: 'user',
+        userId: 'alice',
+        strategyProductId: 'whiterabbit-scalper-futures',
+        runtimeInstanceId: 'runtime-paper-1',
+        providerId: 'simulation',
+        strategyId: 'whiterabbit-v1',
+      },
+      sovereignSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: true,
+          mode: 'paper',
+          health: 'healthy',
+          checkedAt: '2026-05-23T14:00:00.000Z',
+        },
+        runtimes: [{
+          runtimeInstanceId: 'runtime-paper-1',
+          status: 'active',
+          updatedAt: '2026-05-23T14:00:00.000Z',
+        }],
+        capturedAt: '2026-05-23T14:00:00.000Z',
+      },
+      providerSnapshot: {
+        providerStatus: {
+          providerId: 'simulation',
+          type: 'simulation',
+          connected: false,
+          mode: 'paper',
+          health: 'offline',
+          checkedAt: '2026-05-23T14:00:02.000Z',
+        },
+        runtimes: [],
+        capturedAt: '2026-05-23T14:00:02.000Z',
+      },
+      now: '2026-05-23T14:10:00.000Z',
+    };
+    return {
+      id: 'paper-reconciliation-candidate-1',
+      tenantId: 'alice',
+      candidateType: 'provider-drift',
+      request,
+      discoveredAt: request.now,
+      reason: 'paper reconciliation dry run',
+    };
+  }
+
+  it('transitions paper session through requested approved starting and active', async () => {
+    const harness = createPaperHarness();
+
+    const session = await harness.service.requestSession(paperRequest());
+    const events = harness.repository.queryByCorrelationId('corr-paper-session-1').map((event) => event.type);
+
+    assert.equal(session.status, 'active');
+    assert.equal(events.includes('PAPER_SESSION_REQUESTED'), true);
+    assert.equal(events.includes('PAPER_SESSION_APPROVED'), true);
+    assert.equal(events.includes('PAPER_SESSION_STARTED'), true);
+  });
+
+  it('rejects live execution config', async () => {
+    const harness = createPaperHarness();
+
+    const session = await harness.service.requestSession(paperRequest({
+      id: 'paper-session-live-reject',
+      correlationId: 'corr-paper-live-reject',
+      connectorConfig: {
+        providerId: 'simulation',
+        providerType: 'simulation',
+        mode: 'live',
+      },
+    }));
+
+    assert.equal(session.status, 'failed');
+    assert.equal(session.failureReason, 'Paper session rejected live execution mode.');
+    assert.equal(harness.repository.queryByType('PAPER_SESSION_FAILED').length, 1);
+  });
+
+  it('rejects production API key usage in paper config', async () => {
+    const harness = createPaperHarness();
+
+    const session = await harness.service.requestSession(paperRequest({
+      id: 'paper-session-secret-reject',
+      correlationId: 'corr-paper-secret-reject',
+      connectorConfig: {
+        providerId: 'simulation',
+        providerType: 'simulation',
+        mode: 'paper',
+        rawApiKey: 'prod-key-must-not-leak',
+      },
+    }));
+
+    assert.equal(session.status, 'failed');
+    assert.equal(session.failureReason, 'Paper session config must not include raw API credentials.');
+    assert.equal(JSON.stringify(harness.repository.queryByCorrelationId('corr-paper-secret-reject')).includes('prod-key-must-not-leak'), false);
+  });
+
+  it('models Hummingbot paper-compatible session safely', async () => {
+    const harness = createPaperHarness({ provider: new HummingbotProvider() });
+
+    const session = await harness.service.requestSession(paperRequest({
+      id: 'paper-session-hummingbot',
+      correlationId: 'corr-paper-hummingbot',
+      context: paperContext({ providerId: 'hummingbot' }),
+      connectorConfig: {
+        providerId: 'hummingbot',
+        providerType: 'hummingbot',
+        mode: 'paper',
+        connectorName: 'binance_paper_trade',
+      },
+    }));
+
+    assert.equal(session.status, 'active');
+    assert.equal(harness.repository.queryByCorrelationId('corr-paper-hummingbot').some((event) => event.type === 'PAPER_SESSION_STARTED'), true);
+  });
+
+  it('normalizes and persists paper fills', async () => {
+    const harness = createPaperHarness();
+    await harness.service.requestSession(paperRequest());
+
+    const result = await harness.service.ingestOrder('paper-session-1', {
+      requestId: 'paper-order-1',
+      providerId: 'simulation',
+      market: 'BTC-USDT',
+      side: 'buy',
+      orderType: 'market',
+      quantity: '0.01',
+    });
+
+    assert.equal(result.status, 'submitted');
+    assert.equal(harness.repository.queryByType('PAPER_ORDER_INGESTED').length, 1);
+    assert.equal(harness.repository.queryByType('PAPER_FILL_NORMALIZED').length, 1);
+  });
+
+  it('updates observability from paper telemetry', async () => {
+    const harness = createPaperHarness();
+    await harness.service.requestSession(paperRequest());
+
+    const state = harness.runtimeObservability.get('alice', 'runtime-paper-1');
+
+    assert.equal(state?.health.state, 'healthy');
+    assert.equal(state?.metrics.providerId, 'simulation');
+  });
+
+  it('runs reconciliation dry-run and creates proposals only', async () => {
+    const candidate = reconciliationCandidateForPaper();
+    const harness = createPaperHarness({ reconciliationCandidate: candidate });
+    await harness.service.requestSession(paperRequest());
+
+    const result = await harness.service.dryRunReconciliation('paper-session-1', candidate);
+
+    assert.equal(result.proposalsCreated, 1);
+    assert.equal(result.proposals[0]?.mutatesSovereignState, false);
+    assert.equal(harness.repository.queryByType('PAPER_RECONCILIATION_DRY_RUN_COMPLETED').length, 1);
+    assert.equal(typeof harness.service.healRuntime, 'undefined');
+  });
+
+  it('keeps user and treasury paper sessions separated', async () => {
+    const harness = createPaperHarness();
+    await harness.service.requestSession(paperRequest({
+      id: 'paper-session-user-isolated',
+      correlationId: 'corr-paper-user-isolated',
+    }));
+    await harness.service.requestSession(paperRequest({
+      id: 'paper-session-treasury-isolated',
+      correlationId: 'corr-paper-treasury-isolated',
+      context: paperContext({
+        executionDomain: 'treasury',
+        userId: undefined,
+        daoId: 'dao-paper-1',
+        runtimeInstanceId: 'runtime-paper-treasury-1',
+      }),
+    }));
+
+    const userEvents = harness.repository.queryByCorrelationId('corr-paper-user-isolated');
+    const treasuryEvents = harness.repository.queryByCorrelationId('corr-paper-treasury-isolated');
+
+    assert.equal(userEvents.every((event) => event.userId === 'alice'), true);
+    assert.equal(treasuryEvents.every((event) => event.daoId === 'dao-paper-1'), true);
+    assert.equal(treasuryEvents.every((event) => event.userId === undefined), true);
   });
 });
 

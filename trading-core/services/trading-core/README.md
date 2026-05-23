@@ -33,7 +33,7 @@ TRADING_DB_NAME=axodus_trading_local
 TRADING_DB_USER=axodus_trading
 TRADING_DB_PASSWORD=axodus_trading_local_password
 TRADING_DB_SCHEMA=public
-TRADING_DB_MIN_SCHEMA_VERSION=0001_trading_state.sql
+TRADING_DB_MIN_SCHEMA_VERSION=0002_trading_events_tenant_id.sql
 ```
 
 Do not place production credentials, exchange API keys, wallet private keys, or live provider credentials in this file.
@@ -99,7 +99,45 @@ It refuses production-like environments and never writes:
 - live exchange credentials
 - treasury execution data
 
-### 6. Teardown
+### 6. Local End-to-end Smoke Test
+
+After Postgres is running, validate the full durable local path:
+
+```bash
+npm run db:smoke-local
+```
+
+This runs:
+
+```text
+local Postgres
+-> migrations
+-> healthcheck
+-> repository readiness
+-> mock event persistence
+-> correlation replay
+-> tenant-scoped replay
+```
+
+The smoke test uses only mock/simulation data and refuses production-like database settings.
+
+### 7. Reset Local Database
+
+For local development only:
+
+```bash
+npm run db:reset-local
+```
+
+This drops Trading local tables and migration history so the local schema can be recreated with:
+
+```bash
+npm run db:bootstrap-local
+```
+
+The reset helper is guarded by the same local/test environment checks as seed data. It must not be used against staging or production.
+
+### 8. Teardown
 
 From the Trading workspace root:
 
@@ -135,6 +173,8 @@ npm run trading-db -- health
 npm run trading-db -- version
 npm run trading-db -- validate
 npm run trading-db -- seed-local
+npm run db:smoke-local
+npm run db:reset-local
 ```
 
 Every command supports JSON output:

@@ -1,4 +1,5 @@
 import type {
+  CredentialEncryptionEnvelope,
   CredentialScope,
   CredentialVaultReference,
   ExchangeCredentialBinding,
@@ -6,6 +7,7 @@ import type {
 } from '../../../../packages/trading-contracts/src/index.js';
 import type { TradingEventBus } from '../telemetry/TradingEventBus.js';
 import { InMemoryCredentialVaultRepository } from './InMemoryCredentialVaultRepository.js';
+import type { CredentialVaultAdapter } from './CredentialVaultAdapter.js';
 
 export interface RegisterExchangeCredentialRequest {
   ownerUserId: string;
@@ -26,6 +28,7 @@ export class CredentialVaultService {
   constructor(
     private readonly repository = new InMemoryCredentialVaultRepository(),
     private readonly eventBus?: TradingEventBus,
+    private readonly adapter?: CredentialVaultAdapter,
   ) {}
 
   async registerExchangeCredential(request: RegisterExchangeCredentialRequest): Promise<RegisteredExchangeCredential> {
@@ -70,6 +73,30 @@ export class CredentialVaultService {
       reference,
       binding,
     };
+  }
+
+  async registerEncryptedEnvelope(reference: CredentialVaultReference, keyAlias = 'axodus-trading-local'): Promise<CredentialEncryptionEnvelope> {
+    if (!this.adapter) {
+      throw new Error('Credential vault adapter is required to register encrypted envelope metadata.');
+    }
+    const envelope = await this.adapter.registerEnvelope(reference, keyAlias);
+    await this.eventBus?.publish({
+      id: `${envelope.id}:credential-envelope-registered`,
+      type: 'CREDENTIAL_ENVELOPE_REGISTERED',
+      occurredAt: envelope.createdAt,
+      correlationId: `credential-envelope-registered-${reference.id}`,
+      source: 'security',
+      userId: reference.ownerUserId,
+      payload: {
+        envelopeId: envelope.id,
+        vaultRefId: reference.id,
+        providerId: reference.providerId,
+        adapterType: envelope.adapterType,
+        keyAlias: envelope.keyRef.keyAlias,
+        redacted: true,
+      },
+    });
+    return envelope;
   }
 
   registerWalletBinding(request: {

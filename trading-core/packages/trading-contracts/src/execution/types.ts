@@ -89,3 +89,56 @@ export interface PositionSnapshot {
     leverage?: string;
   }>;
 }
+
+export type PaperTradingSessionStatus =
+  | 'requested'
+  | 'approved'
+  | 'starting'
+  | 'active'
+  | 'paused'
+  | 'degraded'
+  | 'completed'
+  | 'failed'
+  | 'terminated';
+
+export interface PaperConnectorConfig {
+  providerId: string;
+  providerType: ExecutionProviderType;
+  mode: Extract<ExecutionMode, 'paper' | 'backtest'>;
+  connectorName?: string;
+  market?: string;
+  vaultRefId?: string;
+  credentialScopes?: string[];
+  rawApiKey?: never;
+  rawApiSecret?: never;
+}
+
+export interface PaperTradingSessionRequest {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  requestedBy: string;
+  context: import('../runtime/types.js').TradingExecutionContext;
+  connectorConfig: PaperConnectorConfig;
+  reason?: string;
+}
+
+export interface PaperTradingSessionState {
+  id: string;
+  correlationId: string;
+  tenantId: string;
+  context: import('../runtime/types.js').TradingExecutionContext;
+  providerId: string;
+  status: PaperTradingSessionStatus;
+  startedAt?: string;
+  updatedAt: string;
+  completedAt?: string;
+  failureReason?: string;
+}
+
+export interface PaperTradingSessionPolicy {
+  allowedProviders: ExecutionProviderType[];
+  requireCredentialBinding: boolean;
+  allowHummingbotPaper: boolean;
+  allowSimulation: boolean;
+}

@@ -18,6 +18,7 @@ interface TradingEventRow {
   strategy_product_id?: string;
   runtime_instance_id?: string;
   provider_id?: string;
+  tenant_id?: string;
   payload: unknown;
 }
 
@@ -42,9 +43,10 @@ export class PostgresTradingEventRepository implements TradingEventRepository, E
         strategy_product_id,
         runtime_instance_id,
         provider_id,
+        tenant_id,
         payload
       )
-      values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb)
+      values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14::jsonb)
     `, [
       event.id,
       event.type,
@@ -58,6 +60,7 @@ export class PostgresTradingEventRepository implements TradingEventRepository, E
       event.strategyProductId,
       event.runtimeInstanceId,
       providerId,
+      this.tenantId(event),
       stableJson(event.payload),
     ]);
     this.cache.push({ ...event, payload: JSON.parse(stableJson(event.payload)) });
@@ -123,5 +126,14 @@ export class PostgresTradingEventRepository implements TradingEventRepository, E
       const timeOrder = Date.parse(left.occurredAt) - Date.parse(right.occurredAt);
       return timeOrder || left.id.localeCompare(right.id);
     });
+  }
+
+  private tenantId(event: TradingEvent): string | undefined {
+    if (event.daoId) {
+      return event.daoId;
+    }
+    const payload = event.payload && typeof event.payload === 'object' ? event.payload as Record<string, unknown> : {};
+    const tenantId = payload.tenantId;
+    return typeof tenantId === 'string' ? tenantId : event.userId;
   }
 }

@@ -564,6 +564,66 @@ CONFIRMED
 
 ---
 
+## Local Postgres E2E Is Validation, Not Production Readiness
+
+Decision:
+Trading may run a local Postgres end-to-end smoke path using Docker Compose, real `NodePostgresClient`, `MigrationRunner`, repository readiness checks, seed-local mock data, event persistence, and replay validation.
+
+This validates local durable infrastructure only. It does not imply production deployment, cloud database readiness, live trading, live Hummingbot sessions, treasury execution, or real exchange connectivity.
+
+Status:
+CONFIRMED
+
+---
+
+## Observability Risk Feedback Is Evidence, Not Authority
+
+Decision:
+Trading observability health signals may feed a risk policy layer that creates decisions, proposals, review requirements, recovery requirements, simulation/backtest requirements, and controlled resume requirements.
+
+This layer must not directly block providers, mutate runtime, mutate strategies, call execution providers, or bypass ACS/Governance/Trading Core gates. Every observability risk decision remains unauthorized for execution by default and must preserve tenant context, correlationId, and sanitized evidence.
+
+Status:
+CONFIRMED
+
+---
+
+## Reconciliation Worker Detects and Proposes Only
+
+Decision:
+Trading may run a local/mock reconciliation worker that discovers stale runtimes, provider drift, orphan runtimes, order divergence, and position divergence candidates, then creates reviewable reconciliation proposals.
+
+The worker must not auto-heal, call providers, call Hummingbot, cancel orders, close positions, mutate provider state, mutate runtime execution state blindly, or bypass ACS/risk/governance.
+
+Status:
+CONFIRMED
+
+---
+
+## Credential Vault Adapter Boundary Is Provider-agnostic
+
+Decision:
+Trading Credential Vault may expose a provider-agnostic adapter boundary for future encrypted secret storage through redacted encryption envelope metadata and scoped ephemeral credential grants.
+
+The service layer must not depend on a specific KMS/HSM provider. Contracts, events, telemetry, ACS, product surfaces, and frontend read models must not expose raw secrets, decrypted credentials, signing material, wallet private keys, or withdrawal permissions.
+
+Status:
+CONFIRMED
+
+---
+
+## Paper Trading Sessions Are Governed Preparation, Not Live Trading
+
+Decision:
+Trading may create governed paper runtime sessions through `SimulationProvider` and Hummingbot paper-compatible provider boundaries.
+
+Paper sessions must use normalized Trading Core lifecycle, event store, observability, and reconciliation dry-run flows. They must not enable live exchange orders, production API keys, withdrawal scopes, autonomous execution, production runtime mutation, direct Hummingbot control, or profit/yield claims.
+
+Status:
+CONFIRMED
+
+---
+
 # Pending Decisions
 
 ## Canonical Exchange Priority Strategy

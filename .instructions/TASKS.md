@@ -742,6 +742,122 @@ Delivered:
 
 ---
 
+# Phase 13A - Local Postgres End-to-End Validation
+
+Status: IMPLEMENTED
+
+Objectives:
+- validate real local Postgres runtime end-to-end
+- prove migration, health, seed, repository readiness and replay flow
+- keep test gated when local Postgres env is absent
+- preserve append-only event store and tenant-scoped replay
+
+Delivered:
+- `smoke-local-postgres.ts`
+- `reset-local-db.ts`
+- `PostgresRepositoryReadinessCheck`
+- `0002_trading_events_tenant_id.sql`
+- gated Postgres E2E test
+- local README updates
+
+---
+
+# Phase 13B - Observability Risk Feedback Policy
+
+Status: IMPLEMENTED
+
+Objectives:
+- feed observability health evidence into risk decisions
+- avoid automatic provider/runtime/strategy mutation
+- keep ACS/Governance as escalation authority
+- preserve tenant context and auditability
+
+Delivered:
+- `ObservabilityRiskSignal`
+- `ObservabilityRiskPolicy`
+- `ProviderHealthRiskEvaluator`
+- `RuntimeHealthRiskEvaluator`
+- `StrategyHealthRiskEvaluator`
+- `ObservabilityRiskDecisionService`
+- `ObservabilityRiskAuditService`
+- tests for provider critical, runtime critical, strategy degraded, cross-tenant rejection, audit, and final risk authority
+
+---
+
+# Phase 13C - Reconciliation Worker Skeleton
+
+Status: IMPLEMENTED
+
+Objectives:
+- execute reconciliation scans locally using normalized state/snapshots
+- persist reviewable reconciliation proposals
+- preserve tenant isolation
+- emit worker audit events
+- avoid auto-healing and provider calls
+
+Delivered:
+- `ReconciliationWorker`
+- `ReconciliationWorkerScheduler`
+- `ReconciliationCandidateDiscoveryService`
+- `ReconciliationProposalRepository`
+- `RuntimeStaleScanService`
+- `ProviderDriftScanService`
+- `ReconciliationWorkerAuditService`
+- proposal review states
+- worker lifecycle events
+- tests for stale runtime, provider drift, orphan runtime, tenant context, failure audit, and no provider execution methods
+
+---
+
+# Phase 14A - Credential Vault Real Adapter Boundary
+
+Status: IMPLEMENTED
+
+Objectives:
+- prepare vault for future real encrypted backend
+- add provider-agnostic adapter boundary
+- model encrypted envelope metadata
+- model ephemeral credential grants
+- enforce TTL, revocation and provider/runtime/tenant scope
+
+Delivered:
+- `CredentialVaultAdapter`
+- `CredentialEncryptionEnvelope`
+- `KmsKeyReference`
+- `EphemeralCredentialGrant`
+- `CredentialGrantPolicy`
+- `CredentialGrantLifecycleService`
+- `CredentialVaultAdapterRegistry`
+- `MockEncryptedCredentialVaultAdapter`
+- tests for grant lifecycle and redacted envelope serialization
+
+---
+
+# Phase 14B - Paper Trading Runtime Session
+
+Status: IMPLEMENTED
+
+Completed:
+- added paper session request/state/policy contracts
+- added paper session lifecycle service
+- added paper connector config validation
+- added paper order ingestion and fill normalization
+- added paper session audit events
+- connected paper telemetry to runtime observability
+- connected reconciliation dry-run to proposal-only workflow
+- validated SimulationProvider and Hummingbot paper-compatible boundaries
+
+Validation:
+- lifecycle transitions covered
+- live mode config rejected
+- raw API key config rejected
+- paper fills normalized and persisted
+- observability updated from paper telemetry
+- reconciliation dry-run creates proposal without mutation
+- user and treasury paper sessions remain isolated
+
+---
+
 # Phase 3 — Risk Infrastructure
 
 Status: PLANNED

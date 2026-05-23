@@ -49,3 +49,46 @@ export interface CredentialAccessDecision {
   allowedScopes: CredentialScope[];
   reason?: string;
 }
+
+export interface KmsKeyReference {
+  keyId: string;
+  keyAlias: string;
+  adapterType: 'mock-encrypted' | string;
+  version?: string;
+  region?: string;
+}
+
+export interface CredentialEncryptionEnvelope {
+  id: string;
+  vaultRefId: string;
+  ownerUserId: string;
+  providerId: string;
+  adapterType: 'mock-encrypted' | string;
+  keyRef: KmsKeyReference;
+  algorithm: string;
+  ciphertextRef: string;
+  status: 'registered' | 'rotated' | 'revoked';
+  createdAt: string;
+  rotatedAt?: string;
+  redacted: true;
+}
+
+export interface EphemeralCredentialGrant {
+  id: string;
+  vaultRefId: string;
+  ownerUserId: string;
+  runtimeInstanceId: string;
+  providerId: string;
+  purpose: 'runtime-execution' | 'telemetry' | 'health-check' | 'paper-trading';
+  scopes: CredentialScope[];
+  status: 'active' | 'expired' | 'revoked';
+  createdAt: string;
+  expiresAt: string;
+  revokedAt?: string;
+}
+
+export interface CredentialGrantPolicy {
+  ttlMs: number;
+  maxTtlMs?: number;
+  allowedScopes: CredentialScope[];
+}

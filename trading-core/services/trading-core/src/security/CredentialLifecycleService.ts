@@ -49,6 +49,22 @@ export class CredentialLifecycleService {
     return rotated;
   }
 
+  async auditRotation(reference: CredentialVaultReference, envelopeId: string, correlationId = `credential-rotation-audited-${reference.id}`): Promise<void> {
+    await this.publish({
+      id: `${reference.id}:credential-rotation-audited`,
+      type: 'CREDENTIAL_ROTATION_AUDITED',
+      occurredAt: new Date().toISOString(),
+      correlationId,
+      source: 'security',
+      userId: reference.ownerUserId,
+      payload: {
+        vaultRefId: reference.id,
+        providerId: reference.providerId,
+        envelopeId,
+      },
+    });
+  }
+
   private async publish(event: TradingEvent): Promise<void> {
     await this.eventBus?.publish(event);
   }
