@@ -38,7 +38,7 @@ Mitigation:
 ### 3. Credential Vault Is Not Production Encryption
 
 Risk:
-Vault adapter boundary exists, but real encryption/KMS/HSM is not implemented.
+Vault adapter boundary and Phase 17E threat model exist, but a production vault/KMS/HSM provider is not selected or implemented.
 
 Impact:
 User Trading cannot safely use production credentials yet.
@@ -46,7 +46,8 @@ User Trading cannot safely use production credentials yet.
 Mitigation:
 - keep live trading disabled
 - keep all runtime config reference-based
-- perform vault adapter selection spike before real credential onboarding
+- use `TRADING_PHASE_17E_CREDENTIAL_VAULT_THREAT_MODEL.md` and `TRADING_CREDENTIAL_VAULT_ADAPTER_DECISION_MATRIX.md` for provider selection planning
+- require approved rotation, emergency revocation, audit retention, operator access and environment-boundary procedures before real credential onboarding
 
 ### 4. Reconciliation Does Not Yet Have Approval Workflow
 
