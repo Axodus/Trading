@@ -1,15 +1,15 @@
 import {
   DatabaseConnectionManager,
-} from '../../../../dist/services/trading-core/services/trading-core/src/repositories/postgres/DatabaseConnectionManager.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/DatabaseConnectionManager.js';
 import {
   DatabaseHealthService,
-} from '../../../../dist/services/trading-core/services/trading-core/src/repositories/postgres/DatabaseHealthService.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/DatabaseHealthService.js';
 import {
   MigrationRunner,
-} from '../../../../dist/services/trading-core/services/trading-core/src/repositories/postgres/MigrationRunner.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/MigrationRunner.js';
 import {
   PostgresBootstrapService,
-} from '../../../../dist/services/trading-core/services/trading-core/src/repositories/postgres/PostgresBootstrapService.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/PostgresBootstrapService.js';
 import { createLocalNodePostgresClient, loadLocalRuntimeConfig, printJson } from './local-db-utils.ts';
 
 const runtime = loadLocalRuntimeConfig();

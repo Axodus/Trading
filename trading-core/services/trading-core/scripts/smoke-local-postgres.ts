@@ -5,10 +5,10 @@ import {
   PostgresBootstrapService,
   PostgresRepositoryReadinessCheck,
   PostgresTradingEventRepository,
-} from '../../../../dist/services/trading-core/services/trading-core/src/index.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/index.js';
 import {
   assertSafeLocalSeedConfig,
-} from '../../../../dist/services/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
 import { createLocalNodePostgresClient, loadLocalRuntimeConfig, printJson } from './local-db-utils.ts';
 
 const runtime = loadLocalRuntimeConfig();

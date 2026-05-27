@@ -14,6 +14,12 @@ Run from the Trading workspace root first:
 cp .env.example .env
 ```
 
+Install service dependencies once:
+
+```bash
+npm install --prefix trading-core/services/trading-core
+```
+
 Required local env values:
 
 ```text
@@ -215,4 +221,3 @@ docker compose --env-file .env -f docker-compose.trading.yml down -v
 ```
 
 Use volume removal only for local development data.
-

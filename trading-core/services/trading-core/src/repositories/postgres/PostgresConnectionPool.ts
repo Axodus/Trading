@@ -38,5 +38,26 @@ export async function createPostgresConnectionPool(config: PostgresConnectionPoo
 
 async function importPg(): Promise<{ Pool: PgPoolConstructor }> {
   const moduleName = 'pg';
-  return import(moduleName) as Promise<{ Pool: PgPoolConstructor }>;
+  try {
+    return normalizePgModule(await import(moduleName));
+  } catch (error) {
+    if (!(error instanceof Error) || !('code' in error) || error.code !== 'ERR_MODULE_NOT_FOUND') {
+      throw error;
+    }
+    const cwd = (globalThis as { process?: { cwd(): string } }).process?.cwd();
+    if (!cwd) {
+      throw error;
+    }
+    const localPg = `file://${cwd.replace(/\/$/, '')}/node_modules/pg/lib/index.js`;
+    return normalizePgModule(await import(localPg));
+  }
+}
+
+function normalizePgModule(moduleValue: unknown): { Pool: PgPoolConstructor } {
+  const moduleRecord = moduleValue as { Pool?: PgPoolConstructor; default?: { Pool?: PgPoolConstructor } };
+  const Pool = moduleRecord.Pool ?? moduleRecord.default?.Pool;
+  if (!Pool) {
+    throw new Error('Unable to resolve pg Pool constructor.');
+  }
+  return { Pool };
 }

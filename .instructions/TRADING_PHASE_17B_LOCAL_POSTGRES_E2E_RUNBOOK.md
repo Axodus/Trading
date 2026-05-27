@@ -102,6 +102,35 @@ npm run trading:local:e2e -- --cleanup
 
 If Docker or local Postgres is unavailable, record the blocker and keep the runbook as developer-ready documentation.
 
+Latest local validation result:
+
+```text
+npm run trading:local:e2e
+PASS
+
+npm run trading:local:e2e -- --json
+PASS
+
+npm run trading:local:e2e -- --cleanup
+PASS
+```
+
+Environment note:
+
+The default local port `55432` was already allocated in this developer environment. The runbook troubleshooting path was validated by using a local `.env` copy with:
+
+```text
+TRADING_DB_PORT=55433
+```
+
+The `.env` file was removed after validation and was not committed.
+
+Operational fixes applied:
+
+- local scripts now reference the actual compiled `dist` path used by the current workspace layout
+- local scripts load the workspace `.env` before database config validation
+- Postgres connection pool resolution supports the service-local `node_modules/pg` package when compiled files run from workspace-level `dist`
+
 ## Non-goals
 
 - no cloud Postgres
@@ -115,4 +144,3 @@ If Docker or local Postgres is unavailable, record the blocker and keep the runb
 ## Outcome
 
 Phase 17B makes `npm run trading:local:e2e` the official local durable persistence validation workflow for Trading Core developers.
-

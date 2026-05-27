@@ -61,6 +61,27 @@ If Postgres is already running outside the command, use:
 npm run trading:local:e2e -- --skip-docker
 ```
 
+### Missing `pg` Package
+
+Symptom:
+
+```text
+Cannot find package 'pg'
+```
+
+Fix from the workspace root:
+
+```bash
+npm install --prefix trading-core/services/trading-core
+```
+
+Then rerun:
+
+```bash
+cd trading-core/services/trading-core
+npm run trading:local:e2e
+```
+
 ### Port `55432` Already In Use
 
 Symptom:
@@ -233,4 +254,3 @@ When reporting a failure, include:
 - whether `--json` output shows `failure`
 
 Do not include secrets.
-
