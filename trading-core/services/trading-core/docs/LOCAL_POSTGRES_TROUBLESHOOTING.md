@@ -20,7 +20,17 @@ Symptom:
 Missing required Trading database config
 ```
 
-Fix from workspace root:
+or:
+
+```text
+TradingDatabaseConfigError: Missing required Trading database env: TRADING_DB_HOST.
+```
+
+Current behavior:
+
+`npm run trading:local:e2e` loads safe local defaults from `.env.example` or built-in local defaults before database config validation. This error usually means the command is being run from the wrong directory, an old build is being executed, or an explicit empty environment value is overriding local defaults.
+
+Optional fix from workspace root:
 
 ```bash
 cp .env.example .env
@@ -31,6 +41,12 @@ Then rerun from the service directory:
 ```bash
 cd trading-core/services/trading-core
 npm run trading:local:e2e
+```
+
+Also verify that no empty shell variables are exported:
+
+```bash
+env | grep '^TRADING_DB_'
 ```
 
 ### Docker Is Not Running
@@ -82,17 +98,17 @@ cd trading-core/services/trading-core
 npm run trading:local:e2e
 ```
 
-### Port `55432` Already In Use
+### Port `55433` Already In Use
 
 Symptom:
 
 ```text
-Bind for 0.0.0.0:55432 failed
+Bind for 0.0.0.0:55433 failed
 ```
 
 Fix options:
 
-1. Stop the process using port `55432`.
+1. Stop the process using port `55433`.
 2. Change `TRADING_DB_PORT` in `.env` to another local port.
 3. Restart the command.
 

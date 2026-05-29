@@ -17,6 +17,17 @@ export interface TradingLocalDatabaseRuntimeConfig {
 
 export type TradingDatabaseEnv = Record<string, string | undefined>;
 
+export const TRADING_LOCAL_DATABASE_DEFAULT_ENV = {
+  TRADING_ENV: 'local',
+  TRADING_DB_HOST: '127.0.0.1',
+  TRADING_DB_PORT: '55433',
+  TRADING_DB_NAME: 'axodus_trading_local',
+  TRADING_DB_USER: 'axodus_trading',
+  TRADING_DB_PASSWORD: 'axodus_trading_local_password',
+  TRADING_DB_SCHEMA: 'public',
+  TRADING_DB_MIN_SCHEMA_VERSION: '0002_trading_events_tenant_id.sql',
+} as const satisfies TradingDatabaseEnv;
+
 export class TradingDatabaseConfigError extends Error {
   constructor(
     message: string,
@@ -48,6 +59,16 @@ export function createLocalTradingDatabaseConfig(env: TradingDatabaseEnv, migrat
       migrations,
     },
   };
+}
+
+export function withTradingLocalDatabaseDefaults(env: TradingDatabaseEnv = {}): TradingDatabaseEnv {
+  const merged: TradingDatabaseEnv = { ...env };
+  for (const [key, value] of Object.entries(TRADING_LOCAL_DATABASE_DEFAULT_ENV)) {
+    if (!merged[key]) {
+      merged[key] = value;
+    }
+  }
+  return merged;
 }
 
 export function assertSafeLocalSeedConfig(config: TradingLocalDatabaseRuntimeConfig): void {

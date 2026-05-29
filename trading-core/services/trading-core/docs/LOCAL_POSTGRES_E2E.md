@@ -14,6 +14,8 @@ Run from the Trading workspace root first:
 cp .env.example .env
 ```
 
+If `.env` is absent, the local scripts fall back to `.env.example` values and then to built-in safe local defaults. Explicit shell environment variables still win over `.env`, `.env.example`, and built-in defaults.
+
 Install service dependencies once:
 
 ```bash
@@ -25,7 +27,7 @@ Required local env values:
 ```text
 TRADING_ENV=local
 TRADING_DB_HOST=127.0.0.1
-TRADING_DB_PORT=55432
+TRADING_DB_PORT=55433
 TRADING_DB_NAME=axodus_trading_local
 TRADING_DB_USER=axodus_trading
 TRADING_DB_PASSWORD=axodus_trading_local_password
@@ -37,6 +39,8 @@ TRADING_DB_IDLE_TIMEOUT_MS=10000
 TRADING_DB_QUERY_TIMEOUT_MS=5000
 TRADING_DB_MAX_RETRIES=1
 ```
+
+The fallback defaults are local-only and simulation-oriented. They do not enable live trading, real exchange credentials, treasury execution, or Hummingbot runtime execution.
 
 Do not put production credentials, exchange API keys, wallet private keys, real provider configs, or production database URLs in `.env`.
 

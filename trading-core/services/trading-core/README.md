@@ -23,12 +23,14 @@ From the Trading workspace root:
 cp .env.example .env
 ```
 
+The local scripts can run without a committed `.env`; when it is absent they use `.env.example` and built-in safe local defaults. Explicit shell environment values still take priority.
+
 The example uses only local development credentials:
 
 ```text
 TRADING_ENV=local
 TRADING_DB_HOST=127.0.0.1
-TRADING_DB_PORT=55432
+TRADING_DB_PORT=55433
 TRADING_DB_NAME=axodus_trading_local
 TRADING_DB_USER=axodus_trading
 TRADING_DB_PASSWORD=axodus_trading_local_password
@@ -50,7 +52,7 @@ The local service is isolated as:
 
 - container: `axodus-trading-postgres-local`
 - volume: `axodus_trading_postgres_data`
-- default host port: `55432`
+- default host port: `55433`
 
 ### 3. Run Migrations
 

@@ -117,13 +117,13 @@ PASS
 
 Environment note:
 
-The default local port `55432` was already allocated in this developer environment. The runbook troubleshooting path was validated by using a local `.env` copy with:
+The previous default local port `55432` was already allocated in this developer environment. Request 03 moved the Trading local default to:
 
 ```text
 TRADING_DB_PORT=55433
 ```
 
-The `.env` file was removed after validation and was not committed.
+The Trading local E2E flow should use `55433` unless an explicit local `.env` or shell environment overrides it.
 
 Operational fixes applied:
 

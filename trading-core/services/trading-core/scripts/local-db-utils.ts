@@ -1,7 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { createLocalTradingDatabaseConfig } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
+import {
+  createLocalTradingDatabaseConfig,
+  withTradingLocalDatabaseDefaults,
+} from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/TradingDatabaseConfig.js';
 import { createNodePostgresEnvConfig } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/config/PostgresEnvConfig.js';
 import { NodePostgresClient } from '../../../../dist/services/trading-core/trading-core/services/trading-core/src/repositories/postgres/NodePostgresClient.js';
 
@@ -16,22 +19,46 @@ export async function createLocalNodePostgresClient() {
 }
 
 export function loadWorkspaceEnvFile() {
-  const envFile = resolve(process.cwd(), '../../..', '.env');
-  if (!existsSync(envFile)) {
-    return;
+  const workspaceRoot = resolve(process.cwd(), '../../..');
+  const originalEnvKeys = new Set(Object.keys(process.env));
+  const fileEnv = {
+    ...readEnvFile(resolve(workspaceRoot, '.env.example')),
+    ...readEnvFile(resolve(workspaceRoot, '.env')),
+  };
+  const localEnv = withTradingLocalDatabaseDefaults(fileEnv);
+  for (const [key, value] of Object.entries(localEnv)) {
+    if (!originalEnvKeys.has(key) && value !== undefined) {
+      process.env[key] = value;
+    }
   }
+}
+
+function readEnvFile(envFile) {
+  if (!existsSync(envFile)) {
+    return {};
+  }
+  const values = {};
   const content = readFileSync(envFile, 'utf8');
   for (const line of content.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) {
       continue;
     }
-    const [key, ...valueParts] = trimmed.split('=');
-    if (!key || process.env[key] !== undefined) {
+    const normalized = trimmed.startsWith('export ') ? trimmed.slice('export '.length).trim() : trimmed;
+    const [key, ...valueParts] = normalized.split('=');
+    if (!key) {
       continue;
     }
-    process.env[key] = valueParts.join('=').trim();
+    values[key] = unquoteEnvValue(valueParts.join('=').trim());
   }
+  return values;
+}
+
+function unquoteEnvValue(value) {
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    return value.slice(1, -1);
+  }
+  return value;
 }
 
 export function loadMigrations() {

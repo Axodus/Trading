@@ -86,6 +86,8 @@ import {
   TenantObservabilityQueryService,
   TradingLocalE2eCommand,
   StrategyTelemetryAggregator,
+  TRADING_LOCAL_DATABASE_DEFAULT_ENV,
+  withTradingLocalDatabaseDefaults,
   createTrinityAutonomyProfile,
   redactLocalE2eText,
   RecommendationApprovalService,
@@ -936,6 +938,31 @@ describe('Local Trading infrastructure runtime config', () => {
     assert.equal(config.connection.port, 55432);
     assert.equal(config.database.minimumSchemaVersion, '0001_trading_state.sql');
     assert.equal(config.database.migrations.length, 1);
+  });
+
+  it('provides safe local database defaults for reproducible local E2E config', () => {
+    const env = withTradingLocalDatabaseDefaults({});
+    const config = createLocalTradingDatabaseConfig(env);
+
+    assert.equal(env.TRADING_DB_HOST, TRADING_LOCAL_DATABASE_DEFAULT_ENV.TRADING_DB_HOST);
+    assert.equal(config.environment, 'local');
+    assert.equal(config.connection.host, '127.0.0.1');
+    assert.equal(config.connection.port, 55433);
+    assert.equal(config.connection.database, 'axodus_trading_local');
+    assert.equal(config.connection.user, 'axodus_trading');
+    assert.equal(config.database.minimumSchemaVersion, '0002_trading_events_tenant_id.sql');
+  });
+
+  it('keeps explicit env values above local database defaults', () => {
+    const env = withTradingLocalDatabaseDefaults({
+      TRADING_DB_PORT: '55434',
+      TRADING_DB_NAME: 'axodus_trading_custom_local',
+    });
+    const config = createLocalTradingDatabaseConfig(env);
+
+    assert.equal(config.connection.port, 55434);
+    assert.equal(config.connection.database, 'axodus_trading_custom_local');
+    assert.equal(config.connection.host, '127.0.0.1');
   });
 
   it('blocks bootstrap config creation when database config is missing', () => {
