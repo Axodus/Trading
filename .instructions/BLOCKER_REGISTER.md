@@ -30,10 +30,20 @@ Resolution path: Complete Credential Vault decisioning and secret-management app
 
 Severity: MEDIUM
 
-Status: OPEN
+Status: UNKNOWN
 
 Description: Historical local E2E evidence exists, but current validation was not rerun in PORTFOLIO-REQ-01.
 
 Impact: Maturity remains L3 candidate.
 
-Resolution path: Run the documented local E2E command in the appropriate nested workspace under a dedicated request.
+Resolution path: PORTFOLIO-REQ-02 ran nested Trading Core typecheck and tests successfully, but the real local Postgres E2E test remains skipped. Run `npm run trading:local:e2e` in a dedicated Trading request.
+
+## PORTFOLIO-REQ-02 Blocker Review
+
+| Blocker | Status |
+|---|---|
+| Live trading blocked | ACTIVE |
+| Production credentials blocked | ACTIVE |
+| Current validation refresh required | UNKNOWN |
+| Root `package.json` absent | ACTIVE |
+| Real local Postgres E2E not executed | ACTIVE |

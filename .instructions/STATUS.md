@@ -89,3 +89,37 @@ Production execution: DISABLED
 ## Next Recommended Request
 
 TRADING-REQ-01 - Current Validation Evidence and Credential Vault Boundary Review
+
+## PORTFOLIO-REQ-02 Validation Refresh
+
+Status: COMPLETE_WITH_GAPS
+
+Validation result: PASS_WITH_E2E_GAP
+
+Commands:
+
+```bash
+npm run typecheck
+npm test
+```
+
+Executed from:
+
+```text
+trading-core/services/trading-core
+```
+
+Evidence:
+
+- typecheck: PASS
+- tests: PASS, 240 passed / 1 skipped
+- skipped: real local Postgres E2E test
+
+Maturity decision: REQUIRES_REVALIDATION
+
+Rationale:
+
+- Trading Core contracts, boundaries and local tests passed.
+- The root workspace still has no `package.json`.
+- The real local Postgres E2E path remains documented but was not executed as a full live local E2E cycle in this request.
+- Live trading, exchange execution, credentials, withdrawals and treasury remain blocked.

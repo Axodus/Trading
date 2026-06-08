@@ -21,7 +21,7 @@ Safe documentation checks:
 
 ## Current Validation Status
 
-Status: BLOCKED
+Status: PASS_WITH_E2E_GAP
 
 Current product validation must be refreshed in a dedicated Trading request using the documented local E2E path.
 
@@ -30,3 +30,21 @@ PORTFOLIO-REQ-01 result:
 - Root `package.json`: not present.
 - Product validation commands were not run from root.
 - No dependency installation was performed.
+
+PORTFOLIO-REQ-02 commands:
+
+```bash
+cd trading-core/services/trading-core
+npm run typecheck
+npm test
+```
+
+PORTFOLIO-REQ-02 results:
+
+- Typecheck: PASS
+- Tests: PASS, 240 passed / 1 skipped
+- Skipped: real local Postgres E2E test
+
+Remaining validation:
+
+- Run the documented `npm run trading:local:e2e` path with safe local Postgres prerequisites in a dedicated Trading request.
