@@ -4,9 +4,9 @@ Date: 2026-06-08
 
 ## Assessment Result
 
-Maturity level: L3 - Local validation candidate
+Maturity level: L4 candidate - Functional integration readiness
 
-Recommendation: REQUIRES_REVALIDATION
+Recommendation: PROMOTE_TO_L4_CANDIDATE
 
 ## L1-L5 Evaluation
 
@@ -15,13 +15,13 @@ Recommendation: REQUIRES_REVALIDATION
 | L0 Idea | PASS | Trading workspace exists. |
 | L1 Scope defined | PASS | Architecture, runtime, risk, compliance and credential-vault docs exist. |
 | L2 Structure created | PASS | Trading Core and implementation inventory exist. |
-| L3 Local validation | PARTIAL_PASS | PORTFOLIO-REQ-02 nested Trading Core typecheck/test passed, but real local Postgres E2E remained skipped. |
-| L4 Functional integration | NOT_CONFIRMED | Product surface planning exists, but execution-sensitive integrations and current E2E evidence remain gated. |
+| L3 Local validation | PASS | PORTFOLIO-REQ-02 nested Trading Core typecheck/test passed and TRADING-REQ-04 local Postgres E2E passed. |
+| L4 Functional integration | CANDIDATE | Local durable persistence/readiness path validates with real local Postgres, mock seed data, schema validation and replay smoke. |
 | L5 Production/auditable | FAIL | No production exchange, credential, treasury or execution approval. |
 
 ## Current Classification
 
-Trading remains L3 candidate and requires revalidation through the documented safe local Postgres E2E path before maturity promotion.
+Trading is promoted to L4 candidate for local durable persistence/readiness evidence. Trading remains non-production and execution-gated.
 
 ## Non-Production Boundary
 

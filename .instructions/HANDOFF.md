@@ -6,11 +6,11 @@ Date: 2026-06-08
 
 State: HOLD_WITH_CREDENTIAL_AND_EXECUTION_GATES
 
-Maturity: L3 candidate
+Maturity: L4 candidate
 
 ## Next Request
 
-TRADING-REQ-02 - Safe Local Postgres E2E Revalidation
+TRADING-REQ-05 - Credential Vault and Execution Gate Review
 
 ## Handoff Notes
 
@@ -19,3 +19,6 @@ TRADING-REQ-02 - Safe Local Postgres E2E Revalidation
 - Refresh local E2E evidence before maturity promotion.
 - PORTFOLIO-REQ-02 nested Trading Core typecheck/test passed.
 - Maturity decision: REQUIRES_REVALIDATION until `npm run trading:local:e2e` is executed safely.
+- TRADING-REQ-04 local Postgres E2E passed with `npm run trading:local:e2e -- --json --cleanup`.
+- Maturity decision: PROMOTE_TO_L4_CANDIDATE for local durable persistence/readiness only.
+- Keep Trading on HOLD for production/execution-sensitive work.

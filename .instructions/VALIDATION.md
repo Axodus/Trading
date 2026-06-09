@@ -21,9 +21,9 @@ Safe documentation checks:
 
 ## Current Validation Status
 
-Status: PASS_WITH_E2E_GAP
+Status: PASS
 
-Current product validation must be refreshed in a dedicated Trading request using the documented local E2E path.
+Current product validation includes the documented local E2E path.
 
 PORTFOLIO-REQ-01 result:
 
@@ -47,4 +47,43 @@ PORTFOLIO-REQ-02 results:
 
 Remaining validation:
 
-- Run the documented `npm run trading:local:e2e` path with safe local Postgres prerequisites in a dedicated Trading request.
+- Production or staging validation remains forbidden until explicitly approved.
+
+## TRADING-REQ-04 Local Postgres E2E
+
+Command:
+
+```bash
+cd trading-core/services/trading-core
+npm run trading:local:e2e -- --json --cleanup
+```
+
+Result: PASS
+
+Summary:
+
+- `ok: true`
+- `status: passed`
+- `environment: local`
+- `cleanup: true`
+- `mock: true`
+- `simulationOnly: true`
+- `liveTradingEnabled: false`
+- `productionReady: false`
+
+Passed steps:
+
+- local safety validation
+- docker compose up
+- wait for postgres
+- run migrations
+- seed local data
+- database health
+- schema validation
+- repository readiness and replay smoke
+- docker compose down
+
+Validation evidence:
+
+- `.instructions/TRADING_E2E_REVALIDATION_EVIDENCE.md`
+- `.instructions/reports/TRADING_REQ_04_SAFE_LOCAL_POSTGRES_E2E_REVALIDATION.md`

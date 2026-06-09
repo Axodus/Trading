@@ -10,9 +10,9 @@ Normalization result: COMPLETE
 
 ## Current Maturity
 
-Detected level: L3 - Local validation candidate
+Detected level: L4 candidate - Functional integration readiness
 
-Maturity recommendation: DOCUMENTED_AS_L3_CANDIDATE
+Maturity recommendation: PROMOTE_TO_L4_CANDIDATE
 
 Rationale:
 
@@ -88,7 +88,7 @@ Production execution: DISABLED
 
 ## Next Recommended Request
 
-TRADING-REQ-01 - Current Validation Evidence and Credential Vault Boundary Review
+TRADING-REQ-05 - Credential Vault and Execution Gate Review
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 
@@ -123,3 +123,48 @@ Rationale:
 - The root workspace still has no `package.json`.
 - The real local Postgres E2E path remains documented but was not executed as a full live local E2E cycle in this request.
 - Live trading, exchange execution, credentials, withdrawals and treasury remain blocked.
+
+## TRADING-REQ-04 Safe Local Postgres E2E Revalidation
+
+Status: COMPLETE
+
+Validation result: PASS
+
+Command:
+
+```bash
+cd trading-core/services/trading-core
+npm run trading:local:e2e -- --json --cleanup
+```
+
+Evidence:
+
+- local safety validation: PASS
+- docker compose up: PASS
+- wait for Postgres: PASS
+- migrations: PASS
+- mock seed data: PASS
+- database health: PASS
+- schema validation: PASS
+- repository readiness and replay smoke: PASS
+- docker compose down: PASS
+
+Validated configuration:
+
+- environment: `local`
+- database host: `127.0.0.1`
+- database port: `55433`
+- database name: `axodus_trading_local`
+- schema version: `0002_trading_events_tenant_id.sql`
+- mock: true
+- simulationOnly: true
+- liveTradingEnabled: false
+- productionReady: false
+
+Maturity decision: PROMOTE_TO_L4_CANDIDATE
+
+Rationale:
+
+- The documented real local Postgres E2E path passed.
+- Trading now has current evidence for local durable persistence, migrations, mock seed data, health checks, schema validation, repository readiness and replay smoke.
+- Production trading, credentials, withdrawals, treasury movement and production databases remain blocked.

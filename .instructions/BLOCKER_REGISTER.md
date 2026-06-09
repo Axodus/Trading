@@ -30,13 +30,25 @@ Resolution path: Complete Credential Vault decisioning and secret-management app
 
 Severity: MEDIUM
 
-Status: UNKNOWN
+Status: RESOLVED
 
 Description: Historical local E2E evidence exists, but current validation was not rerun in PORTFOLIO-REQ-01.
 
-Impact: Maturity remains L3 candidate.
+Impact: Resolved for local durable persistence/readiness evidence.
 
-Resolution path: PORTFOLIO-REQ-02 ran nested Trading Core typecheck and tests successfully, but the real local Postgres E2E test remains skipped. Run `npm run trading:local:e2e` in a dedicated Trading request.
+Resolution path: TRADING-REQ-04 ran `npm run trading:local:e2e -- --json --cleanup` successfully against local Postgres.
+
+## TRADING-BLOCKER-004 - Root Package Boundary
+
+Severity: LOW
+
+Status: ACTIVE
+
+Description: The Trading root workspace does not expose a root `package.json`. Validation commands are nested under `trading-core/services/trading-core`.
+
+Impact: Operators must run validation from the documented nested service path.
+
+Resolution path: Keep documented nested validation path, or create a root orchestration script only through a separate approved non-product request.
 
 ## PORTFOLIO-REQ-02 Blocker Review
 
@@ -44,6 +56,18 @@ Resolution path: PORTFOLIO-REQ-02 ran nested Trading Core typecheck and tests su
 |---|---|
 | Live trading blocked | ACTIVE |
 | Production credentials blocked | ACTIVE |
-| Current validation refresh required | UNKNOWN |
+| Current validation refresh required | RESOLVED |
 | Root `package.json` absent | ACTIVE |
-| Real local Postgres E2E not executed | ACTIVE |
+| Real local Postgres E2E not executed | RESOLVED |
+
+## TRADING-REQ-04 Blocker Review
+
+| Blocker | Status |
+|---|---|
+| Live trading blocked | ACTIVE |
+| Production credentials blocked | ACTIVE |
+| Current validation refresh required | RESOLVED |
+| Root `package.json` absent | ACTIVE |
+| Real local Postgres E2E not executed | RESOLVED |
+| Production database execution blocked | ACTIVE |
+| Treasury movement blocked | ACTIVE |
