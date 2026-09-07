@@ -39,6 +39,7 @@ Current canonical files:
 - `TRADING_CREDENTIAL_VAULT_ENVIRONMENT_BOUNDARIES.md`
 - `TRADING_NEXT_PHASE_BOUNDARIES.md`
 - `TRADING_OPEN_RISKS.md`
+- `TRADING_HUMMINGBOT_BACKEND_API_OWNERSHIP.md`
 
 Processed sprint docs, older plans, duplicate architecture drafts, checkpoint inventories, and historical reports live in:
 
