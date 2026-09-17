@@ -24,7 +24,7 @@ Next gate:
 
 Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B NEXT`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
 
 Scope:
 - `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
@@ -54,7 +54,29 @@ Validation:
 - `npm test`: PASS, 3 test files / 3 suites / 0 failures
 
 Next:
-- `IMP-01B` minimal HTTP `ExecutionProvider` adapter
+- `IMP-01C` offline contract and integration validation
+
+### IMP-01B result
+
+Status: COMPLETE
+
+Delivered:
+- minimal Axodus HTTP `ExecutionProvider` adapter for the admitted `POST /trading/orders` surface
+- request mapping for market and limit order intents
+- response normalization without Hummingbot DTO leakage
+- correlation and authorization-header propagation through injected boundary dependencies
+- typed mapping for upstream HTTP, timeout, transport and protocol failures
+- dependency-baseline enforcement before any HTTP request
+- offline tests for valid mapping, response mapping, failures, forbidden capabilities and revision drift
+
+Validation:
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 4 test files / 4 suites / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+
+Next:
+- `IMP-01C` offline contract and integration validation
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

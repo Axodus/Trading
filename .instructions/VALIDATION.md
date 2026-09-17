@@ -185,3 +185,29 @@ Validation:
 - `npm run typecheck`: PASS
 - `npm test`: PASS, 3 test files / 3 suites / 0 failures
 - no credentials, exchange connectivity, orders or external operations used
+
+## AXODUS-TRADING-IMP-01B — HTTP ExecutionProvider Adapter
+
+Result: `COMPLETE`
+
+Evidence:
+
+- `HummingbotHttpExecutionProvider` exposes only the Axodus `executeOrder` contract
+- the adapter maps Axodus order intents to the admitted Hummingbot `POST /trading/orders` request shape
+- upstream `order_id` and status are normalized into Axodus `ExecutionResult`
+- HTTP, timeout, transport and invalid-response failures become typed `ExecutionProviderBoundaryError` failures
+- correlation and authorization headers are injected through an explicit boundary provider
+- baseline drift and unsupported order capabilities are rejected before crossing HTTP
+- Hummingbot-specific client DTOs/models/exceptions are confined to the adapter implementation
+
+Validation:
+
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 4 test files / 4 suites / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+- no credentials, exchange connectivity, orders or external operations used
+
+Next:
+
+- `IMP-01C` offline contract and integration validation

@@ -2,7 +2,7 @@
 
 Status: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
 
-Progress: `IMP-01A COMPLETE / IMP-01B NEXT / IMP-01C PENDING`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
 
 ## Purpose
 
@@ -54,3 +54,11 @@ This document records the CTO authorization for IMP-01A/B/C and the conditional 
 `IMP-01A` is complete. The code now exposes the frozen dependency baseline, admits HTTP as the only current Hummingbot transport, and defines Axodus-owned authorization and upstream-failure contracts. The implementation remains independent of Hummingbot and Condor runtime imports.
 
 Validation passed with `npm run typecheck` and `npm test` from `trading-core/services/trading-core`. The next increment is `IMP-01B`, the minimal HTTP `ExecutionProvider` adapter.
+
+## IMP-01B implementation result
+
+`IMP-01B` is complete. The implementation adds a minimal Axodus-owned HTTP adapter for `POST /trading/orders`, with explicit request/response mapping, correlation and authorization-header propagation, typed upstream HTTP/transport/protocol failures, and exact dependency-baseline enforcement. Hummingbot client DTOs, exceptions and models are not exposed to Trading Core callers.
+
+The adapter admits only market and limit order intents. Credential/key, wallet/Gateway, executor, lifecycle and direct strategy surfaces remain outside the implementation boundary. The client WebSocket path remains blocked under `AXODUS-TRADING-BLOCKER-01`.
+
+Validation passed with `npm run typecheck`, `npm test`, `npm run build` and `git diff --check` from the Trading workspace. The next increment is `IMP-01C`, offline contract and integration validation.

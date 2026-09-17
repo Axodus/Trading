@@ -67,6 +67,7 @@ export * from './execution/ExecutionProviderRegistry.js';
 export * from './execution/providers/hummingbot/HummingbotConfigMapper.js';
 export * from './execution/providers/hummingbot/HummingbotDependencyBaseline.js';
 export * from './execution/providers/hummingbot/HummingbotHealthService.js';
+export * from './execution/providers/hummingbot/HummingbotHttpExecutionProvider.js';
 export * from './execution/providers/hummingbot/HummingbotProvider.js';
 export * from './execution/providers/hummingbot/HummingbotRuntime.js';
 export * from './execution/providers/hummingbot/HummingbotTelemetryAdapter.js';

@@ -783,7 +783,7 @@ Record:
 
 Status: IN PROGRESS / RESTRICTED HTTP BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B NEXT`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
 
 Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
@@ -801,6 +801,13 @@ IMP-01A evidence:
 - programmatic REQ-04 dependency baseline and HTTP-only transport admission
 - Axodus authorization and provider-failure contracts
 - offline foundation tests passing
+
+IMP-01B evidence:
+- minimal Axodus-owned HTTP order adapter using `POST /trading/orders`
+- request/response mapping and correlation/auth-header propagation
+- typed upstream HTTP, timeout, transport and protocol failure mapping
+- exact baseline enforcement and no Hummingbot DTO exposure
+- offline validation passing
 
 Constraints:
 - WebSocket via `hummingbot-api-client v1.5.9` is blocked under `AXODUS-TRADING-BLOCKER-01`
