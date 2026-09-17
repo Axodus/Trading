@@ -751,3 +751,27 @@ Remaining constraints:
 
 Record:
 - `.instructions/TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md`
+
+---
+
+# AXODUS-TRADING-REQ-04 - Materialized Repository Verification & Baseline Reconciliation
+
+Status: COMPLETE / CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD
+
+Delivered:
+- verified the three materialized repositories, origins, gitlinks, checked-out SHAs, tags, branches and clean states
+- superseded the REQ-03 planning baseline with Condor `d89e74f…`, client `v1.5.9` / `dae015a3…` and Hummingbot API `2494e847…`
+- reconciled Condor, client and server as a compatibility triangle
+- verified 337 client HTTP contracts against the vendored OpenAPI specification
+- recorded the current WebSocket authentication incompatibility without introducing a shim
+- revalidated Axodus ownership, direct-authority isolation and market-data limitations
+
+Remaining constraints:
+- no live or fixture-backed server/client contract test was run
+- Condor and server focused tests require absent local dependencies
+- Hummingbot API remains an untagged commit after `v2.1.0`
+- IMP-01 remains on implementation hold pending CTO release and scope decision for the WebSocket gap
+
+Record:
+- `.instructions/TRADING_REQ_04_MATERIALIZED_REPOSITORY_VERIFICATION.md`
+- REQ-03 remains historical provenance; REQ-04 is the current materialized baseline record

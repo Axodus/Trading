@@ -137,3 +137,26 @@ Implication:
 - no further REQ-03 dependency decision is required; any replacement requires a new compatibility review before IMP-01
 - no adapter, runtime, credential, exchange or trading implementation was performed
 - System One REQ-01A–A4 was assessed only for impact and remains unchanged materially
+
+## AXODUS-TRADING-REQ-04 Materialized Repository Verification
+
+Result: `CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD`
+
+Evidence:
+
+- `.gitmodules` URLs match the actual origins for Condor, Hummingbot API and Hummingbot API Client
+- Trading gitlinks match the checked-out SHAs: Condor `d89e74f…`, Hummingbot API `2494e847…`, client `dae015a3…`
+- all three audited submodule worktrees were clean and on `main`; the client is tagged `v1.5.9` and the server describes as `v2.1.0-961-g2494e84`
+- Condor's current metadata and lockfile pin `hummingbot-api-client==1.5.9`; the source checkout is the Axodus fork with package metadata retaining upstream Hummingbot URLs
+- `pytest -q test/test_calls_match_api_spec.py` in the client passed: `337 passed in 1.33s`
+- Condor surface test was skipped because `aiohttp` is absent; Hummingbot API focused tests failed collection because `pandas` and `fastapi` are absent; dependencies were not installed
+- current server WebSocket authentication accepts Basic headers or the `hummingbot-auth` subprotocol, while the current client connects with a query `token`; this path is incompatible and remains unresolved
+- current Hummingbot market data supports candles, historical candles, top-level order-book snapshots and buffered trade events, but does not establish durable sequence/gap/replay persistence for research-grade collection
+- Condor direct trading, credentials, Gateway/wallet, positions and executor surfaces remain isolated behind Axodus boundaries
+
+Implication:
+
+- REQ-03 remains historical evidence; REQ-04 is the current materialized baseline record
+- the current baseline is verified with limitations and is conditionally suitable for IMP-01 planning
+- no adapter, runtime, credential, exchange or trading implementation was performed
+- REQ-01A–A4 remain materially unchanged; prospective collection is still relevant to LTDI, historical seed remains required for Path M, `HYBRID` remains the candidate and BUY remains `HOLD`

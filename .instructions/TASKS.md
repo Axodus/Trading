@@ -1,5 +1,23 @@
 # Trading Tasks
 
+## REQ-04 — Materialized Repository Verification & Baseline Reconciliation
+
+Status: COMPLETE / CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD
+
+Completed:
+- verified `.gitmodules` URLs, actual origins, Trading gitlinks, checked-out SHAs and clean worktrees for Condor, Hummingbot API and Hummingbot API Client
+- reconciled the current source revisions against the REQ-03 historical baseline
+- audited Condor agent lifecycle, orchestration, direct trading, credentials, Gateway, portfolio, positions and executor surfaces
+- audited the API client HTTP/WebSocket bindings, models, authentication, market data and sensitive operational routes
+- verified 337 client route/path/query/body contracts against the vendored OpenAPI specification
+- identified the current WebSocket authentication incompatibility: client query token versus server header/subprotocol authentication
+- classified ownership, security boundaries, market-data suitability and implementation gaps without changing source
+- preserved REQ-03 provenance and updated the current baseline record
+
+Next gate:
+- CTO decides whether the WebSocket incompatibility is excluded from the first IMP-01 scope or must be resolved before implementation
+- no adapter, collector or runtime implementation is authorized by this record
+
 ## REQ-03 — Implementation Baseline & Gap Freeze
 
 Status: COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD

@@ -210,5 +210,6 @@ Avoid opaque automated trading systems.
 
 - `TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md` — canonical Hummingbot/Condor architecture, ownership, RAG/SPEC reconciliation and implementation gap map
 - `TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md` — concrete source verification gate before adapter implementation
+- `TRADING_REQ_04_MATERIALIZED_REPOSITORY_VERIFICATION.md` — current materialized repository, compatibility-triangle and ownership verification
 
-REQ-03 status: `COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD`. Condor is pinned at `2105d27…`; `hummingbot-api-client==1.4.1` is pinned by verified wheel SHA-256 `37e8b442…`; Hummingbot API server `e855625…` is frozen after static route, authentication and schema compatibility review. `v2.1.0` remains rejected for this Condor surface. `IMP-01` remains on hold.
+REQ-04 status: `CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD`. The current materialized baseline is Condor `d89e74f…`, `hummingbot-api-client` `v1.5.9` at `dae015a3…` and Hummingbot API `2494e847…`. HTTP route coverage is supported by 337 client contract tests; the current WebSocket client query-token path is incompatible with the server's header/subprotocol authentication and remains an explicit implementation gate. REQ-03 remains historical provenance.
