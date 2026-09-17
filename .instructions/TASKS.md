@@ -1,5 +1,21 @@
 # Trading Tasks
 
+## REQ-03 — Implementation Baseline & Gap Freeze
+
+Status: AUDIT COMPLETE / COMPATIBILITY PARTIAL / CTO DEPENDENCY DECISION PENDING / IMPLEMENTATION HOLD
+
+Completed:
+- materialized and audited Condor `2105d27…`
+- compared Hummingbot API `v2.1.0` with `e855625…`
+- rejected `v2.1.0` for the audited Condor client surface
+- recorded Condor direct-authority risks and Axodus ownership boundaries
+- recorded market-data capabilities and the missing durable historical L2/L3 boundary
+- produced the implementation gap map and proposed sequence
+
+Next gate:
+- CTO selects or verifies the Hummingbot API server/client baseline before opening IMP-01
+- no adapter or runtime implementation is authorized by this record
+
 # Phase 0 - Trading Architecture and Product Economy
 
 Status: IN PROGRESS

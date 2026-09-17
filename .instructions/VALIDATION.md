@@ -113,22 +113,25 @@ Evidence:
 
 - `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`
 
-## AXODUS-TRADING-REQ-03 Baseline Preflight
+## AXODUS-TRADING-REQ-03 Implementation Baseline Audit
 
-Result: `PREFLIGHT ACCEPTED / CTO FREEZE REQUIRED / IMPLEMENTATION HOLD`
+Result: `AUDIT COMPLETE / COMPATIBILITY PARTIAL / DEPENDENCY FREEZE PENDING CTO / IMPLEMENTATION HOLD`
 
 Evidence:
 
-- `.gitmodules` declares `condor` and `hummingbot-api`
-- `git ls-files -s condor hummingbot-api` returns no index entries
-- both directories are absent from the working tree
-- `git submodule update --init --recursive` produced no checkout
-- remote `origin/dev` contains the accepted REQ-02 commit `84660790674a8745bc84def40c0ca3866de70482`
-- Condor public `main` candidate observed at `2105d27d94189c3207d6f8fb5d76e754bde3fa65`
-- Hummingbot API public `main` candidate observed at `e85562515e4ded407595fc80d4c19fdc2e57de21`; tags `v2.0.0`, `v2.0.1` and `v2.1.0` also observed
+- `.gitmodules` declares `condor` and `hummingbot-api`, but `git ls-tree` and history contain no recoverable gitlinks
+- controlled inspection materialized Condor `2105d27d94189c3207d6f8fb5d76e754bde3fa65`
+- Hummingbot API `v2.1.0` resolved to `c908a1dcda7512445c11d32a9230fdbf6ba7b87e`; it lacks the modern route families used by Condor
+- Hummingbot API `main` was inspected at `e85562515e4ded407595fc80d4c19fdc2e57de21`; its server routes structurally match the observed Condor surface
+- Condor declares `hummingbot-api-client==1.4.1`; package-level compatibility was not verified because the client package was not materialized and no live contract test ran
+- Condor credentials, direct trading, positions, executors, Gateway and bot lifecycle capabilities were classified as isolated behind Axodus boundaries
+- modern Hummingbot market data includes candles, historical candles, order-book snapshots and WebSocket feed surfaces; durable Axodus historical L2/L3 persistence was not established
+- both audited sources expose MIT licenses; no upstream source was changed
 
 Implication:
 
-- concrete API, revision, dependency, licensing and upstream-test verification cannot be completed yet
-- no implementation should proceed against presumed Condor or Hummingbot interfaces
-- no candidate was materialized because the intended revision is not frozen
+- `v2.1.0` is rejected as the Condor server baseline
+- `e855625…` is a proposed audit/integration baseline, not a production dependency freeze
+- CTO must select or verify the final server/client baseline before IMP-01
+- no adapter, runtime, credential, exchange or trading implementation was performed
+- System One REQ-01A–A4 was assessed only for impact and remains unchanged materially
