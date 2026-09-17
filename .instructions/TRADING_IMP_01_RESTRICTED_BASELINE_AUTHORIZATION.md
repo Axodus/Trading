@@ -1,6 +1,8 @@
 # AXODUS-TRADING-IMP-01 — Restricted Baseline Implementation Authorization
 
-Status: `AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE`
+Status: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
+
+Progress: `IMP-01A COMPLETE / IMP-01B NEXT / IMP-01C PENDING`
 
 ## Purpose
 
@@ -46,3 +48,9 @@ Implement only a read/feed substrate after the required transport is explicitly 
 ## Decision state
 
 This document records the CTO authorization for IMP-01A/B/C and the conditional status of IMP-01D. It does not claim that implementation has been completed or that the system is production-ready.
+
+## IMP-01A implementation result
+
+`IMP-01A` is complete. The code now exposes the frozen dependency baseline, admits HTTP as the only current Hummingbot transport, and defines Axodus-owned authorization and upstream-failure contracts. The implementation remains independent of Hummingbot and Condor runtime imports.
+
+Validation passed with `npm run typecheck` and `npm test` from `trading-core/services/trading-core`. The next increment is `IMP-01B`, the minimal HTTP `ExecutionProvider` adapter.

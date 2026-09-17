@@ -781,7 +781,9 @@ Record:
 
 # AXODUS-TRADING-IMP-01 - Restricted Baseline Implementation Foundations
 
-Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
+Status: IN PROGRESS / RESTRICTED HTTP BASELINE
+
+Progress: `IMP-01A COMPLETE / IMP-01B NEXT`
 
 Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
@@ -794,6 +796,11 @@ Sequence:
 2. `IMP-01B` — HTTP `ExecutionProvider` adapter
 3. `IMP-01C` — offline contract validation
 4. `IMP-01D` — conditional market-data read boundary
+
+IMP-01A evidence:
+- programmatic REQ-04 dependency baseline and HTTP-only transport admission
+- Axodus authorization and provider-failure contracts
+- offline foundation tests passing
 
 Constraints:
 - WebSocket via `hummingbot-api-client v1.5.9` is blocked under `AXODUS-TRADING-BLOCKER-01`

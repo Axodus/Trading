@@ -168,3 +168,20 @@ Implication:
 Result: `AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE`
 
 Authorized scope is documentation and implementation tracking for `IMP-01A/B/C`: dependency and contract foundations, the minimal HTTP `ExecutionProvider` adapter, and offline contract validation. No code implementation was performed by the REQ-04 acceptance record. `IMP-01D` is conditional, and WebSocket market data remains blocked by `AXODUS-TRADING-BLOCKER-01`.
+
+## AXODUS-TRADING-IMP-01A — Dependency and Contract Foundations
+
+Result: `COMPLETE`
+
+Evidence:
+
+- `AXODUS_HUMMINGBOT_DEPENDENCY_BASELINE` records the accepted REQ-04 Condor, API client and API server revisions
+- `AXODUS_HUMMINGBOT_ADMITTED_TRANSPORTS` admits HTTP only; WebSocket remains blocked
+- Axodus execution authorization and upstream failure contracts are defined independently from Hummingbot DTOs
+- baseline drift, transport admission and failure normalization tests pass offline
+
+Validation:
+
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 3 test files / 3 suites / 0 failures
+- no credentials, exchange connectivity, orders or external operations used

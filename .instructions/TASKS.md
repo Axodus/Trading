@@ -24,6 +24,8 @@ Next gate:
 
 Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
 
+Progress: `IMP-01A COMPLETE / IMP-01B NEXT`
+
 Scope:
 - `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
 - `IMP-01B`: implement the minimal HTTP `ExecutionProvider` adapter surface
@@ -35,6 +37,24 @@ Boundaries:
 - Hummingbot provides operational substrate capabilities only through the Axodus adapter
 - Condor is not in the first execution path and cannot control execution directly
 - credentials, Gateway/wallets, direct trade, real orders, paper/shadow/live trading, production and capital remain unauthorized
+
+### IMP-01A result
+
+Status: COMPLETE
+
+Delivered:
+- frozen programmatic dependency baseline for Condor, Hummingbot API Client and Hummingbot API
+- explicit admitted transport list containing HTTP only
+- Axodus-owned execution request authorization contract
+- Axodus-owned upstream failure classification and `ExecutionProviderBoundaryError`
+- offline tests for baseline drift, transport admission and failure shape
+
+Validation:
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 3 test files / 3 suites / 0 failures
+
+Next:
+- `IMP-01B` minimal HTTP `ExecutionProvider` adapter
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

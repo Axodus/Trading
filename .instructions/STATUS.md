@@ -90,7 +90,8 @@ Production execution: DISABLED
 
 - `AXODUS-TRADING-REQ-04`: `COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED`
 - Current baseline: Condor `d89e74f…`, `hummingbot-api-client v1.5.9` at `dae015a3…`, Hummingbot API `2494e847…`
-- `AXODUS-TRADING-IMP-01A/B/C`: `AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE`
+- `AXODUS-TRADING-IMP-01`: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
+- `IMP-01A`: `COMPLETE`; `IMP-01B`: next; `IMP-01C`: pending
 - `AXODUS-TRADING-IMP-01D`: conditional on an explicitly admitted market-data transport
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked
 - Condor integration remains later work and cannot control execution directly
@@ -99,7 +100,7 @@ The next implementation work is governed by `.instructions/TRADING_IMP_01_RESTRI
 
 ## Next Recommended Request
 
-`AXODUS-TRADING-IMP-01A/B/C` implementation work on the restricted HTTP baseline
+`AXODUS-TRADING-IMP-01B` minimal HTTP `ExecutionProvider` adapter on the restricted baseline
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 
