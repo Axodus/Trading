@@ -536,3 +536,28 @@ Static validation for Python:
 - Core duplicate ID rejection: VERIFIED (source diff)
 - InFlightOrder constructor receives client_order_id: VERIFIED (source inspection)
 - ClientOrderTracker indexes by client_order_id: VERIFIED (source inspection)
+
+## AXODUS-TRADING-REQ-12 — Durable Execution State & Recovery Architecture Freeze
+
+Date: 2026-09-17
+
+Validation scope:
+
+- inspected PostgreSQL client, pool, migration runner, database bootstrap and local E2E wiring;
+- inspected Trading repositories, event persistence/replay, lifecycle repository and recovery workers;
+- inspected existing tests for migration repeatability, PostgreSQL adapters, event persistence and CEX lifecycle behavior;
+- did not modify runtime code, run exchange connectivity, use credentials or add dependencies.
+
+Results:
+
+- PostgreSQL connectivity/migration/event foundations: `REUSE CANDIDATE`;
+- durable CEX `SubmissionAttempt` aggregate: `NOT PRESENT`;
+- atomic aggregate plus evidence plus audit transition: `NOT PROVEN`;
+- single-connection transaction abstraction: `NOT PROVEN`;
+- durable CAS/version and worker fencing: `NOT FOUND`;
+- transactional outbox: `NOT FOUND`;
+- crash/process restart and cross-worker validation: `NOT EXECUTED / IMPLEMENTATION NOT PRESENT`.
+
+Classification: `DURABLE ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`.
+
+Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.

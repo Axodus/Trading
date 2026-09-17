@@ -944,3 +944,21 @@ The offline gate validates deterministic in-process lifecycle and exact REST rec
 Next: CTO review of the evidence, followed by a separately scoped durable execution-state/recovery increment if blocker closure is desired.
 
 Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+## AXODUS-TRADING-REQ-12 — Durable Execution State & Recovery Architecture Freeze
+
+Status: `COMPLETE / ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`.
+
+PostgreSQL and persisted events are reusable foundations, but durable execution attempts, atomic state/evidence transitions, compare-and-set or claim fencing, and crash recovery are not yet frozen as implementable contracts.
+
+```text
+VAL-02B accepted
+      ↓
+REQ-12 architecture partial
+      ↓ CTO decisions required
+IMP-02C durable lifecycle and recovery
+      ↓
+durability validation and BLOCKER-02 closure review
+```
+
+Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.

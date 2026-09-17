@@ -1430,3 +1430,20 @@ Completed:
 Limitation: lifecycle persistence is currently in memory. Durable restart/recovery and cross-process concurrency remain outside the implementation and keep `AXODUS-TRADING-BLOCKER-02` open.
 
 Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+## AXODUS-TRADING-REQ-12 — Durable Execution State & Recovery Architecture Freeze
+
+Result: `COMPLETE / DURABLE ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`.
+
+Completed:
+
+- audited PostgreSQL, migrations, repositories, events and recovery-related services;
+- confirmed reuse candidates and separated Trading-owned state from ACS and upstream infrastructure;
+- defined the durable `OrderIntent` / `SubmissionAttempt` aggregate boundary;
+- defined provider-call, atomic transition, concurrency and restart/recovery requirements;
+- modeled failure windows A-J and preserved `UNKNOWN`, cancellation and no-blind-retry semantics;
+- documented that no durable execution implementation was added.
+
+Next gate: CTO decision on transaction abstraction, durable schema/repository, CAS/claim fencing and outbox requirement, followed by a separately scoped `IMP-02C` implementation and crash/recovery validation.
+
+Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.

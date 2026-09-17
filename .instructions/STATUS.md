@@ -208,3 +208,15 @@ Validated exact found/not-found/indeterminate reconciliation, ambiguous submissi
 Validation: `npm run typecheck`, dedicated VAL-02B suite (12 passed), full `npm test`, and `git diff --check` passed.
 
 Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+## AXODUS-TRADING-REQ-12 — Durable Execution State & Recovery Architecture Freeze
+
+Status: `COMPLETE / ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`
+
+The reuse-first audit confirms reusable PostgreSQL, migration, repository and event foundations. The accepted CEX lifecycle remains in memory, and the current database/event surfaces do not prove a single-connection transaction that atomically commits execution state, provider evidence and audit/outbox records.
+
+Open decisions are the durable `SubmissionAttempt` schema/repository, transaction-capable connection abstraction, optimistic version/CAS and worker claim/fencing semantics, transactional outbox requirement, and crash/recovery validation plan.
+
+`IMP-02C` remains `HOLD`. `AXODUS-TRADING-BLOCKER-02` is durability-only. `BLOCKER-01` remains independent and open.
+
+Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.

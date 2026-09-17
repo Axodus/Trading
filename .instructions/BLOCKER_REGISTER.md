@@ -140,3 +140,17 @@ Classification: `CEX RECONCILIATION PARTIALLY VALIDATED / BLOCKER-02 REMAINS OPE
 The blocker is not closed by this validation. A future authorized increment must establish durable execution-state persistence and validate restart/recovery semantics before operational readiness.
 
 Detailed record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+### AXODUS-TRADING-REQ-12 durability reclassification — 2026-09-17
+
+`AXODUS-TRADING-BLOCKER-02` is now:
+
+**`OPEN / DURABILITY BLOCKING`**
+
+Resolved: caller identity propagation, Core tracking continuity, Binance Spot/Perpetual identity capability, exact REST reconciliation, offline lifecycle semantics, repeated-operation safety and terminal-state protection.
+
+Open: durable `SubmissionAttempt` persistence, atomic evidence/state/audit transition, transaction connection pinning, commit-outcome handling, optimistic CAS or equivalent concurrency control, recovery-worker claim/fencing, duplicate-worker protection and crash recovery across provider calls and local commits.
+
+REQ-12 is `COMPLETE / DURABLE ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`. `IMP-02C` remains on hold until these architecture decisions are frozen. Historical blocker records remain preserved for provenance.
+
+Detailed record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
