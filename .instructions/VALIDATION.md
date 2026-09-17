@@ -327,18 +327,33 @@ Record:
 
 ## AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze
 
-Result: `GO / DOCUMENTATION FREEZE / IMPLEMENTATION HOLD`
+Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED`
 
 Scope:
 
-- freeze Axodus ownership for client order identity, idempotency, submission state, provider order identity, reconciliation, status transitions, duplicate prevention, restart recovery and cancellation semantics
-- preserve `PROVIDER_EXECUTION_UNKNOWN` as distinct from `FAILED`; unknown outcomes require reconciliation and never authorize blind resubmission
-- assess Hummingbot identifier and status support without transferring lifecycle ownership to Hummingbot
-- define the implementation gap map and proposed sequence for future `IMP-02`
+- inspect materialized Axodus execution contracts and Hummingbot HTTP client/server source
+- verify submit requests have no caller-supplied client order ID or idempotency field
+- verify active-order, historical-order and trade searches lack exact order-ID lookup filters
+- verify cancellation accepts active in-flight IDs and returns initiation evidence rather than terminal cancellation
+- freeze the Axodus lifecycle, identity/attempt model, ambiguity semantics, reconciliation algorithm and durable recovery requirements
+- classify the current provider identity/reconciliation gap as blocking operational `IMP-02`
+
+Findings:
+
+- `PROVIDER_EXECUTION_UNKNOWN` remains distinct from `FAILED` and never authorizes blind submission retry
+- Hummingbot provider IDs are external evidence; they do not replace Axodus `OrderIntentId` or idempotency identity
+- current provider-side idempotency is `NOT AVAILABLE / UNVERIFIED`
+- current exact unknown-outcome reconciliation is `PARTIAL / UNSAFE`; no direct provider lookup by Axodus identity is available
+- cancellation is `PARTIAL / UNSAFE` for unknown state because the provider only initiates cancellation for active in-flight IDs
 
 Non-goals:
 
 - no lifecycle implementation, persistence changes, credentials, exchange connectivity, orders, paper/shadow/live trading, Condor integration, WebSocket work or upstream modification
+
+Decision state:
+
+- `IMP-02`: `BLOCKED` for operational lifecycle pending CTO decision on the identity/reconciliation gap
+- `AXODUS-TRADING-BLOCKER-01`: preserved open and independent
 
 Record:
 

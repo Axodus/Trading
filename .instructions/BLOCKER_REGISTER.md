@@ -101,3 +101,20 @@ Option assessment:
 Condor calls the same client WebSocket surfaces and has reconnect/backoff behavior, but that cannot repair a handshake rejected before the stream is established. HTTP remains admitted for the published IMP-01 path. WebSocket market data remains unavailable to Axodus; `IMP-01D-HTTP` is complete and streaming remains deferred.
 
 Detailed record: `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`.
+
+
+## AXODUS-TRADING-BLOCKER-02 - Provider Identity and Unknown-Outcome Reconciliation Gap
+
+Severity: HIGH
+
+Status: OPEN / DECISION REQUIRED
+
+Description: The current REQ-04 Hummingbot client/server submission path does not accept a caller-supplied Axodus client order ID or idempotency key. Active orders are discoverable only through account/connector/pair filters, historical orders and trades lack direct order-ID filters, and cancellation returns initiation evidence for active in-flight IDs rather than terminal state.
+
+Impact: A transport failure after submission can leave provider execution unknown without a defensible exact lookup or duplicate-suppression guarantee. Operational IMP-02 lifecycle/reconciliation implementation is blocked.
+
+Resolution path: CTO must select and document a reviewed remedy or explicitly restrict the operational capability. Candidates include provider/API support for caller identity, a reviewed Axodus correlation mechanism, a revised dependency baseline or a governed operational restriction. Do not add a shim, alter upstream, retry blindly or infer exactly-once semantics during this audit.
+
+Preserved boundary: Axodus owns order intent, idempotency, lifecycle, reconciliation, risk, accounting and capital authority. Hummingbot remains an operational substrate; Condor cannot bypass the boundary.
+
+Detailed record: .instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md.

@@ -1237,3 +1237,28 @@ Boundary:
 
 Record:
 - `.instructions/TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md`
+
+
+## AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze
+
+Result: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED
+
+Completed:
+
+- verified Hummingbot client/server submission, identity, search, fills, cancellation and restart surfaces from the materialized REQ-04 baseline
+- froze the Axodus lifecycle, identity/attempt model, reconciliation algorithm, restart durability and cancellation semantics
+- classified missing provider caller identity, idempotency and exact unknown-outcome lookup as an implementation blocker
+- defined the implementation gap map and proposed sequence for future IMP-02
+
+Decision:
+
+- IMP-02 is blocked for operational execution lifecycle until CTO selects a remedy for the provider identity/reconciliation gap
+- AXODUS-TRADING-BLOCKER-01 remains independent and open
+
+Boundaries:
+
+- no lifecycle implementation, persistence changes, credentials, exchange connectivity, orders, paper/shadow/live trading, Condor integration, WebSocket work or upstream modification
+
+Record:
+
+- .instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md

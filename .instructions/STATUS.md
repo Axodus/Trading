@@ -96,11 +96,11 @@ Production execution: DISABLED
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
-The next architectural freeze is `AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze`. IMP-01A/B/C and the restricted HTTP market-data read boundary are implemented, validated and published. Streaming remains blocked. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+`AXODUS-TRADING-REQ-06`: audit complete; documentation freeze proposed; CTO review pending. The current Hummingbot baseline lacks caller-supplied client-order identity, provider idempotency and exact lookup surfaces needed for safe unknown-outcome reconciliation. `IMP-02` is blocked for operational lifecycle work. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
 
 ## Next Recommended Request
 
-`AXODUS-TRADING-REQ-06` documentation freeze; future `IMP-02` implementation remains pending its acceptance
+`AXODUS-TRADING-REQ-06` CTO review; `IMP-02` remains blocked pending a decision on provider identity and reconciliation capability
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

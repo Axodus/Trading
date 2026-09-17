@@ -837,7 +837,7 @@ Constraints:
 
 # AXODUS-TRADING-REQ-06 - Execution State, Reconciliation & Idempotency Freeze
 
-Status: GO / DOCUMENTATION FREEZE / IMPLEMENTATION HOLD
+Status: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED
 
 Objective: freeze the execution lifecycle and ambiguity-handling contracts required before any operational path or `IMP-02` implementation.
 
