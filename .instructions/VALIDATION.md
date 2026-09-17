@@ -471,3 +471,39 @@ Decision state:
 Record:
 
 - `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`
+
+
+## AXODUS-TRADING-VAL-02A — Offline End-to-End Execution Identity Validation
+
+Date: 2026-09-17
+
+Commands:
+
+```bash
+cd trading-core/services/trading-core
+npm run typecheck
+npm test
+```
+
+Results:
+
+- Typecheck: PASS
+- Tests: 6 suites, 6 passed, 0 failed, 0 skipped
+- Test suites:
+  - execution-orchestrator.test.mjs: PASS
+  - imp-01a-foundations.test.mjs: PASS
+  - imp-01b-http-adapter.test.mjs: PASS (includes identity propagation test)
+  - imp-01d-http-market-data.test.mjs: PASS
+  - postgres.e2e.test.mjs: PASS
+  - val-02a-identity.test.mjs: PASS
+
+Python runtime tests: NOT RUN (sandbox pip install blocked by network isolation)
+
+Static validation for Python:
+- API TradeRequest.client_order_id field_validator: VERIFIED (source inspection)
+- service propagation chain: VERIFIED (source diff)
+- Core ExchangePyBase caller ID selection: VERIFIED (source diff)
+- Core duplicate ID rejection: VERIFIED (source diff)
+- InFlightOrder constructor receives client_order_id: VERIFIED (source inspection)
+- ClientOrderTracker indexes by client_order_id: VERIFIED (source inspection)
+

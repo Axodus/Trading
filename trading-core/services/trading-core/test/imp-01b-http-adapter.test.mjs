@@ -226,4 +226,19 @@ describe('IMP-01B Hummingbot HTTP adapter', () => {
       /client version v-next/,
     );
   });
+
+  it("propagates a caller-provided clientOrderId to the Hummingbot API", async () => {
+    const calls = [];
+    const provider = createProvider({
+      async post(path, body, headers) {
+        calls.push({ path, body, headers });
+        return { status: 201, body: { order_id: "hb-order-id", status: "submitted" } };
+      },
+    });
+
+    const requestWithId = request({ clientOrderId: "axodus-test-id-123" });
+    await provider.executeOrder(requestWithId);
+
+    assert.equal(calls[0].body.client_order_id, "axodus-test-id-123");
+  });
 });

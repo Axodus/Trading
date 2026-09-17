@@ -159,6 +159,7 @@ function toHummingbotTradeRequest(
     amount: Number(request.quantity),
     order_type: request.orderType.toUpperCase(),
     ...(request.price === undefined ? {} : { price: Number(request.price) }),
+    ...(request.clientOrderId === undefined ? {} : { client_order_id: request.clientOrderId }),
   };
 }
 

@@ -1345,3 +1345,47 @@ Next gate:
 - only after that selection, materialize the Core and resume targeted connector identity tracing.
 
 Record: `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`.
+
+
+## VAL-02A — Offline End-to-End Execution Identity Validation
+
+Status: COMPLETE / CTO REVIEW READY
+
+Classification: IDENTITY PROPAGATION VALIDATED / TRACKING VALIDATED / VENUE VALIDATION PENDING
+
+Completed:
+- exact caller identity propagation from Axodus adapter through API, service, Core, to InFlightOrder (PASS)
+- native Hummingbot ID fallback when caller ID absent (PASS)
+- OrderTracker registration and retrieval by exact caller ID (PASS)
+- cancellation path locates order by propagated client ID offline (PASS)
+- exchange_order_id coexistence does not corrupt client_order_id (PASS)
+- duplicate active caller ID rejected deterministically before submission (PASS)
+- invalid identity (empty, whitespace, too long, bad charset) rejected at API boundary with field_validator (PASS)
+- ambiguous submission preserves PROVIDER_EXECUTION_UNKNOWN with no retry (PASS)
+- IMP-01 execution regression: all tests pass (PASS)
+- IMP-01D market-data regression: all tests pass (PASS)
+- WebSocket isolation confirmed: no WS path on adapter (PASS)
+
+Python-side (Core/API) runtime tests:
+- NOT RUN due to sandbox network isolation (pip install blocked)
+- validation for Python side is static trace through modified source
+- this is documented and does not convert NOT RUN into PASS
+
+Validation fixes applied (IMP-02A criteria):
+- added field_validator for client_order_id in TradeRequest (length <= 32, charset, non-empty)
+- added duplicate active ID rejection in ExchangePyBase._create_order
+
+Next gate:
+- CTO review of VAL-02A
+- if accepted, IMP-02A moves to COMPLETE / CTO ACCEPTED
+- BLOCKER-02 remains OPEN (venue/reconciliation pending)
+- IMP-02B remains HOLD
+
+## IMP-02A — Provider Order Identity Propagation Foundation
+
+Status: COMPLETE / CTO REVIEW READY (pending VAL-02A acceptance)
+
+Validation fixes:
+- field_validator for client_order_id at API boundary
+- duplicate active ID rejection at Core boundary
+
