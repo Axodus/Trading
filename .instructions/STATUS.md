@@ -96,11 +96,11 @@ Production execution: DISABLED
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
-`AXODUS-TRADING-REQ-06`: audit complete; documentation freeze proposed; CTO review pending. The current Hummingbot baseline lacks caller-supplied client-order identity, provider idempotency and exact lookup surfaces needed for safe unknown-outcome reconciliation. `IMP-02` is blocked for operational lifecycle work. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+`AXODUS-TRADING-REQ-06`: complete / CTO accepted / published. The current Hummingbot baseline lacks caller-supplied client-order identity, provider idempotency and exact lookup surfaces needed for safe unknown-outcome reconciliation. `AXODUS-TRADING-BLOCKER-02` is open and `IMP-02` remains blocked. `AXODUS-TRADING-REQ-07` source audit is complete with classification `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`; the current direction is Axodus-controlled client order ID propagation, pending a separate implementation decision. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
 
 ## Next Recommended Request
 
-`AXODUS-TRADING-REQ-06` CTO review; `IMP-02` remains blocked pending a decision on provider identity and reconciliation capability
+Resolve the REQ-07 dependency/source gap before opening any operational `IMP-02` implementation: materialize and freeze the Hummingbot Core connector source, then define the smallest reviewed identity propagation extension.
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

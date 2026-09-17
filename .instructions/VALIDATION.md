@@ -358,3 +358,43 @@ Decision state:
 Record:
 
 - `.instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md`
+
+## AXODUS-TRADING-REQ-07 — Provider Order Identity Propagation & Reconciliation Feasibility
+
+Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED`
+
+Validation scope:
+
+- traced the current identity path from Axodus execution adapter through the client and Hummingbot API to connector calls;
+- inspected Condor direct trading and provider-ID consumption surfaces;
+- inspected persistence fields for provider client and exchange order IDs;
+- inspected dependency/source metadata for the concrete Hummingbot Core connector package.
+
+Findings:
+
+- Axodus `clientOrderId` is currently dropped before `POST /trading/orders`;
+- client/server request models have no caller-supplied client-order ID or idempotency key;
+- API services call connector `buy/sell` without caller identity;
+- provider-generated `client_order_id` and optional `exchange_order_id` are evidence, not Axodus identity continuity;
+- exact repository lookup exists for provider-generated IDs, but no current HTTP lookup by Axodus identity exists;
+- concrete connector source is not materialized or revision-pinned, so venue-level acceptance/preservation/lookup is unverified;
+- Condor remains outside the Axodus execution path and cannot own identity or lifecycle semantics.
+
+Classification: `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`.
+
+Tests:
+
+- no runtime/upstream tests executed; this was a read-only source audit and the concrete Hummingbot Core package is unavailable locally;
+- no credentials, network exchange calls, orders or external operations;
+- repository/source inspection and documentation diff validation completed.
+
+Boundaries:
+
+- no Hummingbot/client/connector modification;
+- no adapter, shim, heuristic reconciliation or retry implementation;
+- `PROVIDER_EXECUTION_UNKNOWN` remains distinct from `FAILED` and never authorizes blind retry;
+- `BLOCKER-01` remains independent and open.
+
+Record:
+
+- `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`

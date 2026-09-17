@@ -118,3 +118,13 @@ Resolution path: CTO must select and document a reviewed remedy or explicitly re
 Preserved boundary: Axodus owns order intent, idempotency, lifecycle, reconciliation, risk, accounting and capital authority. Hummingbot remains an operational substrate; Condor cannot bypass the boundary.
 
 Detailed record: .instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md.
+
+### AXODUS-TRADING-REQ-07 source audit — 2026-09-17
+
+The materialized source confirms that `clientOrderId` is accepted at the Axodus contract boundary but is dropped by `HummingbotHttpExecutionProvider`. The client `TradeRequest`, server `TradeRequest`, API router and account/trading services contain no caller-supplied identity field and call connector `buy/sell` without one. Hummingbot persistence stores provider-generated `client_order_id` values, but that does not establish continuity from Axodus.
+
+The concrete Hummingbot Core connector package is not materialized or revision-pinned in the workspace, so caller-ID acceptance, venue preservation and exact exchange lookup remain unverified. The current classification is `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`.
+
+The selected direction remains `AXODUS-CONTROLLED CLIENT ORDER ID PROPAGATION`. No shim, upstream modification, connector modification, heuristic lookup or retry behavior is authorized by this audit.
+
+Detailed record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.

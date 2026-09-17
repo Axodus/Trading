@@ -1262,3 +1262,32 @@ Boundaries:
 Record:
 
 - .instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md
+
+## AXODUS-TRADING-REQ-07 — Provider Order Identity Propagation & Reconciliation Feasibility
+
+Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED`
+
+Completed:
+
+- traced Axodus `clientOrderId` through the current adapter, API client, Hummingbot API request model/router/services and persistence;
+- confirmed the current path drops caller identity before connector `buy/sell`;
+- confirmed Hummingbot persistence exposes provider-generated IDs but does not create Axodus identity continuity;
+- confirmed concrete Hummingbot Core connector source is not materialized or revision-pinned;
+- classified venue-level caller-ID acceptance, preservation and lookup as unverified;
+- preserved Condor as outside the Axodus execution authority boundary;
+- preserved REQ-06 unknown-outcome and no-blind-retry invariants.
+
+Decision:
+
+- `AXODUS-TRADING-BLOCKER-02`: `OPEN / IMP-02 BLOCKING`;
+- final classification: `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`;
+- direction retained: `AXODUS-CONTROLLED CLIENT ORDER ID PROPAGATION`;
+- no adapter, shim, upstream modification, connector modification or heuristic reconciliation was implemented.
+
+Next gate:
+
+- materialize and freeze the Hummingbot Core connector source;
+- select canonical connectors/venues for a targeted extension design;
+- define request, persistence and exact evidence lookup contracts before implementation.
+
+Record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.

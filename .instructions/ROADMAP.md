@@ -852,3 +852,23 @@ Sequence:
 Primary invariant: `PROVIDER_EXECUTION_UNKNOWN` requires reconciliation and cannot be blindly resubmitted.
 
 Record: `.instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md`.
+
+# AXODUS-TRADING-REQ-07 - Provider Order Identity Propagation & Reconciliation Feasibility
+
+Status: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED
+
+Objective: determine whether an Axodus-controlled execution identity can cross the current Hummingbot path and return as exact provider evidence.
+
+Result: the current client/server request path has no caller-supplied identity and does not pass one to connector `buy/sell`. Provider-generated IDs are persisted and searchable internally, but they do not establish Axodus identity continuity. Concrete Hummingbot Core connector source is not materialized, so venue-level preservation and lookup remain unverified.
+
+Sequence:
+
+1. preserve REQ-06 lifecycle invariants and BLOCKER-02;
+2. materialize and freeze the Hummingbot Core connector source;
+3. select canonical connectors for a targeted propagation design;
+4. define the smallest reviewed request, persistence and exact lookup extension;
+5. implement only after CTO review; keep operational `IMP-02` blocked until then.
+
+Final classification: `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`.
+
+Record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.
