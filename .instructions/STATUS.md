@@ -96,11 +96,15 @@ Production execution: DISABLED
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
-`AXODUS-TRADING-REQ-06`: complete / CTO accepted / published. The current Hummingbot baseline lacks caller-supplied client-order identity, provider idempotency and exact lookup surfaces needed for safe unknown-outcome reconciliation. `AXODUS-TRADING-BLOCKER-02` is open and `IMP-02` remains blocked. `AXODUS-TRADING-REQ-07` source audit is complete with classification `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`; the current direction is Axodus-controlled client order ID propagation, pending a separate implementation decision. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+`AXODUS-TRADING-REQ-06`: complete / CTO accepted / published. The current Hummingbot baseline lacks caller-supplied client-order identity, provider idempotency and exact lookup surfaces needed for safe unknown-outcome reconciliation. `AXODUS-TRADING-BLOCKER-02` is open and `IMP-02` remains blocked. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+
+`AXODUS-TRADING-REQ-07`: complete / CTO accepted / published with classification `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`; `AXODUS-TRADING-BLOCKER-02` remains open.
+
+`AXODUS-TRADING-REQ-08`: complete as a source/provenance audit with final classification `CORE BASELINE UNRESOLVED`. The materialized API installs `hummingbot` unpinned and provides no Core revision, immutable package, lockfile or image digest. Binance spot/perpetual and Gateway/DEX identity behavior therefore remains unverified. `AXODUS-TRADING-BLOCKER-02` remains open and `IMP-02` remains blocked.
 
 ## Next Recommended Request
 
-Resolve the REQ-07 dependency/source gap before opening any operational `IMP-02` implementation: materialize and freeze the Hummingbot Core connector source, then define the smallest reviewed identity propagation extension.
+Freeze or provide an immutable Hummingbot Core artifact/revision for audit. Do not clone upstream HEAD or select the historical `hummingbot==20241125` pin by approximation.
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

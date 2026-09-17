@@ -837,7 +837,7 @@ Constraints:
 
 # AXODUS-TRADING-REQ-06 - Execution State, Reconciliation & Idempotency Freeze
 
-Status: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 BLOCKED
 
 Objective: freeze the execution lifecycle and ambiguity-handling contracts required before any operational path or `IMP-02` implementation.
 
@@ -855,7 +855,7 @@ Record: `.instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY
 
 # AXODUS-TRADING-REQ-07 - Provider Order Identity Propagation & Reconciliation Feasibility
 
-Status: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 REMAINS BLOCKED
 
 Objective: determine whether an Axodus-controlled execution identity can cross the current Hummingbot path and return as exact provider evidence.
 
@@ -872,3 +872,24 @@ Sequence:
 Final classification: `IDENTITY PROPAGATION NOT RELIABLE / IMP-02 REMAINS BLOCKED`.
 
 Record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.
+
+# AXODUS-TRADING-REQ-08 - Hummingbot Core & Connector Execution Baseline Audit
+
+Status: `COMPLETE / CORE BASELINE UNRESOLVED / IMPLEMENTATION HOLD`
+
+Objective: determine the exact Hummingbot Core source expected by the materialized API server and trace caller-controlled order identity through Core and canonical connector samples.
+
+Result: the current `hummingbot-api` baseline installs `hummingbot` without a version or revision, does not clone Core, does not record a package lock or image digest, and uses `latest` for the operational Hummingbot image. The API startup guard checks only a currently empty attribute-surface list. The historical `hummingbot==20241125` pin is no longer current. Core provenance is therefore unresolved and Core/connector identity tracing cannot be completed defensibly.
+
+Classification: `CORE BASELINE UNRESOLVED`.
+
+Consequences:
+
+- REQ-07 identity findings are preserved;
+- Binance spot, Binance perpetual and Gateway/DEX caller-ID behavior remains `UNVERIFIED`;
+- `AXODUS-TRADING-BLOCKER-02` remains open and operational `IMP-02` remains blocked;
+- no Core, API, client, connector, adapter or dependency modification is authorized by this audit.
+
+Next gate: provide or freeze an immutable Core repository commit, package artifact or inspectable image digest, then repeat only the Core/connector identity trace.
+
+Record: `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`.

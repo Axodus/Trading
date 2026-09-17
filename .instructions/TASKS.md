@@ -1241,7 +1241,7 @@ Record:
 
 ## AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze
 
-Result: AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED
+Result: COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 BLOCKED
 
 Completed:
 
@@ -1265,7 +1265,7 @@ Record:
 
 ## AXODUS-TRADING-REQ-07 — Provider Order Identity Propagation & Reconciliation Feasibility
 
-Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 REMAINS BLOCKED`
 
 Completed:
 
@@ -1291,3 +1291,30 @@ Next gate:
 - define request, persistence and exact evidence lookup contracts before implementation.
 
 Record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.
+
+## AXODUS-TRADING-REQ-08 — Hummingbot Core & Connector Execution Baseline Audit
+
+Result: `COMPLETE / CORE BASELINE UNRESOLVED / IMP-02 BLOCKED`
+
+Completed:
+
+- verified `.gitmodules` URLs, actual remotes, Trading gitlinks, checked-out SHAs, branch/tag relationships and dirty state for Condor, Hummingbot API client and Hummingbot API;
+- verified the current API acquisition path installs `hummingbot` unpinned and does not record a Core repository, commit, package lock or image digest;
+- recovered the historical `hummingbot==20241125` pin as provenance only and preserved it as superseded by the current unpinned state;
+- confirmed the local workspace contains no Hummingbot Core source, wheel, lockfile or installed package;
+- mapped the API's Core-facing connector boundary and recorded that Binance spot/perpetual and Gateway/DEX identity behavior cannot be verified without the exact Core source.
+
+Disposition:
+
+- final classification: `CORE BASELINE UNRESOLVED`;
+- REQ-07 findings preserved; no prior identity conclusion invalidated;
+- `AXODUS-TRADING-BLOCKER-02` remains open and `IMP-02` remains blocked;
+- no Core, API, client, connector, adapter, shim or dependency modification was made.
+
+Next gate:
+
+- obtain or freeze immutable Core provenance;
+- repeat the targeted Core and connector identity trace;
+- do not select upstream HEAD, `latest`, or the historical package pin by approximation.
+
+Record: `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`.

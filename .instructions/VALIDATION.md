@@ -327,7 +327,7 @@ Record:
 
 ## AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze
 
-Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 BLOCKED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 BLOCKED`
 
 Scope:
 
@@ -361,7 +361,7 @@ Record:
 
 ## AXODUS-TRADING-REQ-07 — Provider Order Identity Propagation & Reconciliation Feasibility
 
-Result: `AUDIT COMPLETE / DOCUMENTATION FREEZE PROPOSED / CTO REVIEW PENDING / IMP-02 REMAINS BLOCKED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-02 REMAINS BLOCKED`
 
 Validation scope:
 
@@ -398,3 +398,37 @@ Boundaries:
 Record:
 
 - `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`
+
+## AXODUS-TRADING-REQ-08 — Hummingbot Core & Connector Execution Baseline Audit
+
+Result: `COMPLETE / CORE BASELINE UNRESOLVED / IMP-02 BLOCKED`
+
+Validation scope:
+
+- compared `.gitmodules` declarations with actual remotes and checked-out gitlinks for Condor, Hummingbot API client and Hummingbot API;
+- inspected API manifests, Dockerfile, Compose, setup script, CI workflow, startup compatibility guard and Git history;
+- searched the workspace for Hummingbot Core source, wheels, lockfiles and installed package;
+- inspected the API's Core-facing connector and Gateway boundaries;
+- did not materialize an arbitrary upstream Core revision because no current immutable provenance was recoverable.
+
+Findings:
+
+- current API environment installs `hummingbot` without a version or revision;
+- current Docker and workflow records do not identify the Core artifact or image digest;
+- `main.py` checks only the current Core attribute surface, whose required list is empty;
+- an old `hummingbot==20241125` pin exists in API history but is not the current baseline;
+- local `hummingbot` import fails because the package is not installed;
+- Core-level `ClientOrderTracker`, `InFlightOrder`, ID generation, Binance connector behavior and Gateway/DEX preservation remain unverified.
+
+Classification: `CORE BASELINE UNRESOLVED`.
+
+Tests and limits:
+
+- repository/provenance inspection completed;
+- no Hummingbot Core or connector tests executed because the exact Core dependency is absent;
+- no credentials, network exchange calls, orders, dependency changes or upstream modifications;
+- REQ-07 identity findings and `AXODUS-TRADING-BLOCKER-02` remain preserved.
+
+Record:
+
+- `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`
