@@ -1,8 +1,8 @@
 # AXODUS-TRADING-IMP-01 — Restricted Baseline Implementation Authorization
 
-Status: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
+Status: `COMPLETE / CTO ACCEPTED / RESTRICTED HTTP SUBSTRATE ESTABLISHED / PUBLISHED`
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D-HTTP COMPLETE / BLOCKER-01 OPEN`
 
 ## Purpose
 
@@ -34,7 +34,7 @@ The adapter is not a generic wrapper for all Hummingbot API routes. Direct trade
 
 Validate fixtures and mocks for serialization, request/response mapping, errors, timeouts, authentication injection boundaries, lifecycle and upstream failure mapping. Tests must prove that unauthorized calls cannot escape the Axodus boundary. Tests remain offline and must not use credentials, exchanges, orders or capital.
 
-### IMP-01D — Conditional market-data read boundary
+### IMP-01D-HTTP — Admitted HTTP market-data read boundary
 
 Implement only a read/feed substrate after the required transport is explicitly admitted. Hummingbot feed data must be normalized at the Axodus boundary before any future Trading Data Store integration. Research-grade persistence, provenance, deduplication, gap detection/recovery and replay remain separate capabilities.
 
@@ -47,7 +47,7 @@ Implement only a read/feed substrate after the required transport is explicitly 
 
 ## Decision state
 
-This document records the CTO authorization for IMP-01A/B/C and the conditional status of IMP-01D. It does not claim that implementation has been completed or that the system is production-ready.
+This document records the completed and CTO-accepted IMP-01A/B/C and IMP-01D-HTTP increments. It preserves the WebSocket blocker and does not claim production readiness.
 
 ## IMP-01A implementation result
 
@@ -69,4 +69,12 @@ Validation passed with `npm run typecheck`, `npm test`, `npm run build` and `git
 
 Transport failure after order submission is represented as `PROVIDER_EXECUTION_UNKNOWN` with `retryable: false`; the adapter performs one HTTP attempt and does not blindly retry an outcome that may already have reached Hummingbot.
 
-Validation passed with `npm run typecheck`, `npm test` (`4 passed, 0 failures`), `npm run build`, `git diff --check` and the materialized Hummingbot API Client contract suite (`337 passed`). No credentials, exchange connectivity, order, collector, Condor integration or upstream source change was used. `IMP-01D` remains conditional and `AXODUS-TRADING-BLOCKER-01` remains open for WebSocket authentication. CTO acceptance is recorded by commit `8119fe9`.
+Validation passed with `npm run typecheck`, `npm test` (`4 passed, 0 failures`), `npm run build`, `git diff --check` and the materialized Hummingbot API Client contract suite (`337 passed`). No credentials, exchange connectivity, order, collector, Condor integration or upstream source change was used. `IMP-01D-HTTP` is accepted for the restricted HTTP read boundary; `AXODUS-TRADING-BLOCKER-01` remains open for WebSocket authentication. CTO acceptance is recorded by the accepted implementation commits.
+
+## IMP-01D-HTTP implementation result
+
+`IMP-01D-HTTP` is complete for the admitted HTTP market-data read boundary. The Axodus-owned `MarketDataProvider` normalizes candles, historical candles, prices, tickers, rates, funding and order-book snapshots while keeping Hummingbot DTOs and exceptions inside the adapter.
+
+Validation passed with `npm run typecheck`, `npm test` (`5 test files / 5 suites / 0 failures`), `npm run build` and `git diff --check`. Snapshot reads do not claim streaming, sequencing, losslessness, gap recovery or replayability. WebSocket, incremental order-book, trade streams, collection and Trading Data Store work remain deferred.
+
+The next authorized architecture record is `AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze`.

@@ -90,17 +90,17 @@ Production execution: DISABLED
 
 - `AXODUS-TRADING-REQ-04`: `COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED`
 - Current baseline: Condor `d89e74f…`, `hummingbot-api-client v1.5.9` at `dae015a3…`, Hummingbot API `2494e847…`
-- `AXODUS-TRADING-IMP-01`: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
+- `AXODUS-TRADING-IMP-01`: `COMPLETE / CTO ACCEPTED / RESTRICTED HTTP SUBSTRATE ESTABLISHED / PUBLISHED`
 - `IMP-01A`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01B`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01C`: `COMPLETE / CTO ACCEPTED / PUBLISHED`
-- `AXODUS-TRADING-IMP-01D-HTTP`: `COMPLETE / CTO REVIEW PENDING / HTTP-SAFE / STREAMING DEFERRED`
+- `AXODUS-TRADING-IMP-01D-HTTP`: `COMPLETE / CTO ACCEPTED / PUBLISHED / HTTP-SAFE / STREAMING DEFERRED`
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
-The next implementation work is governed by `.instructions/TRADING_IMP_01_RESTRICTED_BASELINE_AUTHORIZATION.md` and `.instructions/TRADING_IMP_01D_HTTP_MARKET_DATA_BOUNDARY.md`. IMP-01A/B/C and the restricted HTTP market-data read boundary are locally implemented and validated. Streaming remains blocked. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+The next architectural freeze is `AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze`. IMP-01A/B/C and the restricted HTTP market-data read boundary are implemented, validated and published. Streaming remains blocked. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
 
 ## Next Recommended Request
 
-CTO review of `AXODUS-TRADING-IMP-01D-HTTP`; then open a separate future milestone for streaming/LTDI or Condor integration
+`AXODUS-TRADING-REQ-06` documentation freeze; future `IMP-02` implementation remains pending its acceptance
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

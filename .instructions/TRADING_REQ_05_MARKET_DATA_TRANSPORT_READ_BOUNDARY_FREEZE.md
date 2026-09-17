@@ -1,6 +1,6 @@
 # AXODUS-TRADING-REQ-05 — Market Data Transport & Read-Boundary Freeze
 
-Status: `COMPLETE / CTO REVIEW PENDING`
+Status: `COMPLETE / CTO ACCEPTED / PUBLISHED`
 
 Decision classification: `IMP-01D HTTP-SAFE / STREAMING DEFERRED`
 
@@ -81,7 +81,7 @@ Historical MVRD remains unresolved and still requires the historical seed for Pa
 ## Decision and sequence
 
 ```text
-REQ-05: COMPLETE / CTO REVIEW PENDING
+REQ-05: COMPLETE / CTO ACCEPTED / PUBLISHED
 IMP-01D-HTTP: technically viable as a restricted read boundary
 WebSocket streaming: deferred under BLOCKER-01
 Full prospective LTDI: deferred pending streaming or an approved alternative
@@ -91,7 +91,7 @@ Trading Data Store: later Axodus milestone
 Recommended sequence after CTO review:
 
 1. freeze the minimal `MarketDataProvider` HTTP contract;
-2. implement bounded HTTP reads and normalization in a later authorized `IMP-01D-HTTP` increment;
+2. implement bounded HTTP reads and normalization in the authorized `IMP-01D-HTTP` increment;
 3. validate stale, partial, malformed and upstream failure states offline;
 4. keep order-book incremental and trade streaming outside the implementation until `BLOCKER-01` is resolved;
 5. design the future Trading Data Store independently of Hummingbot persistence behavior.

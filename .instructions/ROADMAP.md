@@ -771,7 +771,7 @@ Remaining constraints:
 - Condor and server focused tests require absent local dependencies
 - Hummingbot API remains an untagged commit after `v2.1.0`
 - the client WebSocket authentication path is blocked as `AXODUS-TRADING-BLOCKER-01`
-- `IMP-01D` remains conditional on an explicitly admitted transport
+- `IMP-01D-HTTP` is complete for the explicitly admitted HTTP transport; streaming remains deferred
 
 Record:
 - `.instructions/TRADING_REQ_04_MATERIALIZED_REPOSITORY_VERIFICATION.md`
@@ -781,7 +781,7 @@ Record:
 
 # AXODUS-TRADING-IMP-01 - Restricted Baseline Implementation Foundations
 
-Status: IMP-01A/B/C COMPLETE / IMP-01D-HTTP COMPLETE / CTO REVIEW PENDING
+Status: IMP-01 COMPLETE / CTO ACCEPTED / RESTRICTED HTTP SUBSTRATE ESTABLISHED / PUBLISHED
 
 Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D-HTTP COMPLETE / BLOCKER-01 OPEN`
 
@@ -789,7 +789,7 @@ Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
 - implement the minimal Axodus-owned HTTP `ExecutionProvider` boundary
 - run offline fixture, mock and contract validation before any operational integration
-- defer market-data read/feed work until the required transport is explicitly admitted
+- complete the admitted HTTP market-data read boundary while keeping streaming deferred
 
 Sequence:
 1. `IMP-01A` — dependency and contract foundations
@@ -819,7 +819,7 @@ IMP-01C evidence:
 - transport failure after submission maps to `PROVIDER_EXECUTION_UNKNOWN` and is never blindly retried
 - upstream Hummingbot API Client contract suite passes with 337 tests
 - no upstream DTO/exception leakage or WebSocket execution path is exposed to Trading Core
-- `IMP-01D` remains conditional; `AXODUS-TRADING-BLOCKER-01` remains open
+- `IMP-01D-HTTP` is complete for the admitted HTTP read boundary; `AXODUS-TRADING-BLOCKER-01` remains open for streaming
 - Condor integration is later work and remains outside the first path
 - no credentials, direct trading, real orders, Gateway/wallet authority, production, capital or System One activity
 
@@ -832,3 +832,23 @@ IMP-01D-HTTP evidence:
 Constraints:
 - WebSocket remains blocked under `AXODUS-TRADING-BLOCKER-01`
 - incremental order-book, trade stream, collector, Trading Data Store, persistence, gap recovery, deduplication, replay, MVRD acquisition and Condor integration remain future work
+
+---
+
+# AXODUS-TRADING-REQ-06 - Execution State, Reconciliation & Idempotency Freeze
+
+Status: GO / DOCUMENTATION FREEZE / IMPLEMENTATION HOLD
+
+Objective: freeze the execution lifecycle and ambiguity-handling contracts required before any operational path or `IMP-02` implementation.
+
+Sequence:
+1. preserve the published IMP-01 restricted HTTP substrate;
+2. define Axodus-owned client order identity and idempotency semantics;
+3. define submission and provider-result state transitions;
+4. define reconciliation, restart recovery and cancellation rules;
+5. assess Hummingbot identifier/status support without transferring lifecycle ownership;
+6. open `IMP-02` only after CTO acceptance of the freeze.
+
+Primary invariant: `PROVIDER_EXECUTION_UNKNOWN` requires reconciliation and cannot be blindly resubmitted.
+
+Record: `.instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md`.

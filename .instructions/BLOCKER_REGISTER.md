@@ -98,6 +98,6 @@ Option assessment:
 - `UPSTREAM FIX`: candidate only through an explicitly reviewed upstream change and revision freeze.
 - `KEEP BLOCKED`: current decision and safe operating state.
 
-Condor calls the same client WebSocket surfaces and has reconnect/backoff behavior, but that cannot repair a handshake rejected before the stream is established. HTTP remains admitted for the restricted IMP-01 path. WebSocket market data remains unavailable to Axodus, and `IMP-01D` remains conditional.
+Condor calls the same client WebSocket surfaces and has reconnect/backoff behavior, but that cannot repair a handshake rejected before the stream is established. HTTP remains admitted for the published IMP-01 path. WebSocket market data remains unavailable to Axodus; `IMP-01D-HTTP` is complete and streaming remains deferred.
 
 Detailed record: `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`.

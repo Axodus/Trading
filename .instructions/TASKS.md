@@ -15,14 +15,14 @@ Completed:
 - preserved REQ-03 provenance and updated the current baseline record
 
 Next gate:
-- execute `IMP-01A/B/C` against the restricted HTTP baseline with Axodus-defined contracts and boundaries
-- keep `IMP-01D` conditional on an explicitly admitted market-data transport
+- preserve the published restricted HTTP baseline as the completed IMP-01 result
+- proceed to `AXODUS-TRADING-REQ-06` for execution lifecycle, reconciliation and idempotency contract freeze
 - track the WebSocket incompatibility as `AXODUS-TRADING-BLOCKER-01`; do not use the client WebSocket path
 - Condor integration remains later work and is outside the first implementation path
 
 ## IMP-01 — Restricted Baseline Implementation Authorization
 
-Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
+Status: COMPLETE / CTO ACCEPTED / RESTRICTED HTTP SUBSTRATE ESTABLISHED / PUBLISHED
 
 Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D-HTTP COMPLETE / BLOCKER-01 OPEN`
 
@@ -80,7 +80,7 @@ Next:
 
 ### IMP-01C result
 
-Status: COMPLETE / CTO REVIEW PENDING
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED
 
 Delivered:
 - adversarial offline validation for serialized Axodus requests and representative Hummingbot response fixtures
@@ -103,7 +103,7 @@ Boundaries preserved:
 
 ### IMP-01D-HTTP result
 
-Status: COMPLETE / CTO REVIEW PENDING
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED
 
 Delivered:
 - Axodus-owned `MarketDataProvider` contracts for candles, historical candles, prices, tickers, rates, funding and order-book snapshots
@@ -122,12 +122,12 @@ Boundaries:
 - no collector, persistence, gap recovery, replay, MVRD acquisition, Condor, credentials, exchange or trading operations
 
 Next:
-- CTO review of the implementation commit
+- proceed to `AXODUS-TRADING-REQ-06` execution lifecycle, reconciliation and idempotency freeze
 - separate future milestone for admitted streaming or LTDI work
 
 ## AXODUS-TRADING-BLOCKER-01 — WebSocket Authentication Remediation Design
 
-Status: COMPLETE / CTO REVIEW PENDING
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED / KEEP BLOCKED
 
 Completed:
 - verified the client query-token handshake against the server Basic/subprotocol authentication contract
@@ -139,14 +139,14 @@ Completed:
 Decision state:
 - current classification: `KEEP BLOCKED / DO NOT USE`
 - preferred future candidate: `ADAPT AXODUS TRANSPORT`, pending explicit implementation decision
-- `IMP-01D` remains conditional; no transport or collector implementation is authorized
+- `IMP-01D-HTTP` is complete for the admitted HTTP read boundary; streaming remains deferred and no collector is authorized
 
 Record:
 - `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`
 
 ## AXODUS-TRADING-REQ-05 — Market Data Transport & Read-Boundary Freeze
 
-Status: COMPLETE / CTO REVIEW PENDING
+Status: COMPLETE / CTO ACCEPTED / PUBLISHED
 
 Result:
 - `IMP-01D HTTP-SAFE / STREAMING DEFERRED`
@@ -158,7 +158,7 @@ Record:
 - `.instructions/TRADING_REQ_05_MARKET_DATA_TRANSPORT_READ_BOUNDARY_FREEZE.md`
 
 Next:
-- CTO review of the minimal Axodus `MarketDataProvider` contract
+- `AXODUS-TRADING-REQ-06` execution lifecycle, reconciliation and idempotency freeze
 - no collector, Trading Data Store or WebSocket implementation
 
 ## REQ-03 — Implementation Baseline & Gap Freeze

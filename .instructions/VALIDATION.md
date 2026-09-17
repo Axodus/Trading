@@ -159,15 +159,15 @@ Implication:
 - REQ-03 remains historical evidence; REQ-04 is the current materialized baseline record
 - the current baseline is accepted for `IMP-01A/B/C` on the restricted HTTP surface
 - the client WebSocket path is blocked and tracked as `AXODUS-TRADING-BLOCKER-01`; no workaround or upstream change was introduced
-- `IMP-01D` remains conditional on a separately admitted market-data transport
+- `IMP-01D-HTTP` is complete for the admitted HTTP read boundary; streaming remains deferred
 - no adapter, runtime, credential, exchange or trading implementation was performed
 - REQ-01A–A4 remain materially unchanged; prospective collection is still relevant to LTDI, historical seed remains required for Path M, `HYBRID` remains the candidate and BUY remains `HOLD`
 
 ## AXODUS-TRADING-IMP-01 Authorization
 
-Result: `AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE`
+Result: `COMPLETE / CTO ACCEPTED / RESTRICTED HTTP SUBSTRATE ESTABLISHED / PUBLISHED`
 
-Authorized scope is documentation and implementation tracking for `IMP-01A/B/C`: dependency and contract foundations, the minimal HTTP `ExecutionProvider` adapter, and offline contract validation. No code implementation was performed by the REQ-04 acceptance record. `IMP-01D` is conditional, and WebSocket market data remains blocked by `AXODUS-TRADING-BLOCKER-01`.
+The accepted scope covered `IMP-01A/B/C` and the subsequent `IMP-01D-HTTP` increment: dependency and contract foundations, the minimal HTTP `ExecutionProvider` adapter, offline contract validation and the Axodus-owned HTTP market-data read boundary. WebSocket market data remains blocked by `AXODUS-TRADING-BLOCKER-01`.
 
 ## AXODUS-TRADING-IMP-01A — Dependency and Contract Foundations
 
@@ -214,7 +214,7 @@ Next:
 
 ## AXODUS-TRADING-IMP-01C — Offline Contract / Integration Validation
 
-Result: `COMPLETE / CTO REVIEW PENDING`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED`
 
 Scope:
 
@@ -244,12 +244,12 @@ Validation:
 Boundaries:
 
 - no credentials, exchange connectivity, orders, Condor integration, collector, WebSocket or upstream source modification
-- `IMP-01D` remains `HOLD / CONDITIONAL`
+- `IMP-01D-HTTP` is complete for the admitted HTTP read boundary; streaming remains deferred
 - `AXODUS-TRADING-BLOCKER-01` remains `OPEN / WEBSOCKET BLOCKED / DO NOT USE`
 
 ## AXODUS-TRADING-REQ-05 — Market Data Transport & Read-Boundary Freeze
 
-Result: `COMPLETE / CTO REVIEW PENDING / IMP-01D HTTP-SAFE / STREAMING DEFERRED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / IMP-01D HTTP-SAFE / STREAMING DEFERRED`
 
 Evidence:
 
@@ -277,7 +277,7 @@ Record:
 
 ## AXODUS-TRADING-BLOCKER-01 — WebSocket Remediation Design
 
-Result: `COMPLETE / CTO REVIEW PENDING / KEEP BLOCKED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / KEEP BLOCKED`
 
 Evidence:
 
@@ -298,7 +298,7 @@ Record:
 
 ## AXODUS-TRADING-IMP-01D-HTTP — Market Data Read Boundary
 
-Result: `COMPLETE / CTO REVIEW PENDING / HTTP-SAFE / STREAMING DEFERRED`
+Result: `COMPLETE / CTO ACCEPTED / PUBLISHED / HTTP-SAFE / STREAMING DEFERRED`
 
 Evidence:
 
@@ -324,3 +324,22 @@ Boundaries:
 Record:
 
 - `.instructions/TRADING_IMP_01D_HTTP_MARKET_DATA_BOUNDARY.md`
+
+## AXODUS-TRADING-REQ-06 — Execution State, Reconciliation & Idempotency Freeze
+
+Result: `GO / DOCUMENTATION FREEZE / IMPLEMENTATION HOLD`
+
+Scope:
+
+- freeze Axodus ownership for client order identity, idempotency, submission state, provider order identity, reconciliation, status transitions, duplicate prevention, restart recovery and cancellation semantics
+- preserve `PROVIDER_EXECUTION_UNKNOWN` as distinct from `FAILED`; unknown outcomes require reconciliation and never authorize blind resubmission
+- assess Hummingbot identifier and status support without transferring lifecycle ownership to Hummingbot
+- define the implementation gap map and proposed sequence for future `IMP-02`
+
+Non-goals:
+
+- no lifecycle implementation, persistence changes, credentials, exchange connectivity, orders, paper/shadow/live trading, Condor integration, WebSocket work or upstream modification
+
+Record:
+
+- `.instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md`
