@@ -130,3 +130,13 @@ The concrete Hummingbot Core connector package is not materialized or revision-p
 The selected direction remains `AXODUS-CONTROLLED CLIENT ORDER ID PROPAGATION`. No shim, upstream modification, connector modification, heuristic lookup or retry behavior is authorized by this audit.
 
 Detailed record: `.instructions/TRADING_REQ_07_PROVIDER_ORDER_IDENTITY_PROPAGATION_FEASIBILITY.md`.
+
+### VAL-02B validation result — 2026-09-17
+
+The offline validation passed the in-process deterministic CEX lifecycle cases, including exact identity reconciliation, no-blind-retry behavior, cancellation ambiguity, terminal protection, connector admission, Gateway/DEX exclusion, WebSocket independence and snapshot-equivalent recovery. The current implementation still uses an in-memory lifecycle repository; durable persistence, crash recovery and cross-process atomicity remain unvalidated.
+
+Classification: `CEX RECONCILIATION PARTIALLY VALIDATED / BLOCKER-02 REMAINS OPEN`.
+
+The blocker is not closed by this validation. A future authorized increment must establish durable execution-state persistence and validate restart/recovery semantics before operational readiness.
+
+Detailed record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.

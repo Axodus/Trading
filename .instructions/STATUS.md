@@ -196,3 +196,15 @@ The CEX lifecycle foundation is implemented for the frozen Binance Spot and Bina
 Cancellation remains a separate process (`cancel-requested` is not `cancelled`). REST exact lookup is the admitted correctness path; WebSocket remains blocked under `AXODUS-TRADING-BLOCKER-01`. Gateway/DEX is excluded from this CEX model.
 
 Validation: `npm test` passed with 7 test files and 0 failures from `trading-core/services/trading-core`; `VAL-02B` remains pending and `AXODUS-TRADING-BLOCKER-02` remains open until that validation is accepted.
+
+## AXODUS-TRADING-VAL-02B — Offline Deterministic CEX Lifecycle & Reconciliation
+
+Status: COMPLETE / VALIDATION EVIDENCE READY / CTO REVIEW PENDING
+
+Classification: `CEX RECONCILIATION PARTIALLY VALIDATED / BLOCKER-02 REMAINS OPEN`.
+
+Validated exact found/not-found/indeterminate reconciliation, ambiguous submission, malformed evidence, lookup failures, cancellation ambiguity, terminal-state protection, connector admission, Gateway/DEX exclusion, WebSocket independence, concurrent/repeated operations and snapshot-equivalent recovery. The current lifecycle repository remains in memory, so durable persistence and crash recovery are not claimed.
+
+Validation: `npm run typecheck`, dedicated VAL-02B suite (12 passed), full `npm test`, and `git diff --check` passed.
+
+Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.

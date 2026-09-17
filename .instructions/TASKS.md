@@ -1413,3 +1413,20 @@ Validation:
 - `AXODUS-TRADING-BLOCKER-02` remains open pending VAL-02B.
 
 Record: `.instructions/TRADING_IMP_02B_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+## AXODUS-TRADING-VAL-02B — Offline Deterministic CEX Lifecycle & Reconciliation Acceptance
+
+Result: `COMPLETE / CEX RECONCILIATION PARTIALLY VALIDATED / BLOCKER-02 REMAINS OPEN`.
+
+Completed:
+
+- validated acknowledged, rejected and ambiguous submission paths;
+- validated exact `FOUND`, `NOT_FOUND` and `INDETERMINATE` outcomes without blind resubmission;
+- validated malformed evidence, provider lookup failure, cancellation ambiguity and terminal-state protection;
+- validated repeated/concurrent reconciliation safety and connector capability admission;
+- validated Gateway/DEX exclusion and WebSocket-independent correctness;
+- validated snapshot-equivalent reconstruction in a new service instance.
+
+Limitation: lifecycle persistence is currently in memory. Durable restart/recovery and cross-process concurrency remain outside the implementation and keep `AXODUS-TRADING-BLOCKER-02` open.
+
+Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.

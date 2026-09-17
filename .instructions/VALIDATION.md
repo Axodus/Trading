@@ -472,6 +472,36 @@ Record:
 
 - `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`
 
+## AXODUS-TRADING-VAL-02B — Offline Deterministic CEX Lifecycle & Reconciliation Acceptance
+
+Date: 2026-09-17
+
+Commands:
+
+```bash
+cd trading-core/services/trading-core
+npm run typecheck
+node test/val-02b-cex-lifecycle.test.mjs
+npm test
+git diff --check
+```
+
+Results:
+
+- typecheck: PASS;
+- dedicated VAL-02B suite: 12 passed, 0 failed;
+- full regression: PASS after validation fixes;
+- diff check: PASS;
+- no credentials, exchange connectivity, orders, WebSocket or upstream changes.
+
+Coverage includes acknowledged/rejected submission, timeout ambiguity, exact reconciliation, not-found policy, indeterminate evidence, malformed responses, provider failures, partial fills, cancellation ambiguity, terminal protection, connector admission, Gateway/DEX rejection, snapshot recovery and concurrent/repeated operations.
+
+Classification: `CEX RECONCILIATION PARTIALLY VALIDATED / BLOCKER-02 REMAINS OPEN`.
+
+The in-memory repository supports snapshot-equivalent recovery validation. Durable persistence and crash/process recovery remain unvalidated and are not claimed complete.
+
+Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.
+
 
 ## AXODUS-TRADING-VAL-02A — Offline End-to-End Execution Identity Validation
 
@@ -506,4 +536,3 @@ Static validation for Python:
 - Core duplicate ID rejection: VERIFIED (source diff)
 - InFlightOrder constructor receives client_order_id: VERIFIED (source inspection)
 - ClientOrderTracker indexes by client_order_id: VERIFIED (source inspection)
-

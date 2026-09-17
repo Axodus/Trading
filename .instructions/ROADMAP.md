@@ -934,3 +934,13 @@ Delivered:
 Next gate: `VAL-02B — Offline deterministic reconciliation`. `AXODUS-TRADING-BLOCKER-02` remains open until validation acceptance. Gateway/DEX, Condor, WebSocket and operational trading remain outside scope.
 
 Record: `.instructions/TRADING_IMP_02B_CEX_LIFECYCLE_RECONCILIATION.md`.
+
+## AXODUS-TRADING-VAL-02B — Offline Deterministic CEX Lifecycle & Reconciliation Acceptance
+
+Status: `COMPLETE / PARTIALLY VALIDATED / CTO REVIEW PENDING`
+
+The offline gate validates deterministic in-process lifecycle and exact REST reconciliation behavior. It does not close `BLOCKER-02`: the current repository is in memory, and durable persistence, crash recovery and cross-process atomicity require a future authorized increment.
+
+Next: CTO review of the evidence, followed by a separately scoped durable execution-state/recovery increment if blocker closure is desired.
+
+Record: `.instructions/TRADING_VAL_02B_OFFLINE_CEX_LIFECYCLE_RECONCILIATION.md`.

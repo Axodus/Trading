@@ -13,7 +13,8 @@ export type CexLifecycleFailureCode =
   | 'INVALID_TRANSITION'
   | 'RECONCILIATION_CAPABILITY_NOT_ADMITTED'
   | 'PROVIDER_MISMATCH'
-  | 'DUPLICATE_EXECUTION_CLIENT_ORDER_ID';
+  | 'DUPLICATE_EXECUTION_CLIENT_ORDER_ID'
+  | 'INVALID_RECONCILIATION_RESULT';
 
 export class CexExecutionLifecycleError extends Error {
   constructor(
@@ -63,6 +64,8 @@ export interface CreateCexSubmissionAttemptInput {
 }
 
 export class CexExecutionLifecycleService {
+  private readonly reconciliationInFlight = new Map<string, Promise<CexSubmissionAttempt>>();
+
   constructor(
     private readonly repository: CexExecutionAttemptRepository,
     private readonly now: () => string = () => new Date().toISOString(),
@@ -99,6 +102,7 @@ export class CexExecutionLifecycleService {
   async recordAcknowledged(attemptId: string, evidence: CexOrderEvidence): Promise<CexSubmissionAttempt> {
     const attempt = await this.requireAttempt(attemptId);
     this.assertState(attempt, ['submission-in-progress']);
+    this.assertEvidenceIdentity(attempt, evidence);
     return this.save({
       ...attempt,
       state: 'provider-acknowledged',
@@ -120,24 +124,20 @@ export class CexExecutionLifecycleService {
   }
 
   async reconcile(attemptId: string, provider: CexReconciliationProvider): Promise<CexSubmissionAttempt> {
-    const attempt = await this.requireAttempt(attemptId);
-    this.assertState(attempt, ['execution-unknown', 'reconciling']);
-    this.assertProvider(attempt, provider);
-    assertReconciliationCapabilities(provider.capabilities);
-    const reconciling = await this.save({ ...attempt, state: 'reconciling' });
-    const result = await provider.reconcileByClientOrderId({
-      attemptId: reconciling.attemptId,
-      providerId: reconciling.providerId,
-      connector: reconciling.connector,
-      market: reconciling.market,
-      executionClientOrderId: reconciling.executionClientOrderId,
-      requestedAt: this.now(),
-    });
-    return this.applyReconciliationResult(reconciling, result);
+    const existing = this.reconciliationInFlight.get(attemptId);
+    if (existing) return existing;
+    const operation = this.reconcileInternal(attemptId, provider);
+    this.reconciliationInFlight.set(attemptId, operation);
+    try {
+      return await operation;
+    } finally {
+      if (this.reconciliationInFlight.get(attemptId) === operation) this.reconciliationInFlight.delete(attemptId);
+    }
   }
 
   async requestCancellation(attemptId: string): Promise<CexSubmissionAttempt> {
     const attempt = await this.requireAttempt(attemptId);
+    if (['cancel-requested', 'cancelled', 'cancellation-rejected', 'cancellation-failed'].includes(attempt.state)) return attempt;
     this.assertState(attempt, ['provider-acknowledged', 'reconciled-found']);
     if (!attempt.providerOrderId) {
       throw new CexExecutionLifecycleError('INVALID_TRANSITION', 'Cancellation requires provider order evidence');
@@ -147,17 +147,51 @@ export class CexExecutionLifecycleService {
 
   async recordCancellation(attemptId: string, outcome: 'cancelled' | 'rejected' | 'failed', reason?: string): Promise<CexSubmissionAttempt> {
     const attempt = await this.requireAttempt(attemptId);
+    if (['cancelled', 'cancellation-rejected', 'cancellation-failed'].includes(attempt.state)) return attempt;
     this.assertState(attempt, ['cancel-requested']);
     const state = outcome === 'cancelled' ? 'cancelled' : outcome === 'rejected' ? 'cancellation-rejected' : 'cancellation-failed';
     return this.save({ ...attempt, state, lastFailure: reason });
   }
 
   async recoverableAttempts(): Promise<CexSubmissionAttempt[]> {
-    return this.repository.listByStates(['submission-in-progress', 'execution-unknown', 'reconciling', 'cancel-requested']);
+    return this.repository.listByStates(['submission-in-progress', 'execution-unknown', 'reconciling', 'reconciled-indeterminate', 'cancel-requested']);
+  }
+
+  private async reconcileInternal(attemptId: string, provider: CexReconciliationProvider): Promise<CexSubmissionAttempt> {
+    const attempt = await this.requireAttempt(attemptId);
+    if (['reconciled-found', 'reconciled-not-found', 'reconciled-indeterminate'].includes(attempt.state)) return attempt;
+    this.assertState(attempt, ['execution-unknown', 'reconciling']);
+    this.assertProvider(attempt, provider);
+    assertReconciliationCapabilities(provider.capabilities);
+    const reconciling = await this.save({ ...attempt, state: 'reconciling' });
+    let result: CexReconciliationResult;
+    try {
+      result = await provider.reconcileByClientOrderId({
+        attemptId: reconciling.attemptId,
+        providerId: reconciling.providerId,
+        connector: reconciling.connector,
+        market: reconciling.market,
+        executionClientOrderId: reconciling.executionClientOrderId,
+        requestedAt: this.now(),
+      });
+    } catch (error) {
+      return this.save({
+        ...reconciling,
+        state: 'reconciled-indeterminate',
+        lastFailure: `Reconciliation lookup failed: ${error instanceof Error ? error.message : String(error)}`,
+      });
+    }
+    return this.applyReconciliationResult(reconciling, result);
   }
 
   private async applyReconciliationResult(attempt: CexSubmissionAttempt, result: CexReconciliationResult): Promise<CexSubmissionAttempt> {
+    if (!result || !['found', 'not-found', 'indeterminate'].includes(result.outcome)) {
+      return this.save({ ...attempt, state: 'reconciled-indeterminate', lastFailure: 'Invalid reconciliation result', });
+    }
     if (result.outcome === 'found') {
+      if (!result.evidence || result.evidence.executionClientOrderId !== attempt.executionClientOrderId) {
+        return this.save({ ...attempt, state: 'reconciled-indeterminate', lastFailure: 'Reconciliation evidence identity mismatch' });
+      }
       return this.save({
         ...attempt,
         state: 'reconciled-found',
@@ -168,7 +202,19 @@ export class CexExecutionLifecycleService {
     if (result.outcome === 'not-found') {
       return this.save({ ...attempt, state: 'reconciled-not-found', evidence: result.evidence });
     }
+    if (result.outcome === 'indeterminate' && typeof result.reason !== 'string') {
+      return this.save({ ...attempt, state: 'reconciled-indeterminate', lastFailure: 'Invalid reconciliation result reason' });
+    }
+    if (result.evidence && result.evidence.executionClientOrderId !== attempt.executionClientOrderId) {
+      return this.save({ ...attempt, state: 'reconciled-indeterminate', lastFailure: 'Reconciliation evidence identity mismatch' });
+    }
     return this.save({ ...attempt, state: 'reconciled-indeterminate', evidence: result.evidence, lastFailure: result.reason });
+  }
+
+  private assertEvidenceIdentity(attempt: CexSubmissionAttempt, evidence: CexOrderEvidence): void {
+    if (evidence.executionClientOrderId !== attempt.executionClientOrderId) {
+      throw new CexExecutionLifecycleError('INVALID_RECONCILIATION_RESULT', 'Provider evidence does not match the execution client order ID');
+    }
   }
 
   private async transition(attemptId: string, state: CexExecutionLifecycleState, allowed: CexExecutionLifecycleState[]): Promise<CexSubmissionAttempt> {
