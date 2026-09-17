@@ -893,3 +893,24 @@ Consequences:
 Next gate: provide or freeze an immutable Core repository commit, package artifact or inspectable image digest, then repeat only the Core/connector identity trace.
 
 Record: `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`.
+
+# AXODUS-TRADING-REQ-09 - Hummingbot Core Provenance Recovery & Immutable Baseline Freeze
+
+Status: `COMPLETE / PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED / IMPLEMENTATION HOLD`
+
+Objective: recover the strongest historical evidence for the Hummingbot Core expected by API `2494e847...` without selecting an arbitrary upstream revision.
+
+Result: API history contains explicit pins `hummingbot==20241125` at `88400de...` and `hummingbot==20250715` at `68367ab...`; both were later removed. The current API deliberately installs `hummingbot` without a version or revision, and no Core SHA, package artifact, lockfile or image digest establishes the implementation used by the current baseline.
+
+Classification: `PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED`.
+
+Consequences:
+
+- historical reconstruction is not defensible from the available evidence;
+- a new prospective Axodus Core qualification may be selected, but this REQ does not select it;
+- Core/connector identity tracing, `AXODUS-TRADING-BLOCKER-02` and `IMP-02` remain blocked;
+- no dependency or runtime modification was made.
+
+Next gate: CTO selection of immutable historical provenance or a prospective Axodus Core qualification, followed by targeted connector identity tracing.
+
+Record: `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`.

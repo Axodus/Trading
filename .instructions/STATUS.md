@@ -102,9 +102,11 @@ Production execution: DISABLED
 
 `AXODUS-TRADING-REQ-08`: complete as a source/provenance audit with final classification `CORE BASELINE UNRESOLVED`. The materialized API installs `hummingbot` unpinned and provides no Core revision, immutable package, lockfile or image digest. Binance spot/perpetual and Gateway/DEX identity behavior therefore remains unverified. `AXODUS-TRADING-BLOCKER-02` remains open and `IMP-02` remains blocked.
 
+`AXODUS-TRADING-REQ-09`: complete with classification `PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED`. API history recovers explicit package pins `hummingbot==20241125` and `hummingbot==20250715`, but both were removed and no pin maps to an immutable Core SHA, artifact or image digest for API `2494e847...`. Historical reconstruction is therefore unresolved; prospective Axodus baseline qualification requires CTO selection. Connector identity trace and `IMP-02` remain blocked.
+
 ## Next Recommended Request
 
-Freeze or provide an immutable Hummingbot Core artifact/revision for audit. Do not clone upstream HEAD or select the historical `hummingbot==20241125` pin by approximation.
+Select a prospective Axodus Core qualification path or provide immutable historical Core provenance. Do not clone upstream HEAD or select a historical package pin by approximation.
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

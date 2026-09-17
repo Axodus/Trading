@@ -432,3 +432,42 @@ Tests and limits:
 Record:
 
 - `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`
+
+## AXODUS-TRADING-REQ-09 — Hummingbot Core Provenance Recovery & Immutable Baseline Freeze
+
+Result: `COMPLETE / PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED / IMP-02 BLOCKED`
+
+Validation scope:
+
+- inspected the API commit history around dependency pins and removals;
+- inspected current and historical `environment.yml`, Dockerfile, Compose, setup script and CI workflow;
+- inspected API tags, reachable refs and unreachable Git objects;
+- verified that no exact Core revision, wheel, lockfile or image digest is available in the current workspace;
+- did not select or materialize arbitrary Core HEAD, a same-date commit or a historical package pin as a substitute for immutable provenance.
+
+Findings:
+
+- `hummingbot==20241125` was explicitly pinned at `88400de...` and later removed;
+- `hummingbot==20250715` was explicitly pinned at `68367ab...` and later removed;
+- current API revision `2494e847...` installs `hummingbot` without version/revision and documents the unpinned state as deliberate;
+- no evidence maps either historical package pin to a Core commit or artifact used by the current API baseline;
+- the historical evidence is partial and does not support a reproducible Core baseline.
+
+Classification: `PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED`.
+
+Tests and limits:
+
+- repository history and provenance inspection completed;
+- no Core or connector runtime tests executed because no immutable Core dependency is available;
+- no dependency changes, upstream modifications, credentials, exchange calls or orders;
+- REQ-08 and REQ-07 findings remain preserved.
+
+Decision state:
+
+- historical Core reconstruction is not defensible from the workspace evidence;
+- a prospective Axodus Core qualification is a separate CTO decision;
+- `AXODUS-TRADING-BLOCKER-02` and `IMP-02` remain open/blocked.
+
+Record:
+
+- `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`

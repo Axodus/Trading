@@ -1318,3 +1318,30 @@ Next gate:
 - do not select upstream HEAD, `latest`, or the historical package pin by approximation.
 
 Record: `.instructions/TRADING_REQ_08_HUMMINGBOT_CORE_CONNECTOR_EXECUTION_BASELINE_AUDIT.md`.
+
+## AXODUS-TRADING-REQ-09 — Hummingbot Core Provenance Recovery & Immutable Baseline Freeze
+
+Result: `COMPLETE / PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED / IMP-02 BLOCKED`
+
+Completed:
+
+- recovered API history for the explicit `hummingbot==20241125` and `hummingbot==20250715` pins and their later removals;
+- inspected current dependency, Docker, Compose, setup and CI provenance;
+- confirmed no current Core SHA, package artifact, lockfile or image digest is recorded;
+- checked reachable tags and unreachable Git objects for a hidden immutable recovery path;
+- preserved the distinction between historical evidence and a new prospective Axodus baseline.
+
+Disposition:
+
+- historical Core reconstruction: `NOT DEFENSIBLE`;
+- final classification: `PROVENANCE PARTIALLY RECOVERED / CTO BASELINE SELECTION REQUIRED`;
+- `AXODUS-TRADING-BLOCKER-02` remains open and `IMP-02` remains blocked;
+- Binance spot/perpetual and Gateway/DEX identity tracing remains on hold;
+- no dependency, Core, API, client, connector or runtime modification was made.
+
+Next gate:
+
+- CTO selects immutable historical provenance or authorizes a prospective Axodus Core qualification;
+- only after that selection, materialize the Core and resume targeted connector identity tracing.
+
+Record: `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`.
