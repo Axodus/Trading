@@ -756,7 +756,7 @@ Record:
 
 # AXODUS-TRADING-REQ-04 - Materialized Repository Verification & Baseline Reconciliation
 
-Status: COMPLETE / CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD
+Status: COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED
 
 Delivered:
 - verified the three materialized repositories, origins, gitlinks, checked-out SHAs, tags, branches and clean states
@@ -770,8 +770,32 @@ Remaining constraints:
 - no live or fixture-backed server/client contract test was run
 - Condor and server focused tests require absent local dependencies
 - Hummingbot API remains an untagged commit after `v2.1.0`
-- IMP-01 remains on implementation hold pending CTO release and scope decision for the WebSocket gap
+- the client WebSocket authentication path is blocked as `AXODUS-TRADING-BLOCKER-01`
+- `IMP-01D` remains conditional on an explicitly admitted transport
 
 Record:
 - `.instructions/TRADING_REQ_04_MATERIALIZED_REPOSITORY_VERIFICATION.md`
 - REQ-03 remains historical provenance; REQ-04 is the current materialized baseline record
+
+---
+
+# AXODUS-TRADING-IMP-01 - Restricted Baseline Implementation Foundations
+
+Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
+
+Scope:
+- establish the dependency and contract foundations for the frozen REQ-04 baseline
+- implement the minimal Axodus-owned HTTP `ExecutionProvider` boundary
+- run offline fixture, mock and contract validation before any operational integration
+- defer market-data read/feed work until the required transport is explicitly admitted
+
+Sequence:
+1. `IMP-01A` — dependency and contract foundations
+2. `IMP-01B` — HTTP `ExecutionProvider` adapter
+3. `IMP-01C` — offline contract validation
+4. `IMP-01D` — conditional market-data read boundary
+
+Constraints:
+- WebSocket via `hummingbot-api-client v1.5.9` is blocked under `AXODUS-TRADING-BLOCKER-01`
+- Condor integration is later work and remains outside the first path
+- no credentials, direct trading, real orders, Gateway/wallet authority, production, capital or System One activity

@@ -2,7 +2,7 @@
 
 ## REQ-04 — Materialized Repository Verification & Baseline Reconciliation
 
-Status: COMPLETE / CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD
+Status: COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED
 
 Completed:
 - verified `.gitmodules` URLs, actual origins, Trading gitlinks, checked-out SHAs and clean worktrees for Condor, Hummingbot API and Hummingbot API Client
@@ -15,8 +15,26 @@ Completed:
 - preserved REQ-03 provenance and updated the current baseline record
 
 Next gate:
-- CTO decides whether the WebSocket incompatibility is excluded from the first IMP-01 scope or must be resolved before implementation
-- no adapter, collector or runtime implementation is authorized by this record
+- execute `IMP-01A/B/C` against the restricted HTTP baseline with Axodus-defined contracts and boundaries
+- keep `IMP-01D` conditional on an explicitly admitted market-data transport
+- track the WebSocket incompatibility as `AXODUS-TRADING-BLOCKER-01`; do not use the client WebSocket path
+- Condor integration remains later work and is outside the first implementation path
+
+## IMP-01 — Restricted Baseline Implementation Authorization
+
+Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
+
+Scope:
+- `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
+- `IMP-01B`: implement the minimal HTTP `ExecutionProvider` adapter surface
+- `IMP-01C`: validate fixtures, mocks, serialization, errors, timeouts, auth injection boundaries and upstream failure mapping offline
+- `IMP-01D`: implement only a read/feed market-data boundary after the required transport is admitted; do not build the Trading Data Store here
+
+Boundaries:
+- Axodus retains Strategy, Signal, Market Judgment, Risk, Order Intent, Position, Portfolio, Credentials, Audit, Accounting and Capital Authority
+- Hummingbot provides operational substrate capabilities only through the Axodus adapter
+- Condor is not in the first execution path and cannot control execution directly
+- credentials, Gateway/wallets, direct trade, real orders, paper/shadow/live trading, production and capital remain unauthorized
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

@@ -721,3 +721,38 @@ Decision:
 
 Evidence:
 - `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`
+
+---
+
+## AXODUS-TRADING-REQ-04 — Current materialized baseline accepted
+
+Status:
+CONFIRMED / CURRENT BASELINE FROZEN / PUBLISHED
+
+Decision:
+- the current Trading gitlinks are the canonical materialized baseline: Condor `d89e74f2e3e273bea102c64e4977118e6a88084f`, `hummingbot-api-client v1.5.9` at `dae015a3c513879ed06a55cf2b2c10e5772c0962`, and Hummingbot API `2494e847538bb7b819495cbc30eb4ef828feaacd`
+- HTTP capabilities are admitted for `IMP-01A/B/C` only through minimal Axodus-defined contracts
+- the client WebSocket path is blocked and isolated as `AXODUS-TRADING-BLOCKER-01`
+- `IMP-01D` is conditional on an explicitly admitted transport
+- no dependency source was changed and no compatibility shim was selected
+
+Evidence:
+- `.instructions/TRADING_REQ_04_MATERIALIZED_REPOSITORY_VERIFICATION.md`
+- commit `e059ecc` published to `origin/dev`
+
+---
+
+## AXODUS-TRADING-IMP-01 — Restricted baseline implementation authorization
+
+Status:
+AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
+
+Decision:
+- authorize `IMP-01A` dependency and contract foundations, `IMP-01B` minimal HTTP `ExecutionProvider`, and `IMP-01C` offline contract validation
+- keep `IMP-01D` conditional on a separately admitted market-data transport
+- keep Condor outside the first implementation path; it may not control execution directly
+- preserve Axodus ownership of strategy, signal, judgment, risk, order intent, positions, portfolio, credentials, audit, accounting and capital authority
+- preserve no-go boundaries for credentials, direct trading, real orders, Gateway/wallets, production, paper/shadow/live trading, System One and capital
+
+Related blocker:
+- `AXODUS-TRADING-BLOCKER-01 — Hummingbot WebSocket Authentication Compatibility`

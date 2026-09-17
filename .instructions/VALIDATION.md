@@ -140,7 +140,7 @@ Implication:
 
 ## AXODUS-TRADING-REQ-04 Materialized Repository Verification
 
-Result: `CURRENT BASELINE VERIFIED WITH LIMITATIONS / IMP-01 CONDITIONALLY READY / IMPLEMENTATION HOLD`
+Result: `COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED`
 
 Evidence:
 
@@ -157,6 +157,14 @@ Evidence:
 Implication:
 
 - REQ-03 remains historical evidence; REQ-04 is the current materialized baseline record
-- the current baseline is verified with limitations and is conditionally suitable for IMP-01 planning
+- the current baseline is accepted for `IMP-01A/B/C` on the restricted HTTP surface
+- the client WebSocket path is blocked and tracked as `AXODUS-TRADING-BLOCKER-01`; no workaround or upstream change was introduced
+- `IMP-01D` remains conditional on a separately admitted market-data transport
 - no adapter, runtime, credential, exchange or trading implementation was performed
 - REQ-01A–A4 remain materially unchanged; prospective collection is still relevant to LTDI, historical seed remains required for Path M, `HYBRID` remains the candidate and BUY remains `HOLD`
+
+## AXODUS-TRADING-IMP-01 Authorization
+
+Result: `AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE`
+
+Authorized scope is documentation and implementation tracking for `IMP-01A/B/C`: dependency and contract foundations, the minimal HTTP `ExecutionProvider` adapter, and offline contract validation. No code implementation was performed by the REQ-04 acceptance record. `IMP-01D` is conditional, and WebSocket market data remains blocked by `AXODUS-TRADING-BLOCKER-01`.

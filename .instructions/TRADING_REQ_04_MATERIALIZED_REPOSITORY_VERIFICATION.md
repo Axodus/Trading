@@ -125,7 +125,7 @@ REQ-01A–A4 remain materially unchanged: prospective collection remains relevan
 8. Add replay/backtest integration after data contracts are validated.
 9. Add operations, reconciliation, audit evidence and recovery handling.
 
-This is a planning result, not implementation authorization.
+This was the audit-time planning result. The subsequent CTO disposition below authorizes `IMP-01A/B/C` on the restricted HTTP surface while preserving the WebSocket blocker.
 
 ## REQ-03 findings
 
@@ -168,16 +168,34 @@ No test used credentials, external exchange connectivity, orders, capital or pro
 - The client fork's repository identity and package metadata identity differ.
 - No durable research-grade market-data persistence, sequence/gap recovery or historical MVRD seed was found.
 
-## Decisions required
+## Decisions required at audit close
 
-**CTO:** approve the current SHA matrix as the conditional REQ-04 baseline and decide whether the WebSocket incompatibility is excluded from IMP-01 scope or must be resolved before implementation.
+**CTO:** approve the current SHA matrix as the conditional REQ-04 baseline and decide whether the WebSocket incompatibility is excluded from IMP-01 scope or must be resolved before implementation. **Resolved by the acceptance disposition below.**
 
 **CEO:** `NONE`.
 
-**Implementation:** `HOLD`; this audit recommends `IMP-01 CONDITIONALLY READY` only after CTO release with the documented limitations.
+**Implementation at audit close:** `HOLD`; this audit recommended `IMP-01 CONDITIONALLY READY` only after CTO release with the documented limitations. **Superseded by the acceptance disposition below.**
 
 **Capital authority:** `NONE`.
 
 ## Preserved boundaries
 
 No upstream source was changed. No dependency was upgraded or downgraded. No adapter, collector, runtime, credential path, exchange connection, order, paper/live trading, production service, System One research or capital authority was initiated.
+
+## CTO acceptance and implementation disposition
+
+Status: `COMPLETE / CTO ACCEPTED / CURRENT BASELINE FROZEN / PUBLISHED`
+
+The CTO accepted the current materialized baseline and authorized the first implementation increment on a restricted surface. The accepted baseline remains:
+
+```text
+Condor              d89e74f2e3e273bea102c64e4977118e6a88084f
+API client          v1.5.9 / dae015a3c513879ed06a55cf2b2c10e5772c0962
+Hummingbot API      2494e847538bb7b819495cbc30eb4ef828feaacd
+```
+
+HTTP is admitted for `IMP-01A/B/C` through minimal Axodus-owned contracts and the `ExecutionProvider` boundary. The client WebSocket path remains `BLOCKED / DO NOT USE` and is registered as `AXODUS-TRADING-BLOCKER-01`; no upstream correction, compatibility shim or dependency change was selected. `IMP-01D` is conditional on an explicitly admitted market-data transport.
+
+Condor remains outside the first implementation path and cannot control execution directly. The authorization does not grant credentials, direct trading, real orders, Gateway/wallet authority, paper/shadow/live trading, production, System One activity or capital authority.
+
+This disposition updates implementation readiness only. It does not alter the audit evidence, REQ-03 provenance, ownership matrix, market-data limitations or REQ-01A–A4 conclusions.

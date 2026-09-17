@@ -71,3 +71,17 @@ Resolution path: Keep documented nested validation path, or create a root orches
 | Real local Postgres E2E not executed | RESOLVED |
 | Production database execution blocked | ACTIVE |
 | Treasury movement blocked | ACTIVE |
+
+## AXODUS-TRADING-BLOCKER-01 - Hummingbot WebSocket Authentication Compatibility
+
+Severity: HIGH
+
+Status: OPEN
+
+Description: `hummingbot-api-client v1.5.9` opens WebSocket connections with a query-token path, while the current Hummingbot API server authenticates through `Authorization: Basic` or the `hummingbot-auth` subprotocol. The audited client path is therefore not admitted.
+
+Impact: WebSocket-dependent market-data and runtime capabilities cannot be used by Axodus IMP-01. HTTP execution and offline contract validation remain available on the restricted baseline.
+
+Resolution path: Perform a separate compatibility decision covering transport adaptation, upstream alignment or dependency-baseline change. Do not patch upstream opportunistically, implement a compatibility shim during IMP-01A/B/C, or treat WebSocket availability as implicit.
+
+Preserved boundary: Hummingbot remains an operational substrate; Axodus owns the adapter, authorization, risk, order-intent and capital boundaries.
