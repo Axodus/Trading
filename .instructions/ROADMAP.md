@@ -732,7 +732,7 @@ Record:
 
 # AXODUS-TRADING-REQ-03 - Hummingbot / Condor Implementation Baseline & Gap Freeze
 
-Status: AUDIT COMPLETE / COMPATIBILITY PARTIAL / DEPENDENCY FREEZE PENDING CTO / IMPLEMENTATION HOLD
+Status: COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD
 
 Objective:
 - verify concrete Hummingbot and Condor revisions, APIs, dependencies, lifecycle and adaptation points against REQ-02
@@ -740,15 +740,14 @@ Objective:
 Delivered:
 - Condor audit baseline `2105d27…` materialized and inspected
 - Hummingbot API `v2.1.0` inspected and rejected for the audited Condor surface
-- Hummingbot API `e855625…` inspected as a structurally compatible candidate
+- Hummingbot API `e855625…` frozen as the server baseline after static client compatibility resolution
+- `hummingbot-api-client==1.4.1` frozen by wheel SHA-256 `37e8b442…` from Condor's lockfile
 - ownership, security-sensitive surfaces, market-data suitability and implementation gap map recorded
 
-Current blocker:
-- final Hummingbot server/client dependency freeze remains pending CTO because `e855625…` is untagged and `hummingbot-api-client==1.4.1` package-level compatibility is unverified
-
-Exit criteria:
-- CTO selects or verifies the final Hummingbot server/client baseline
-- open IMP-01 only after package-level compatibility and adapter boundary tests are defined
+Remaining constraints:
+- server is pinned by immutable SHA rather than release tag
+- client wheel embeds no source commit
+- IMP-01 remains on hold until its own implementation authorization and contract validation plan
 
 Record:
 - `.instructions/TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md`

@@ -211,4 +211,4 @@ Avoid opaque automated trading systems.
 - `TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md` — canonical Hummingbot/Condor architecture, ownership, RAG/SPEC reconciliation and implementation gap map
 - `TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md` — concrete source verification gate before adapter implementation
 
-REQ-03 source audit status: Condor audit baseline is `2105d27…`; Hummingbot API `v2.1.0` is incompatible with the audited Condor surface; `e855625…` is a proposed structural compatibility baseline pending package-level verification and CTO dependency freeze. `IMP-01` remains on hold.
+REQ-03 status: `COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD`. Condor is pinned at `2105d27…`; `hummingbot-api-client==1.4.1` is pinned by verified wheel SHA-256 `37e8b442…`; Hummingbot API server `e855625…` is frozen after static route, authentication and schema compatibility review. `v2.1.0` remains rejected for this Condor surface. `IMP-01` remains on hold.

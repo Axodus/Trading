@@ -2,9 +2,9 @@
 
 ## Hummingbot / Condor Implementation Baseline & Gap Freeze
 
-**Status:** `AUDIT COMPLETE / COMPATIBILITY PARTIAL / DEPENDENCY FREEZE PENDING CTO / IMPLEMENTATION HOLD`
+**Status:** `COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD`
 **Authorized by:** CTO review on 2026-09-17
-**Decision state:** `CONDOR AUDIT BASELINE FROZEN; HUMMINGBOT SERVER BASELINE PROPOSED; PACKAGE-LEVEL COMPATIBILITY UNVERIFIED`
+**Decision state:** `CONDOR + CLIENT + HUMMINGBOT SERVER BASELINE FROZEN FOR IMPLEMENTATION PLANNING; RUNTIME IMPLEMENTATION HOLD`
 
 REQ-03 verifies the concrete source selected for audit against the canonical Axodus Trading architecture in REQ-02. It does not implement adapters, change runtime behavior, install services, configure credentials, connect an exchange, trade, purchase data, or reopen System One research.
 
@@ -44,9 +44,28 @@ This release is an older Backend API surface. It provides account management, ca
 
 This revision contains the route families observed by Condor: `/accounts`, `/market-data`, `/trading`, `/executors`, `/portfolio`, `/backtesting`, `/bot-orchestration`, `/connectors`, `/gateway`, `/gateway/swap`, `/gateway/clmm` and WebSocket routes. The market-data service manages candle and order-book feeds; order-book responses include bids, asks, trading pair and a service-generated timestamp. Historical candles and live feed lifecycle are exposed.
 
-The revision is not a tagged release. The local audit establishes structural server compatibility with Condor's observed calls, but does not prove package-level compatibility with `hummingbot-api-client==1.4.1`, because that client package source was not materialized and no live contract test was run.
+The revision is not a tagged release. The materialized client audit establishes compatibility at the route, authentication and request/response contract level. The server remains pinned by immutable SHA rather than a release tag.
 
-**Classification:** `PROPOSED AUDIT / INTEGRATION BASELINE`; final dependency freeze remains `DECISION REQUIRED` from the CTO.
+**Classification:** `FROZEN AUDIT / IMPLEMENTATION BASELINE`; production promotion remains outside this REQ.
+
+## Client/server compatibility resolution
+
+Condor's lockfile pins `hummingbot-api-client==1.4.1`. The materialized wheel matches the lockfile artifact:
+
+| Field | Frozen value |
+|---|---|
+| Package | `hummingbot-api-client==1.4.1` |
+| Artifact | `hummingbot_api_client-1.4.1-py3-none-any.whl` |
+| SHA-256 | `37e8b442c15bc3a5cf42fa9f40e9efdd74ec1d8e40d39d0ee01264e0db94a4fe` |
+| Package source | `hummingbot/hummingbot-api-client` |
+| License | `Apache-2.0` |
+| Server | `hummingbot-api @ e85562515e4ded407595fc80d4c19fdc2e57de21` |
+
+The wheel has no embedded source commit, so the client is frozen by package version and artifact hash. This is sufficient for the REQ-03 implementation baseline while preserving the provenance limitation for later release management.
+
+Static contract comparison found the client route families represented by the server: accounts and credentials, connectors, market data and order-book queries, trading/orders/positions/funding, executors, portfolio, backtesting tasks, bot orchestration, Gateway, Gateway swap/CLMM, controllers, scripts, archived bots and Docker. The client uses HTTP Basic authentication for HTTP requests; the WebSocket client sends a base64 `user:password` token and the server accepts that form. Request payload names and the observed order-book response fields (`trading_pair`, `bids`, `asks`, `timestamp`) align for the audited market-data path.
+
+The comparison also identified non-blocking compatibility details: FastAPI trailing-slash redirects are used by a small number of list routes, and the server exposes additional routes not wrapped by the client. These do not invalidate the selected baseline. No live API, exchange, credentials or runtime service was used.
 
 ## Compatibility result
 
@@ -54,11 +73,11 @@ The revision is not a tagged release. The local audit establishes structural ser
 |---|---|---|
 | Condor revision | exact revision authorized and inspected | `FREEZE AUDIT BASELINE` |
 | Hummingbot `v2.1.0` route coverage | missing required modern families | `REJECT` |
-| Hummingbot `e855625…` route coverage | observed Condor families are present | `PROPOSE` |
-| `hummingbot-api-client==1.4.1` package compatibility | source/package contract not locally verified | `DECISION REQUIRED / VERIFY BEFORE IMP` |
-| Production Hummingbot revision | no tagged compatible release selected | `HOLD` |
+| Hummingbot `e855625…` route coverage | observed Condor/client families are present | `FREEZE SERVER BASELINE` |
+| `hummingbot-api-client==1.4.1` package compatibility | wheel hash, routes, auth and audited schemas verified statically | `FREEZE ARTIFACT BASELINE` |
+| Production Hummingbot revision | immutable SHA selected; release provenance remains a later concern | `HOLD PROMOTION` |
 
-REQ-03 freezes the audit evidence and gap map, not an untagged production dependency. IMP-01 remains on hold until the CTO selects or verifies the Hummingbot server/client baseline.
+REQ-03 freezes the audit evidence, client artifact and server SHA as the implementation planning baseline. This does not authorize runtime activation, production deployment or IMP-01.
 
 ## Security-sensitive capabilities
 
@@ -127,15 +146,14 @@ It does not provide the Axodus historical MVRD seed or prove durable institution
 
 ## Proposed implementation sequence
 
-1. CTO selects and verifies the Hummingbot server/client dependency baseline.
-2. Freeze the `ExecutionProvider` adapter contract and DTO isolation rules.
-3. Implement Hummingbot substrate health and read-only connector discovery.
-4. Implement Axodus market-data adapter and prospective persistence path.
-5. Implement paper/simulation execution mapping and normalized fills/positions.
-6. Add Axodus risk and capital gates at the Order Intent boundary.
-7. Add Condor agent adapter with proposal-only and permission-scoped orchestration.
-8. Add backtest/replay integration after data contracts are validated.
-9. Add operations, reconciliation and recovery evidence.
+1. Freeze the `ExecutionProvider` adapter contract and DTO isolation rules.
+2. Implement Hummingbot substrate health and read-only connector discovery.
+3. Implement Axodus market-data adapter and prospective persistence path.
+4. Implement paper/simulation execution mapping and normalized fills/positions.
+5. Add Axodus risk and capital gates at the Order Intent boundary.
+6. Add Condor agent adapter with proposal-only and permission-scoped orchestration.
+7. Add backtest/replay integration after data contracts are validated.
+8. Add operations, reconciliation and recovery evidence.
 
 This sequence does not authorize exchange connectivity, credentials, paper/live execution or production activation. It is a proposed engineering order pending the dependency decision.
 
@@ -161,15 +179,16 @@ REQ-03 now records the materialized revisions, source-history result, concrete i
 
 Remaining gaps are explicit:
 
-- Hummingbot server revision is not a tagged release freeze.
-- `hummingbot-api-client==1.4.1` package-level compatibility is unverified.
+- Hummingbot server revision is frozen by SHA but is not a tagged release.
+- The client wheel has no embedded source commit; provenance is version + artifact hash + upstream repository metadata.
+- No live or fixture-backed client/server contract test has been run.
 - Condor upstream provenance differs between its README and Trading's `.gitmodules`.
 - No Axodus adapter has been implemented or validated.
 - No durable Hummingbot-to-Axodus market-data persistence contract exists yet.
 
 ## Decisions required
 
-**CTO:** select or verify the final Hummingbot API server/client dependency baseline, including whether `e855625…` is acceptable as a temporary integration baseline or whether a compatible tagged release must be identified.
+**CTO:** no further REQ-03 decision required; the audited baseline is frozen for implementation planning. Any replacement of the pinned server/client artifacts requires a new compatibility decision.
 **CEO:** `NONE`.
 **Implementation:** `HOLD`.
 **Capital authority:** `NONE`.

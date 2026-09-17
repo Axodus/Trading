@@ -2,12 +2,14 @@
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 
-Status: AUDIT COMPLETE / COMPATIBILITY PARTIAL / CTO DEPENDENCY DECISION PENDING / IMPLEMENTATION HOLD
+Status: COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD
 
 Completed:
 - materialized and audited Condor `2105d27…`
 - compared Hummingbot API `v2.1.0` with `e855625…`
 - rejected `v2.1.0` for the audited Condor client surface
+- verified `hummingbot-api-client==1.4.1` from Condor's lockfile by materialized wheel hash
+- froze Hummingbot API `e855625…` as the server baseline after static client/server compatibility review
 - recorded Condor direct-authority risks and Axodus ownership boundaries
 - recorded market-data capabilities and the missing durable historical L2/L3 boundary
 - produced the implementation gap map and proposed sequence
@@ -1058,16 +1060,16 @@ Record:
 
 # AXODUS-TRADING-REQ-03 - Hummingbot / Condor Implementation Baseline & Gap Freeze
 
-Status: PREFLIGHT ACCEPTED / CTO FREEZE REQUIRED / IMPLEMENTATION HOLD
+Status: COMPLETE / DEPENDENCY BASELINE FROZEN / IMPLEMENTATION HOLD
 
 Task:
 - inspect concrete Hummingbot and Condor source, revisions, dependencies, APIs, lifecycle, licensing and tests
 - map every capability to Axodus ownership and classify the action as `REUSE`, `ADAPT`, `EXTEND`, `NEW`, `PROTECT` or `REJECT`
 - freeze the implementation baseline required before `IMP-01`
 
-Current blocker:
-- declared submodules are not materialized and are not represented as gitlinks in the current index
-- upstream candidates exist, but the intended Condor and Hummingbot API revisions are not frozen
+Resolution:
+- Condor `2105d27…`, client `1.4.1` with verified wheel hash, and Hummingbot API `e855625…` are frozen for implementation planning
+- static route, auth and schema compatibility was established; no live contract test was run
 
 Boundary:
 - no adapter implementation, runtime activation, credential use, trading, dataset purchase or capital authority
