@@ -1015,3 +1015,25 @@ Validation:
 - secrets redacted in diagnostics
 - migration, seed, health, validate and smoke steps are called
 - failure report is readable and stops safely
+
+---
+
+# AXODUS-TRADING-REQ-02 - Canonical Architecture & RAG Reconciliation
+
+Status: COMPLETE / DOCUMENTATION VALIDATED / IMPLEMENTATION HOLD
+
+Completed:
+- audited the Trading workspace and relevant Core/Institutional authority surfaces
+- recovered and classified canonical, supporting, legacy, partial, contradictory and missing architecture material
+- formalized Hummingbot responsibilities and the Condor agent-runtime/orchestration boundary
+- documented ownership for strategy, signals, judgment, risk, order intent, execution, state, credentials, data, agents, audit, accounting and capital authority
+- reconciled architecture, SPEC/boundary guidance, roadmap and task records
+- assessed REQ-01A–A4 impacts without re-running System One research
+
+Validation:
+- documentation/source inventory completed
+- no conflicting Hummingbot or Condor authority statement found in checked Core/Institutional surfaces
+- implementation remains unauthorized and on hold
+
+Record:
+- `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`

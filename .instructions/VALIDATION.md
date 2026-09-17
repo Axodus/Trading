@@ -87,3 +87,28 @@ Validation evidence:
 
 - `.instructions/TRADING_E2E_REVALIDATION_EVIDENCE.md`
 - `.instructions/reports/TRADING_REQ_04_SAFE_LOCAL_POSTGRES_E2E_REVALIDATION.md`
+
+## AXODUS-TRADING-REQ-02 Documentation Audit
+
+Result: COMPLETE / DOCUMENTATION VALIDATED / IMPLEMENTATION HOLD
+
+Validation performed:
+
+- Trading instructions, architecture, decisions, roadmap, tasks, security, risk, agent, runtime, implementation inventory and Hummingbot backend ownership records reviewed
+- Trading Core Hummingbot adapter and selected nested backend API market-data/backtesting surfaces reviewed
+- declared submodule state checked; Condor and Hummingbot API submodule source checkouts are absent in this working tree
+- Core and Institutional authority terms checked for conflicting ownership statements
+- System One REQ-01A–A4 records read for impact only; no research re-executed
+- documentation diff checked with `git diff --check`
+
+Findings:
+
+- Hummingbot is canonical as an execution substrate behind Axodus `ExecutionProvider`
+- Condor is now explicitly documented as a bounded external agent runtime/orchestration adapter
+- Axodus retains strategy, signal, market judgment, risk, order intent, canonical state, portfolio, credentials, audit, accounting and capital authority
+- candle/backtest and normalized event replay are present in evidence; historical L2/L3 microstructure replay is not
+- REQ-01A–A4 conclusions remain unchanged except for boundary clarifications
+
+Evidence:
+
+- `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`

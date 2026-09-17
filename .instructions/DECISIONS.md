@@ -679,8 +679,6 @@ CONFIRMED
 Status:
 PENDING
 
----
-
 ## Cross-market Routing Strategy
 
 Status:
@@ -706,3 +704,20 @@ PENDING
 
 Status:
 PENDING
+
+---
+
+## AXODUS-TRADING-REQ-02 — Hummingbot and Condor boundary formalization
+
+Status:
+CONFIRMED / DOCUMENTATION COMPLETE / IMPLEMENTATION HOLD
+
+Decision:
+- Hummingbot remains an operational execution substrate behind the Axodus `ExecutionProvider` boundary.
+- Condor is formalized as an external agent runtime and bounded orchestration adapter.
+- Condor may reason, propose and orchestrate permitted operations, but does not own Axodus financial authority, canonical state, credentials, risk, execution or capital authority.
+- The existing Hummingbot backend API fork remains protected supporting infrastructure and does not become canonical Trading authority.
+- No code, installation, provider promotion, credential path or capital authority is authorized by this decision.
+
+Evidence:
+- `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`

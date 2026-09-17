@@ -205,3 +205,7 @@ Avoid opaque automated trading systems.
 - auditable strategies
 - bounded automation
 - no opaque execution
+
+## Current canonical audit
+
+- `TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md` — canonical Hummingbot/Condor architecture, ownership, RAG/SPEC reconciliation and implementation gap map

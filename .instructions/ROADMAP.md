@@ -702,3 +702,28 @@ Delivered:
 - `scripts/wait-for-postgres.ts`
 - `scripts/local-e2e-report.ts`
 - tests for safety, redaction, command sequencing and readable failure reporting
+
+---
+
+# AXODUS-TRADING-REQ-02 - Canonical Architecture & RAG Reconciliation
+
+Status: COMPLETE / DOCUMENTATION VALIDATED / IMPLEMENTATION HOLD
+
+Delivered:
+- recovered and classified existing Axodus, Hummingbot, backend API, agent, market-data, risk, credential and execution material
+- formalized the Condor external agent runtime and bounded orchestration boundary
+- recorded the canonical ownership matrix and implementation gap map
+- reconciled RAG-facing architecture, SPEC-facing boundaries and roadmap/task order
+- assessed System One REQ-01A–A4 premises without re-running research
+
+Next implementation order, pending CTO review:
+1. architecture and contract freeze
+2. materialize and audit Hummingbot/Condor source boundaries
+3. complete adapter contracts
+4. validate market-data and execution-provider paths
+5. integrate risk and strategy through governed requests
+6. integrate Condor/agent workflows behind the same gates
+7. expand research/backtest and operations evidence
+
+Record:
+- `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`

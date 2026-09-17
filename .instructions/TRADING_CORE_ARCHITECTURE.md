@@ -239,6 +239,16 @@ It must not bypass:
 
 ---
 
+# Condor Agent Runtime Boundary
+
+Condor is an external agent runtime and bounded orchestration adapter at the Axodus boundary. It may reason, propose signals or workflow requests, maintain bounded agent state, and orchestrate operations that Axodus has already permitted.
+
+Condor must remain downstream of Axodus-owned governance, compliance, risk, credential, state, audit and execution gates. It must not call Hummingbot, exchange connectors, exchanges, wallets or credential stores directly; create or approve orders outside Trading Core; own canonical positions, portfolio, accounting, audit or capital authority; bypass gates; or receive private keys, withdrawal rights or unrestricted capital access.
+
+The Condor source is not materialized in this checkout. This boundary formalizes the approved Axodus ownership model without asserting uninspected Condor internals. A future Condor implementation task must verify the source interfaces and add an adapter contract where required.
+
+---
+
 # WhiteRabbit Runtime-native Strategy Boundary
 
 WhiteRabbit is the first strategy migrated into:
