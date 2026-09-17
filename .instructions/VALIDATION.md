@@ -246,3 +246,24 @@ Boundaries:
 - no credentials, exchange connectivity, orders, Condor integration, collector, WebSocket or upstream source modification
 - `IMP-01D` remains `HOLD / CONDITIONAL`
 - `AXODUS-TRADING-BLOCKER-01` remains `OPEN / WEBSOCKET BLOCKED / DO NOT USE`
+
+## AXODUS-TRADING-BLOCKER-01 — WebSocket Remediation Design
+
+Result: `COMPLETE / CTO REVIEW PENDING / KEEP BLOCKED`
+
+Evidence:
+
+- `hummingbot-api-client v1.5.9` constructs WebSocket URLs with `?token=...` and has no authentication-mode configuration hook
+- Hummingbot API `2494e847…` authenticates WebSocket handshakes with `Authorization: Basic` or `hummingbot-auth` subprotocol and deliberately excludes query-string authentication
+- Condor calls the client market-data and executor WebSocket surfaces and adds reconnect/backoff behavior, but cannot repair a handshake rejected by the server
+- `CONFIGURE` is insufficient for the current source; an Axodus-owned transport is the preferred future candidate, while dependency update and upstream fix require separate compatibility decisions
+- WebSocket-dependent market data remains blocked; HTTP execution remains admitted; research-grade persistence, gap recovery, provenance and replay remain outside this design
+
+Validation:
+
+- source and test inspection completed for client, server and Condor WebSocket paths
+- no credentials, network WebSocket session, exchange, order, dependency update or upstream modification used
+
+Record:
+
+- `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`

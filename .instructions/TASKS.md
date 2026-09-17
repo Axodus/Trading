@@ -24,7 +24,7 @@ Next gate:
 
 Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / BLOCKER-01 DESIGN CURRENT / IMP-01D HOLD`
 
 Scope:
 - `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
@@ -102,8 +102,27 @@ Boundaries preserved:
 - no WebSocket, Condor, credentials, exchange connectivity, orders, collector or Trading Data Store
 
 Next:
+- `AXODUS-TRADING-BLOCKER-01`: remediation design complete; current decision `KEEP BLOCKED`
 - `IMP-01D`: HOLD / CONDITIONAL on an explicitly admitted market-data transport
-- `AXODUS-TRADING-BLOCKER-01`: OPEN / WebSocket blocked
+
+## AXODUS-TRADING-BLOCKER-01 — WebSocket Authentication Remediation Design
+
+Status: COMPLETE / CTO REVIEW PENDING
+
+Completed:
+- verified the client query-token handshake against the server Basic/subprotocol authentication contract
+- verified that current client configuration cannot select a compatible authentication mode
+- assessed Axodus transport adaptation, dependency update, upstream fix and continued block
+- recorded Condor's client WebSocket callers and reconnect limitation
+- preserved the separation between operational streaming and research-grade collection
+
+Decision state:
+- current classification: `KEEP BLOCKED / DO NOT USE`
+- preferred future candidate: `ADAPT AXODUS TRANSPORT`, pending explicit implementation decision
+- `IMP-01D` remains conditional; no transport or collector implementation is authorized
+
+Record:
+- `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

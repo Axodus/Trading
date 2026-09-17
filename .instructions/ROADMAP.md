@@ -783,7 +783,7 @@ Record:
 
 Status: IN PROGRESS / RESTRICTED HTTP BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / BLOCKER-01 DESIGN CURRENT / IMP-01D HOLD`
 
 Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
@@ -795,7 +795,8 @@ Sequence:
 1. `IMP-01A` — dependency and contract foundations
 2. `IMP-01B` — HTTP `ExecutionProvider` adapter
 3. `IMP-01C` — offline contract validation
-4. `IMP-01D` — conditional market-data read boundary
+4. `AXODUS-TRADING-BLOCKER-01` — WebSocket authentication remediation design
+5. `IMP-01D` — conditional market-data read boundary
 
 IMP-01A evidence:
 - programmatic REQ-04 dependency baseline and HTTP-only transport admission

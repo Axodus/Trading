@@ -85,3 +85,19 @@ Impact: WebSocket-dependent market-data and runtime capabilities cannot be used 
 Resolution path: Perform a separate compatibility decision covering transport adaptation, upstream alignment or dependency-baseline change. Do not patch upstream opportunistically, implement a compatibility shim during IMP-01A/B/C, or treat WebSocket availability as implicit.
 
 Preserved boundary: Hummingbot remains an operational substrate; Axodus owns the adapter, authorization, risk, order-intent and capital boundaries.
+
+### BLOCKER-01 remediation design — 2026-09-17
+
+The materialized client `v1.5.9` hard-codes a `?token=...` WebSocket URL in `hummingbot_api_client/ws.py`. The materialized server `2494e847…` authenticates before handshake acceptance through `Authorization: Basic` or the `hummingbot-auth` subprotocol and deliberately ignores query-string credentials/tokens. The client has no configuration hook that changes this authentication mode.
+
+Option assessment:
+
+- `CONFIGURE`: rejected for the current source; no authentication-mode setting exists.
+- `ADAPT AXODUS TRANSPORT`: preferred future candidate if streaming is required; not selected or implemented.
+- `UPDATE DEPENDENCY`: candidate only after a new source and compatibility-triangle review.
+- `UPSTREAM FIX`: candidate only through an explicitly reviewed upstream change and revision freeze.
+- `KEEP BLOCKED`: current decision and safe operating state.
+
+Condor calls the same client WebSocket surfaces and has reconnect/backoff behavior, but that cannot repair a handshake rejected before the stream is established. HTTP remains admitted for the restricted IMP-01 path. WebSocket market data remains unavailable to Axodus, and `IMP-01D` remains conditional.
+
+Detailed record: `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`.
