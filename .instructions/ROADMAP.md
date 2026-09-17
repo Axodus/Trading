@@ -732,13 +732,14 @@ Record:
 
 # AXODUS-TRADING-REQ-03 - Hummingbot / Condor Implementation Baseline & Gap Freeze
 
-Status: GO / BASELINE BLOCKED ON SOURCE MATERIALIZATION / IMPLEMENTATION HOLD
+Status: PREFLIGHT ACCEPTED / CTO FREEZE REQUIRED / IMPLEMENTATION HOLD
 
 Objective:
 - verify concrete Hummingbot and Condor revisions, APIs, dependencies, lifecycle and adaptation points against REQ-02
 
 Current blocker:
 - `.gitmodules` declares both components, but the current index has no gitlink entries and the directories are absent
+- public `main` candidates are known, but no canonical revision is frozen; do not materialize an arbitrary candidate
 
 Exit criteria:
 - produce evidence-backed `REUSE / ADAPT / EXTEND / NEW / PROTECT / REJECT` classifications for each capability

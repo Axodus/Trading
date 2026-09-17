@@ -115,7 +115,7 @@ Evidence:
 
 ## AXODUS-TRADING-REQ-03 Baseline Preflight
 
-Result: `GO / BLOCKED ON SOURCE MATERIALIZATION / IMPLEMENTATION HOLD`
+Result: `PREFLIGHT ACCEPTED / CTO FREEZE REQUIRED / IMPLEMENTATION HOLD`
 
 Evidence:
 
@@ -124,8 +124,11 @@ Evidence:
 - both directories are absent from the working tree
 - `git submodule update --init --recursive` produced no checkout
 - remote `origin/dev` contains the accepted REQ-02 commit `84660790674a8745bc84def40c0ca3866de70482`
+- Condor public `main` candidate observed at `2105d27d94189c3207d6f8fb5d76e754bde3fa65`
+- Hummingbot API public `main` candidate observed at `e85562515e4ded407595fc80d4c19fdc2e57de21`; tags `v2.0.0`, `v2.0.1` and `v2.1.0` also observed
 
 Implication:
 
 - concrete API, revision, dependency, licensing and upstream-test verification cannot be completed yet
 - no implementation should proceed against presumed Condor or Hummingbot interfaces
+- no candidate was materialized because the intended revision is not frozen
