@@ -64,6 +64,7 @@ export * from './config/PostgresEnvConfig.js';
 export * from './config/TradingDatabaseConfig.js';
 export * from './core/TradingCore.js';
 export * from './execution/ExecutionProviderRegistry.js';
+export * from './execution/CexExecutionLifecycleService.js';
 export * from './execution/providers/hummingbot/HummingbotConfigMapper.js';
 export * from './execution/providers/hummingbot/HummingbotDependencyBaseline.js';
 export * from './execution/providers/hummingbot/HummingbotHealthService.js';

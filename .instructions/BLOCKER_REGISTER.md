@@ -107,17 +107,19 @@ Detailed record: `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`.
 
 Severity: HIGH
 
-Status: OPEN / DECISION REQUIRED
+Status: OPEN / IMPLEMENTATION BLOCKER ONLY / CEX FEASIBILITY RESOLVED
 
-Description: The current REQ-04 Hummingbot client/server submission path does not accept a caller-supplied Axodus client order ID or idempotency key. Active orders are discoverable only through account/connector/pair filters, historical orders and trades lack direct order-ID filters, and cancellation returns initiation evidence for active in-flight IDs rather than terminal state.
+Description: CEX identity continuity is now represented in the Axodus lifecycle foundation for the accepted Binance Spot and Binance Perpetual capability model. The remaining blocker is implementation validation of exact REST reconciliation, recovery and lifecycle semantics before operational use.
 
-Impact: A transport failure after submission can leave provider execution unknown without a defensible exact lookup or duplicate-suppression guarantee. Operational IMP-02 lifecycle/reconciliation implementation is blocked.
+Impact: Until VAL-02B is accepted, PROVIDER_EXECUTION_UNKNOWN recovery and restart behavior remain unvalidated for operational use. Gateway/DEX remains outside the CEX identity model.
 
-Resolution path: CTO must select and document a reviewed remedy or explicitly restrict the operational capability. Candidates include provider/API support for caller identity, a reviewed Axodus correlation mechanism, a revised dependency baseline or a governed operational restriction. Do not add a shim, alter upstream, retry blindly or infer exactly-once semantics during this audit.
+Resolution path: execute and accept VAL-02B for acknowledged, rejected, ambiguous, exact-found, exact-not-found, indeterminate, cancellation and restart/recovery semantics. Do not add blind retry or infer exactly-once semantics.
 
 Preserved boundary: Axodus owns order intent, idempotency, lifecycle, reconciliation, risk, accounting and capital authority. Hummingbot remains an operational substrate; Condor cannot bypass the boundary.
 
 Detailed record: .instructions/TRADING_REQ_06_EXECUTION_STATE_RECONCILIATION_IDEMPOTENCY_FREEZE.md.
+
+IMP-02B implementation record: `.instructions/TRADING_IMP_02B_CEX_LIFECYCLE_RECONCILIATION.md`.
 
 ### AXODUS-TRADING-REQ-07 source audit — 2026-09-17
 

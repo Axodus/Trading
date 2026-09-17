@@ -914,3 +914,23 @@ Consequences:
 Next gate: CTO selection of immutable historical provenance or a prospective Axodus Core qualification, followed by targeted connector identity tracing.
 
 Record: `.instructions/TRADING_REQ_09_HUMMINGBOT_CORE_PROVENANCE_RECOVERY.md`.
+
+## AXODUS-TRADING-IMP-02B — Canonical CEX Execution Lifecycle & Reconciliation
+
+Status: IMPLEMENTED / CTO REVIEW PENDING
+
+Objective: implement the Axodus-owned CEX execution lifecycle on top of the accepted Binance Spot and Binance Perpetual strong-reconciliation capability model.
+
+Delivered:
+
+- attempt-specific execution client identity and repository boundary;
+- explicit submission, acknowledgement, rejection, failure and unknown-outcome states;
+- REST exact reconciliation with `found`, `not-found` and `indeterminate` outcomes;
+- connector capability admission before reconciliation;
+- separate cancellation request and cancellation result states;
+- recoverable state listing for restart/recovery integration;
+- no blind retry and no WebSocket correctness dependency.
+
+Next gate: `VAL-02B — Offline deterministic reconciliation`. `AXODUS-TRADING-BLOCKER-02` remains open until validation acceptance. Gateway/DEX, Condor, WebSocket and operational trading remain outside scope.
+
+Record: `.instructions/TRADING_IMP_02B_CEX_LIFECYCLE_RECONCILIATION.md`.

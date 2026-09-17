@@ -1389,3 +1389,27 @@ Validation fixes:
 - field_validator for client_order_id at API boundary
 - duplicate active ID rejection at Core boundary
 
+
+## AXODUS-TRADING-IMP-02B — Canonical CEX Execution Lifecycle & Reconciliation
+
+Result: `IMPLEMENTED / CTO REVIEW PENDING / VAL-02B NEXT`
+
+Completed:
+
+- implemented Axodus-owned CEX submission-attempt lifecycle contracts;
+- generated a distinct execution client order identity per attempt;
+- added capability admission for caller identity, exact lookup and deterministic reconciliation;
+- added exact reconciliation outcomes `found`, `not-found` and `indeterminate`;
+- preserved `PROVIDER_EXECUTION_UNKNOWN` and prohibited automatic resubmission;
+- modeled cancellation request and cancellation completion separately;
+- exposed recoverable states for later durable restart/recovery integration;
+- kept Gateway/DEX, WebSocket, Condor, credentials and operational trading outside the implementation.
+
+Validation:
+
+- `npm test` from `trading-core/services/trading-core`: 7 test files passed, 0 failed;
+- typecheck/test compilation passed as part of the test command;
+- `VAL-02B` is not yet executed;
+- `AXODUS-TRADING-BLOCKER-02` remains open pending VAL-02B.
+
+Record: `.instructions/TRADING_IMP_02B_CEX_LIFECYCLE_RECONCILIATION.md`.

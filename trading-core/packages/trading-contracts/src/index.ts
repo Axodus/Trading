@@ -7,6 +7,7 @@ export * from './compliance/types.js';
 export * from './events/types.js';
 export * from './execution/ExecutionProvider.js';
 export * from './execution/axodus.js';
+export * from './execution/lifecycle.js';
 export * from './execution/types.js';
 export * from './federation/types.js';
 export * from './governance/types.js';

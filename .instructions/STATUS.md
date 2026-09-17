@@ -186,3 +186,13 @@ Rationale:
 - The documented real local Postgres E2E path passed.
 - Trading now has current evidence for local durable persistence, migrations, mock seed data, health checks, schema validation, repository readiness and replay smoke.
 - Production trading, credentials, withdrawals, treasury movement and production databases remain blocked.
+
+## AXODUS-TRADING-IMP-02B — Canonical CEX Execution Lifecycle & Reconciliation
+
+Status: IMPLEMENTED / CTO REVIEW PENDING
+
+The CEX lifecycle foundation is implemented for the frozen Binance Spot and Binance Perpetual capability model. Axodus creates an attempt-specific execution client identity, owns lifecycle transitions, requires declared caller identity/exact lookup/deterministic reconciliation capabilities, and records `FOUND`, `NOT_FOUND` and `INDETERMINATE` evidence without blind resubmission.
+
+Cancellation remains a separate process (`cancel-requested` is not `cancelled`). REST exact lookup is the admitted correctness path; WebSocket remains blocked under `AXODUS-TRADING-BLOCKER-01`. Gateway/DEX is excluded from this CEX model.
+
+Validation: `npm test` passed with 7 test files and 0 failures from `trading-core/services/trading-core`; `VAL-02B` remains pending and `AXODUS-TRADING-BLOCKER-02` remains open until that validation is accepted.
