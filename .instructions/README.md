@@ -209,3 +209,4 @@ Avoid opaque automated trading systems.
 ## Current canonical audit
 
 - `TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md` — canonical Hummingbot/Condor architecture, ownership, RAG/SPEC reconciliation and implementation gap map
+- `TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md` — concrete source verification gate before adapter implementation

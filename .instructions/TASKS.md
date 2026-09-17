@@ -1037,3 +1037,23 @@ Validation:
 
 Record:
 - `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`
+
+---
+
+# AXODUS-TRADING-REQ-03 - Hummingbot / Condor Implementation Baseline & Gap Freeze
+
+Status: GO / BLOCKED ON SOURCE MATERIALIZATION / IMPLEMENTATION HOLD
+
+Task:
+- inspect concrete Hummingbot and Condor source, revisions, dependencies, APIs, lifecycle, licensing and tests
+- map every capability to Axodus ownership and classify the action as `REUSE`, `ADAPT`, `EXTEND`, `NEW`, `PROTECT` or `REJECT`
+- freeze the implementation baseline required before `IMP-01`
+
+Current blocker:
+- declared submodules are not materialized and are not represented as gitlinks in the current index
+
+Boundary:
+- no adapter implementation, runtime activation, credential use, trading, dataset purchase or capital authority
+
+Record:
+- `.instructions/TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md`

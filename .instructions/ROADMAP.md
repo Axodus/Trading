@@ -727,3 +727,22 @@ Next implementation order, pending CTO review:
 
 Record:
 - `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`
+
+---
+
+# AXODUS-TRADING-REQ-03 - Hummingbot / Condor Implementation Baseline & Gap Freeze
+
+Status: GO / BASELINE BLOCKED ON SOURCE MATERIALIZATION / IMPLEMENTATION HOLD
+
+Objective:
+- verify concrete Hummingbot and Condor revisions, APIs, dependencies, lifecycle and adaptation points against REQ-02
+
+Current blocker:
+- `.gitmodules` declares both components, but the current index has no gitlink entries and the directories are absent
+
+Exit criteria:
+- produce evidence-backed `REUSE / ADAPT / EXTEND / NEW / PROTECT / REJECT` classifications for each capability
+- freeze the first IMP scope without relying on presumed external interfaces
+
+Record:
+- `.instructions/TRADING_REQ_03_IMPLEMENTATION_BASELINE_GAP_FREEZE.md`

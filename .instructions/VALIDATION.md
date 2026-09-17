@@ -112,3 +112,20 @@ Findings:
 Evidence:
 
 - `.instructions/TRADING_REQ_02_CANONICAL_ARCHITECTURE_AUDIT.md`
+
+## AXODUS-TRADING-REQ-03 Baseline Preflight
+
+Result: `GO / BLOCKED ON SOURCE MATERIALIZATION / IMPLEMENTATION HOLD`
+
+Evidence:
+
+- `.gitmodules` declares `condor` and `hummingbot-api`
+- `git ls-files -s condor hummingbot-api` returns no index entries
+- both directories are absent from the working tree
+- `git submodule update --init --recursive` produced no checkout
+- remote `origin/dev` contains the accepted REQ-02 commit `84660790674a8745bc84def40c0ca3866de70482`
+
+Implication:
+
+- concrete API, revision, dependency, licensing and upstream-test verification cannot be completed yet
+- no implementation should proceed against presumed Condor or Hummingbot interfaces
