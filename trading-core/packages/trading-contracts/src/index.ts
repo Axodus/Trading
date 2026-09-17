@@ -11,6 +11,8 @@ export * from './execution/types.js';
 export * from './federation/types.js';
 export * from './governance/types.js';
 export * from './marketplace/types.js';
+export * from './market-data/MarketDataProvider.js';
+export * from './market-data/types.js';
 export * from './observability/types.js';
 export * from './portfolio/types.js';
 export * from './product/types.js';

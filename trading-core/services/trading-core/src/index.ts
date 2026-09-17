@@ -79,6 +79,7 @@ export * from './governance/FederationExecutionEvaluator.js';
 export * from './governance/GovernanceExecutionGuard.js';
 export * from './governance/TreasuryPolicyEvaluator.js';
 export * from './local/TradingLocalE2eCommand.js';
+export * from './market-data/providers/hummingbot/HummingbotHttpMarketDataProvider.js';
 export * from './product/EntitlementEvaluator.js';
 export * from './product/ProductExecutionGate.js';
 export * from './product/RuntimeQuotaEvaluator.js';

@@ -1,6 +1,6 @@
 # Trading Status
 
-Last updated: 2026-06-08
+Last updated: 2026-09-17
 
 ## Portfolio Normalization
 
@@ -92,15 +92,15 @@ Production execution: DISABLED
 - Current baseline: Condor `d89e74f…`, `hummingbot-api-client v1.5.9` at `dae015a3…`, Hummingbot API `2494e847…`
 - `AXODUS-TRADING-IMP-01`: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
 - `IMP-01A`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01B`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01C`: `COMPLETE / CTO ACCEPTED / PUBLISHED`
-- `AXODUS-TRADING-IMP-01D`: conditional on an explicitly admitted market-data transport
+- `AXODUS-TRADING-IMP-01D-HTTP`: `COMPLETE / CTO REVIEW PENDING / HTTP-SAFE / STREAMING DEFERRED`
 - `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
-The next implementation work is governed by `.instructions/TRADING_IMP_01_RESTRICTED_BASELINE_AUTHORIZATION.md`. IMP-01C is complete for offline validation of the restricted HTTP order surface. `IMP-01D` remains conditional on an explicitly admitted market-data transport. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
+The next implementation work is governed by `.instructions/TRADING_IMP_01_RESTRICTED_BASELINE_AUTHORIZATION.md` and `.instructions/TRADING_IMP_01D_HTTP_MARKET_DATA_BOUNDARY.md`. IMP-01A/B/C and the restricted HTTP market-data read boundary are locally implemented and validated. Streaming remains blocked. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
 
 ## Next Recommended Request
 
-`AXODUS-TRADING-REQ-05` market-data transport and read-boundary freeze; determine the HTTP-safe subset while keeping streaming conditional
+CTO review of `AXODUS-TRADING-IMP-01D-HTTP`; then open a separate future milestone for streaming/LTDI or Condor integration
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 

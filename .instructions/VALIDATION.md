@@ -1,6 +1,6 @@
 # Trading Validation
 
-Last updated: 2026-06-08
+Last updated: 2026-09-17
 
 ## Known Commands
 
@@ -295,3 +295,32 @@ Validation:
 Record:
 
 - `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`
+
+## AXODUS-TRADING-IMP-01D-HTTP — Market Data Read Boundary
+
+Result: `COMPLETE / CTO REVIEW PENDING / HTTP-SAFE / STREAMING DEFERRED`
+
+Evidence:
+
+- `MarketDataProvider` is Axodus-owned and exposes only admitted read capabilities: candles, historical candles, prices, tickers, rates, funding and order-book snapshots
+- Hummingbot-specific models, DTOs and exceptions are confined to the adapter implementation
+- observations preserve venue, instrument, observed time, receipt time, correlation and optional source timestamps/references
+- snapshot metadata explicitly does not claim continuous, lossless, sequenced, gap-recovered or replayable semantics
+- malformed protocol responses, timeout/transport failures, baseline drift and invalid requests become typed Axodus failures
+- no incremental order-book, trade, WebSocket or generic Hummingbot capability is exposed
+
+Validation:
+
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 5 test files / 5 suites / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+
+Boundaries:
+
+- no collector, Trading Data Store, persistence, gap recovery, deduplication, replay, historical MVRD acquisition, Condor, credentials, exchange connectivity, orders, production or capital
+- `AXODUS-TRADING-BLOCKER-01` remains open; streaming is deferred
+
+Record:
+
+- `.instructions/TRADING_IMP_01D_HTTP_MARKET_DATA_BOUNDARY.md`

@@ -24,13 +24,13 @@ Next gate:
 
 Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / BLOCKER-01 DESIGN CURRENT / IMP-01D HOLD`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D-HTTP COMPLETE / BLOCKER-01 OPEN`
 
 Scope:
 - `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
 - `IMP-01B`: implement the minimal HTTP `ExecutionProvider` adapter surface
 - `IMP-01C`: validate fixtures, mocks, serialization, errors, timeouts, auth injection boundaries and upstream failure mapping offline
-- `IMP-01D`: implement only a read/feed market-data boundary after the required transport is admitted; do not build the Trading Data Store here
+- `IMP-01D-HTTP`: implement only the Axodus-owned HTTP read boundary; streaming and the Trading Data Store remain deferred
 
 Boundaries:
 - Axodus retains Strategy, Signal, Market Judgment, Risk, Order Intent, Position, Portfolio, Credentials, Audit, Accounting and Capital Authority
@@ -101,9 +101,29 @@ Boundaries preserved:
 - no new ExecutionProvider capability
 - no WebSocket, Condor, credentials, exchange connectivity, orders, collector or Trading Data Store
 
+### IMP-01D-HTTP result
+
+Status: COMPLETE / CTO REVIEW PENDING
+
+Delivered:
+- Axodus-owned `MarketDataProvider` contracts for candles, historical candles, prices, tickers, rates, funding and order-book snapshots
+- Hummingbot HTTP adapter with normalized observations, source/receipt metadata and typed failure mapping
+- explicit false stream/replay semantics and no WebSocket, incremental-book or trade capabilities
+- offline validation for success, malformed data, timeout/transport failures, baseline drift, pre-HTTP rejection and upstream isolation
+
+Validation:
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 5 test files / 5 suites / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+
+Boundaries:
+- `AXODUS-TRADING-BLOCKER-01` remains `OPEN / KEEP BLOCKED / DO NOT USE`
+- no collector, persistence, gap recovery, replay, MVRD acquisition, Condor, credentials, exchange or trading operations
+
 Next:
-- `AXODUS-TRADING-REQ-05`: determine the HTTP-safe market-data read boundary while streaming remains blocked
-- `IMP-01D`: HOLD pending REQ-05; streaming remains conditional on an explicitly admitted transport
+- CTO review of the implementation commit
+- separate future milestone for admitted streaming or LTDI work
 
 ## AXODUS-TRADING-BLOCKER-01 — WebSocket Authentication Remediation Design
 

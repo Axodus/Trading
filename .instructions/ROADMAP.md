@@ -781,9 +781,9 @@ Record:
 
 # AXODUS-TRADING-IMP-01 - Restricted Baseline Implementation Foundations
 
-Status: IN PROGRESS / RESTRICTED HTTP BASELINE
+Status: IMP-01A/B/C COMPLETE / IMP-01D-HTTP COMPLETE / CTO REVIEW PENDING
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / BLOCKER-01 OPEN / REQ-05 CURRENT / IMP-01D HOLD`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D-HTTP COMPLETE / BLOCKER-01 OPEN`
 
 Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
@@ -797,7 +797,7 @@ Sequence:
 3. `IMP-01C` — offline contract validation
 4. `AXODUS-TRADING-BLOCKER-01` — WebSocket authentication remediation design, accepted with blocker open
 5. `AXODUS-TRADING-REQ-05` — market-data transport and read-boundary freeze
-6. `IMP-01D` — conditional HTTP-safe market-data read boundary
+6. `IMP-01D-HTTP` — restricted HTTP-safe market-data read boundary
 
 IMP-01A evidence:
 - programmatic REQ-04 dependency baseline and HTTP-only transport admission
@@ -822,3 +822,13 @@ IMP-01C evidence:
 - `IMP-01D` remains conditional; `AXODUS-TRADING-BLOCKER-01` remains open
 - Condor integration is later work and remains outside the first path
 - no credentials, direct trading, real orders, Gateway/wallet authority, production, capital or System One activity
+
+IMP-01D-HTTP evidence:
+- Axodus-owned market-data read contracts for candles, historical candles, prices, tickers, rates, funding and order-book snapshots
+- Hummingbot HTTP normalization with typed market-data failures and no upstream DTO/exception leakage
+- offline validation passes for valid observations, malformed responses, timeout/transport failures, baseline drift, pre-HTTP rejection and forbidden stream surfaces
+- snapshot metadata explicitly denies continuous, lossless, sequenced, gap-recovered and replayable semantics
+
+Constraints:
+- WebSocket remains blocked under `AXODUS-TRADING-BLOCKER-01`
+- incremental order-book, trade stream, collector, Trading Data Store, persistence, gap recovery, deduplication, replay, MVRD acquisition and Condor integration remain future work
