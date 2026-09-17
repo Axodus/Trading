@@ -783,7 +783,7 @@ Record:
 
 Status: IN PROGRESS / RESTRICTED HTTP BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
 
 Scope:
 - establish the dependency and contract foundations for the frozen REQ-04 baseline
@@ -811,5 +811,12 @@ IMP-01B evidence:
 
 Constraints:
 - WebSocket via `hummingbot-api-client v1.5.9` is blocked under `AXODUS-TRADING-BLOCKER-01`
+
+IMP-01C evidence:
+- offline adversarial validation covers serialization, response normalization, malformed responses, HTTP 4xx/5xx, timeout and transport failures, auth/correlation boundaries, baseline drift and forbidden capabilities
+- transport failure after submission maps to `PROVIDER_EXECUTION_UNKNOWN` and is never blindly retried
+- upstream Hummingbot API Client contract suite passes with 337 tests
+- no upstream DTO/exception leakage or WebSocket execution path is exposed to Trading Core
+- `IMP-01D` remains conditional; `AXODUS-TRADING-BLOCKER-01` remains open
 - Condor integration is later work and remains outside the first path
 - no credentials, direct trading, real orders, Gateway/wallet authority, production, capital or System One activity

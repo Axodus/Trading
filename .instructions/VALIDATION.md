@@ -203,7 +203,7 @@ Evidence:
 Validation:
 
 - `npm run typecheck`: PASS
-- `npm test`: PASS, 4 test files / 4 suites / 0 failures
+- `npm test`: PASS, 4 tests / 0 failures
 - `npm run build`: PASS
 - `git diff --check`: PASS
 - no credentials, exchange connectivity, orders or external operations used
@@ -211,3 +211,38 @@ Validation:
 Next:
 
 - `IMP-01C` offline contract and integration validation
+
+## AXODUS-TRADING-IMP-01C — Offline Contract / Integration Validation
+
+Result: `COMPLETE / CTO REVIEW PENDING`
+
+Scope:
+
+- validate the restricted HTTP adapter offline against Axodus contracts and materialized upstream evidence
+- attempt to break the boundary without adding capabilities or operational connectivity
+
+Evidence:
+
+- serialized Axodus requests map deterministically to the admitted `POST /trading/orders` payload
+- representative upstream success responses normalize to the minimal Axodus result, including isolation of extra upstream fields
+- malformed success responses produce typed `PROVIDER_PROTOCOL_ERROR` failures
+- HTTP `422` maps to non-retryable `PROVIDER_REJECTED`; HTTP `503` maps to retryable `PROVIDER_UNAVAILABLE`
+- timeout and non-timeout transport failures map to non-retryable `PROVIDER_EXECUTION_UNKNOWN`, with one call and no blind retry
+- correlation and intent identifiers propagate through the header/auth boundary; provider does not store credential fields
+- dependency drift and unsupported capabilities are rejected before HTTP
+- the provider exposes no WebSocket execution path
+- callers receive Axodus result/error contracts without upstream DTOs, models or exceptions
+
+Validation:
+
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 4 test files / 4 suites / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+- `python3 -m pytest test/test_calls_match_api_spec.py` in `hummingbot-api-client`: PASS, 337 tests
+
+Boundaries:
+
+- no credentials, exchange connectivity, orders, Condor integration, collector, WebSocket or upstream source modification
+- `IMP-01D` remains `HOLD / CONDITIONAL`
+- `AXODUS-TRADING-BLOCKER-01` remains `OPEN / WEBSOCKET BLOCKED / DO NOT USE`

@@ -76,14 +76,40 @@ describe('IMP-01B Hummingbot HTTP adapter', () => {
   it('maps a valid upstream response to Axodus semantics', async () => {
     const provider = createProvider({
       async post() {
-        return { status: 201, body: { order_id: 'hb-order-2', status: 'accepted' } };
+        return {
+          status: 201,
+          body: {
+            order_id: 'hb-order-2',
+            status: 'accepted',
+            account_name: 'upstream-only',
+            executor: { id: 'must-not-leak' },
+          },
+        };
       },
     });
-    assert.deepEqual(await provider.executeOrder(request({ orderType: 'market', price: undefined })), {
+    const serializedRequest = JSON.parse(JSON.stringify(request({ orderType: 'market', price: undefined })));
+    assert.deepEqual(await provider.executeOrder(serializedRequest), {
       requestId: 'req-01b-1',
       providerOrderId: 'hb-order-2',
       status: 'accepted',
     });
+  });
+
+  it('maps a non-retryable upstream 4xx rejection without leaking upstream errors', async () => {
+    const provider = createProvider({
+      async post() {
+        return { status: 422, body: { error_code: 'INVALID_ORDER', detail: 'upstream detail' } };
+      },
+    });
+    await assert.rejects(
+      () => provider.executeOrder(request()),
+      (error) => error instanceof ExecutionProviderBoundaryError
+        && error.failure.code === 'PROVIDER_REJECTED'
+        && error.failure.upstreamStatus === 422
+        && error.failure.upstreamCode === 'INVALID_ORDER'
+        && error.failure.retryable === false
+        && !('detail' in error.failure),
+    );
   });
 
   it('maps upstream HTTP failures to a typed retryable Axodus failure', async () => {
@@ -102,18 +128,78 @@ describe('IMP-01B Hummingbot HTTP adapter', () => {
     );
   });
 
-  it('maps timeout and transport failures without leaking upstream exceptions', async () => {
+  it('preserves unknown execution state after timeout without blindly retrying', async () => {
+    let calls = 0;
     const provider = createProvider({
       async post() {
+        calls += 1;
         throw new Error('request timed out');
       },
     });
     await assert.rejects(
       () => provider.executeOrder(request()),
       (error) => error instanceof ExecutionProviderBoundaryError
-        && error.failure.code === 'PROVIDER_TIMEOUT'
-        && error.failure.retryable === true,
+        && error.failure.code === 'PROVIDER_EXECUTION_UNKNOWN'
+        && error.failure.retryable === false,
     );
+    assert.equal(calls, 1);
+  });
+
+  it('preserves unknown execution state after a non-timeout transport failure', async () => {
+    let calls = 0;
+    const provider = createProvider({
+      async post() {
+        calls += 1;
+        throw new Error('socket closed after request write');
+      },
+    });
+    await assert.rejects(
+      () => provider.executeOrder(request()),
+      (error) => error instanceof ExecutionProviderBoundaryError
+        && error.failure.code === 'PROVIDER_EXECUTION_UNKNOWN'
+        && error.failure.retryable === false,
+    );
+    assert.equal(calls, 1);
+  });
+
+  it('injects authorization through the boundary without passing credentials to the provider', async () => {
+    const authContexts = [];
+    const provider = createProvider(
+      { post: async () => ({ status: 201, body: { order_id: 'hb-order-auth', status: 'submitted' } }) },
+      {
+        async getHeaders(context) {
+          authContexts.push(context);
+          return { authorization: 'Basic injected-at-boundary' };
+        },
+      },
+    );
+
+    await provider.executeOrder(request());
+
+    assert.deepEqual(authContexts, [{ correlationId: 'corr-01b-1', intentId: 'intent-01b-1' }]);
+    assert.equal(Object.prototype.hasOwnProperty.call(provider, 'username'), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(provider, 'password'), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(provider, 'apiKey'), false);
+  });
+
+  it('maps malformed success responses to a typed protocol failure', async () => {
+    const provider = createProvider({
+      async post() {
+        return { status: 201, body: { status: 'submitted' } };
+      },
+    });
+    await assert.rejects(
+      () => provider.executeOrder(request()),
+      (error) => error instanceof ExecutionProviderBoundaryError
+        && error.failure.code === 'PROVIDER_PROTOCOL_ERROR'
+        && error.failure.retryable === false,
+    );
+  });
+
+  it('does not expose a WebSocket execution path', () => {
+    const provider = createProvider({ post: async () => ({ status: 201, body: {} }) });
+    assert.equal('connectWebSocket' in provider, false);
+    assert.equal('ws' in provider, false);
   });
 
   it('rejects capabilities outside the admitted boundary before HTTP', async () => {

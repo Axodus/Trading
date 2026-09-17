@@ -210,10 +210,12 @@ function mapTransportFailure(_request: AxodusExecutionRequest, error: unknown): 
   const message = error instanceof Error ? error.message : String(error);
   const timeout = /timeout|timed out|aborted/i.test(message);
   return new BoundaryError({
-    code: timeout ? 'PROVIDER_TIMEOUT' : 'PROVIDER_UNAVAILABLE',
+    code: 'PROVIDER_EXECUTION_UNKNOWN',
     operation: 'execute-order',
-    message: timeout ? 'Hummingbot execution request timed out' : 'Hummingbot HTTP transport is unavailable',
-    retryable: true,
+    message: timeout
+      ? 'Hummingbot execution outcome is unknown after a transport timeout'
+      : 'Hummingbot execution outcome is unknown after an HTTP transport failure',
+    retryable: false,
   });
 }
 

@@ -24,7 +24,7 @@ Next gate:
 
 Status: AUTHORIZED / IMPLEMENTATION GO / RESTRICTED BASELINE
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
 
 Scope:
 - `IMP-01A`: freeze the current dependency SHAs and establish minimal Axodus contracts
@@ -54,7 +54,7 @@ Validation:
 - `npm test`: PASS, 3 test files / 3 suites / 0 failures
 
 Next:
-- `IMP-01C` offline contract and integration validation
+- `IMP-01B` minimal HTTP `ExecutionProvider` adapter
 
 ### IMP-01B result
 
@@ -71,12 +71,39 @@ Delivered:
 
 Validation:
 - `npm run typecheck`: PASS
-- `npm test`: PASS, 4 test files / 4 suites / 0 failures
+- `npm test`: PASS, 4 tests / 0 failures
 - `npm run build`: PASS
 - `git diff --check`: PASS
 
 Next:
 - `IMP-01C` offline contract and integration validation
+
+### IMP-01C result
+
+Status: COMPLETE / CTO REVIEW PENDING
+
+Delivered:
+- adversarial offline validation for serialized Axodus requests and representative Hummingbot response fixtures
+- deterministic success normalization, malformed-response rejection and HTTP 4xx/5xx failure mapping
+- explicit timeout and transport-failure handling as `PROVIDER_EXECUTION_UNKNOWN` with no blind retry
+- correlation propagation, authorization-header injection boundary, baseline drift rejection and forbidden-capability rejection
+- evidence that upstream response fields, DTOs and exceptions do not cross into Trading Core callers
+- evidence that WebSocket is absent from the execution path
+
+Validation:
+- `npm run typecheck`: PASS
+- `npm test`: PASS, 4 tests / 0 failures
+- `npm run build`: PASS
+- `git diff --check`: PASS
+- Hummingbot API Client `test/test_calls_match_api_spec.py`: PASS, 337 tests
+
+Boundaries preserved:
+- no new ExecutionProvider capability
+- no WebSocket, Condor, credentials, exchange connectivity, orders, collector or Trading Data Store
+
+Next:
+- `IMP-01D`: HOLD / CONDITIONAL on an explicitly admitted market-data transport
+- `AXODUS-TRADING-BLOCKER-01`: OPEN / WebSocket blocked
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

@@ -2,7 +2,7 @@
 
 Status: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
 
-Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C NEXT`
+Progress: `IMP-01A COMPLETE / IMP-01B COMPLETE / IMP-01C COMPLETE / IMP-01D HOLD`
 
 ## Purpose
 
@@ -61,4 +61,12 @@ Validation passed with `npm run typecheck` and `npm test` from `trading-core/ser
 
 The adapter admits only market and limit order intents. Credential/key, wallet/Gateway, executor, lifecycle and direct strategy surfaces remain outside the implementation boundary. The client WebSocket path remains blocked under `AXODUS-TRADING-BLOCKER-01`.
 
-Validation passed with `npm run typecheck`, `npm test`, `npm run build` and `git diff --check` from the Trading workspace. The next increment is `IMP-01C`, offline contract and integration validation.
+Validation passed with `npm run typecheck`, `npm test`, `npm run build` and `git diff --check` from the Trading workspace. `IMP-01C` is the next authorized increment for offline contract and integration validation.
+
+## IMP-01C implementation result
+
+`IMP-01C` is complete for the restricted HTTP execution boundary. Offline adversarial validation covers serialized Axodus requests, representative Hummingbot response fixtures, success normalization, malformed responses, HTTP 4xx/5xx mapping, timeout and transport failures, correlation propagation, authorization-header injection, baseline drift, forbidden capabilities, upstream-field isolation and the absence of a WebSocket execution path.
+
+Transport failure after order submission is represented as `PROVIDER_EXECUTION_UNKNOWN` with `retryable: false`; the adapter performs one HTTP attempt and does not blindly retry an outcome that may already have reached Hummingbot.
+
+Validation passed with `npm run typecheck`, `npm test` (`4 passed, 0 failures`), `npm run build`, `git diff --check` and the materialized Hummingbot API Client contract suite (`337 passed`). No credentials, exchange connectivity, order, collector, Condor integration or upstream source change was used. `IMP-01D` remains conditional and `AXODUS-TRADING-BLOCKER-01` remains open for WebSocket authentication.
