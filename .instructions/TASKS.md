@@ -102,8 +102,8 @@ Boundaries preserved:
 - no WebSocket, Condor, credentials, exchange connectivity, orders, collector or Trading Data Store
 
 Next:
-- `AXODUS-TRADING-BLOCKER-01`: remediation design complete; current decision `KEEP BLOCKED`
-- `IMP-01D`: HOLD / CONDITIONAL on an explicitly admitted market-data transport
+- `AXODUS-TRADING-REQ-05`: determine the HTTP-safe market-data read boundary while streaming remains blocked
+- `IMP-01D`: HOLD pending REQ-05; streaming remains conditional on an explicitly admitted transport
 
 ## AXODUS-TRADING-BLOCKER-01 — WebSocket Authentication Remediation Design
 
@@ -123,6 +123,23 @@ Decision state:
 
 Record:
 - `.instructions/TRADING_BLOCKER_01_REMEDIATION_DESIGN.md`
+
+## AXODUS-TRADING-REQ-05 — Market Data Transport & Read-Boundary Freeze
+
+Status: COMPLETE / CTO REVIEW PENDING
+
+Result:
+- `IMP-01D HTTP-SAFE / STREAMING DEFERRED`
+- HTTP supports bounded reads for candles, historical candles, prices, tickers, rates, funding and order-book snapshots
+- incremental order-book updates and trades remain blocked because they require the inadmissible WebSocket path
+- HTTP responses do not establish sequence integrity, gap recovery, losslessness, replay or research-grade provenance
+
+Record:
+- `.instructions/TRADING_REQ_05_MARKET_DATA_TRANSPORT_READ_BOUNDARY_FREEZE.md`
+
+Next:
+- CTO review of the minimal Axodus `MarketDataProvider` contract
+- no collector, Trading Data Store or WebSocket implementation
 
 ## REQ-03 — Implementation Baseline & Gap Freeze
 

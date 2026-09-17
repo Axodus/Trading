@@ -247,6 +247,34 @@ Boundaries:
 - `IMP-01D` remains `HOLD / CONDITIONAL`
 - `AXODUS-TRADING-BLOCKER-01` remains `OPEN / WEBSOCKET BLOCKED / DO NOT USE`
 
+## AXODUS-TRADING-REQ-05 — Market Data Transport & Read-Boundary Freeze
+
+Result: `COMPLETE / CTO REVIEW PENDING / IMP-01D HTTP-SAFE / STREAMING DEFERRED`
+
+Evidence:
+
+- the materialized client exposes HTTP methods for candles, historical candles, prices, tickers, rates, funding information and order-book snapshots
+- the materialized server exposes matching `/market-data` routes with typed candle, price, ticker and order-book response models
+- no audited HTTP market-data route provides incremental order-book updates or trades; those capabilities are only represented by the blocked WebSocket surface
+- Condor already consumes the HTTP market-data methods for prices, candles, historical candles, connector discovery, rates and ticker pools
+- HTTP polling can support a bounded read boundary but cannot prove sequence integrity, gap recovery, losslessness, replayability or research-grade provenance
+
+Decision:
+
+- `IMP-01D HTTP-SAFE / STREAMING DEFERRED`
+- propose a minimal Axodus-owned `MarketDataProvider`; do not expose the generic Hummingbot client or upstream models
+- keep WebSocket-dependent market data under `AXODUS-TRADING-BLOCKER-01`
+- keep Trading Data Store, collector, normalization persistence, recovery and replay as later Axodus work
+
+Validation:
+
+- source inspection completed for materialized client market-data routers, server routes/models, Condor HTTP fetchers and WebSocket evidence
+- no source, dependency, adapter, collector, credential, network, exchange or runtime change was made
+
+Record:
+
+- `.instructions/TRADING_REQ_05_MARKET_DATA_TRANSPORT_READ_BOUNDARY_FREEZE.md`
+
 ## AXODUS-TRADING-BLOCKER-01 — WebSocket Remediation Design
 
 Result: `COMPLETE / CTO REVIEW PENDING / KEEP BLOCKED`

@@ -93,14 +93,14 @@ Production execution: DISABLED
 - `AXODUS-TRADING-IMP-01`: `IMPLEMENTATION IN PROGRESS / RESTRICTED HTTP BASELINE`
 - `IMP-01A`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01B`: `COMPLETE / CTO ACCEPTED / PUBLISHED`; `IMP-01C`: `COMPLETE / CTO ACCEPTED / PUBLISHED`
 - `AXODUS-TRADING-IMP-01D`: conditional on an explicitly admitted market-data transport
-- `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked
+- `AXODUS-TRADING-BLOCKER-01`: open; Hummingbot client WebSocket authentication path is blocked; remediation design accepted
 - Condor integration remains later work and cannot control execution directly
 
 The next implementation work is governed by `.instructions/TRADING_IMP_01_RESTRICTED_BASELINE_AUTHORIZATION.md`. IMP-01C is complete for offline validation of the restricted HTTP order surface. `IMP-01D` remains conditional on an explicitly admitted market-data transport. This status does not authorize credentials, direct trading, real orders, Gateway/wallet authority, production, System One activity or capital.
 
 ## Next Recommended Request
 
-`AXODUS-TRADING-BLOCKER-01` remediation design review; keep `IMP-01D` conditional on transport admission
+`AXODUS-TRADING-REQ-05` market-data transport and read-boundary freeze; determine the HTTP-safe subset while keeping streaming conditional
 
 ## PORTFOLIO-REQ-02 Validation Refresh
 
