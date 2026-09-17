@@ -368,6 +368,253 @@ authorization to obtain data.
 If no dataset passes those checks at acceptable cost, close the microstructure
 path and decide separately whether a bounded Path T study is justified.
 
+## REQ-01A3 acquisition decision package
+
+The following options are the reduced shortlist for a future acquisition gate.
+They are not purchase orders and no vendor contact was initiated.
+
+### MVRD — Minimum Viable Research Dataset
+
+The MVRD should be the smallest bounded historical corpus that supports:
+
+```text
+development
+    -> validation
+    -> freeze
+    -> untouched temporal OOS
+```
+
+The proposed first shape is one venue, one instrument, raw trades plus L2
+snapshot/incremental updates, and a 14-day feasibility sample followed by a
+30-day research target if reconstruction passes. The sample must include at
+least two materially different liquidity/volatility conditions. These periods
+are planning gates, not arbitrary evidence of sufficiency and not an
+authorization to obtain data.
+
+The MVRD must preserve raw records, source metadata, checksums/version IDs,
+replay diagnostics, and a normalized derived layer. Derived features remain
+replaceable; raw source data remains the audit reference subject to license.
+
+### LTDI — Long-Term Data Infrastructure
+
+LTDI is a separate candidate architecture:
+
+```text
+historical seed archive + continuous raw collection
+             -> immutable/raw store
+             -> normalization and gap validation
+             -> reconstructed book/replay layer
+             -> research and backtest consumers
+```
+
+LTDI is only justified if the Trading program expects repeated market-data
+research independent of System One. It should not be built solely to provide a
+single provider experiment. A self-collected archive also does not replace a
+historical seed: waiting months for a temporal OOS period creates opportunity
+cost and delays falsification of the original hypothesis.
+
+### Four acquisition strategies
+
+| Strategy | MVRD | LTDI | Decision status | Assessment |
+|---|---|---|---|---|
+| `BUY` | Buy a bounded historical product with trades + L2 updates/snapshots | Usually not sufficient by itself for long-term sovereignty | `CONDITIONAL` | Fastest route to a research-ready historical/OOS sample; price and rights are quote-dependent |
+| `BUILD/COLLECT` | Not immediately suitable for historical/OOS unless an existing archive is found | Collect exchange-public feeds prospectively with raw retention and replay validation | `TECHNICALLY FEASIBLE` | Avoids vendor data dependency but creates substantial engineering, operations, and time-to-history cost |
+| `HYBRID` | Buy the smallest seed archive, then collect the same venue/instrument prospectively | Best candidate for long-term continuity if rights and schema are controlled | `PREFERRED CANDIDATE` | Combines immediate historical validation with future collection; requires source normalization and dual quality checks |
+| `HOLD / NO-GO` | Keep Path M blocked | Do not build collection until research value is re-justified | `VALID OPTION` | Correct outcome if license, price, storage, or expected information gain is disproportionate |
+
+## BUY options
+
+### BUY-1 — Tardis historical derivatives data
+
+**Exact candidate product:** Tardis `Perpetuals` or `Derivatives` plan with
+downloadable CSV datasets and, if required, the Pro/Business raw replay API;
+requested data types should be `trades`, `incremental_book_L2`, and book
+snapshots for Binance USD-M Futures `btcusdt` (exact entitlement and symbol
+must be confirmed).
+
+**Verified public information:** Tardis documentation describes normalized
+tick-level trades, incremental L2 updates, top-5/top-25 snapshots, raw
+exchange-native replay for higher subscription tiers, and per-exchange
+historical coverage pages. It documents exchange timestamps, local capture
+timestamps, capture order, and sequence/gap caveats. The documentation also
+states that plans and historical access vary by subscription and billing
+period.
+
+**Vendor claim / to validate:** exact Binance USD-M BTCUSDT coverage for the
+requested dates, completeness for the required channels, and suitability of
+the selected plan for the intended internal research.
+
+**Price:** `QUOTE REQUIRED` for the exact plan, historical window, API/CSV
+access, and any export rights. No price is estimated here.
+
+**MVRD assessment:** `STRONG CANDIDATE`. The documented data shape is aligned
+with the minimum Path M requirement, but reconstruction must be tested against
+a representative sample before commitment.
+
+**LTDI assessment:** `POSSIBLE SEED / NOT A SOVEREIGN ARCHIVE`. The product can
+seed research and may reduce early collection work, but recurring access,
+subscription validity, and contract rights must be evaluated.
+
+### BUY-2 — Kaiko Level 1 & Level 2 Data
+
+**Exact candidate product:** Kaiko `Level 1 & Level 2 Data`, requesting
+historical tick-level trades and the exact raw/full-order-book or granular
+snapshot product for the selected venue/instrument. Delivery may be via API,
+CSV/cloud delivery, or another product path offered in the quote.
+
+**Verified public information:** Kaiko publicly describes tick-level trades,
+order books, full-order-book and snapshot products, multiple delivery methods,
+dataset versioning, and venue coverage. Its public material also indicates that
+some products are aggregated or snapshot-based, so the requested product must
+not be confused with raw event-level L2.
+
+**Vendor claim / to validate:** exact Binance USD-M BTCUSDT perpetual product,
+event granularity, update/sequence semantics, raw versus normalized delivery,
+and whether the selected product supports deterministic reconstruction rather
+than only derived liquidity metrics.
+
+**Price:** `QUOTE REQUIRED`. Public material directs prospective customers to a
+custom quote; no estimate is appropriate.
+
+**MVRD assessment:** `STRONG CANDIDATE`, conditional on receiving raw or
+sufficiently granular L2 plus trades for the same venue/instrument and a
+license permitting internal research retention.
+
+**LTDI assessment:** `POSSIBLE SEED / DEPENDENCY RISK`. Dataset versioning is a
+positive reproducibility feature, but delivery, contract, and ongoing access
+must be checked against the desired long-term ownership boundary.
+
+### BUY-3 — Binance Public Data / Futures Orderbook route
+
+**Exact candidate product:** Binance Public Data historical `trades`,
+`aggTrades`, and klines for USD-M Futures, plus the separate futures order-book
+data route if Binance confirms access for the requested symbol/date range.
+
+**Verified public information:** the official public-data repository documents
+daily/monthly public files for futures trades, aggregate trades, and klines,
+with checksums. Official Binance material also documents public market-data
+REST/WebSocket access. Historical futures order-book availability is a
+separate route and must be confirmed; older official order-book documentation
+explicitly described gaps and application-based access.
+
+**MVRD assessment:** `PARTIAL`. Trades and candles are a credible public
+starting point, but the required historical L2 product, coverage, and
+completeness are not established by the public archive alone.
+
+**LTDI assessment:** `VIABLE BUILD INPUT`. The live public feed can be a source
+for future collection, subject to rate limits, reconnect handling, sequence
+gaps, snapshots, storage, and terms. It is not a substitute for a historical
+seed if immediate OOS research is required.
+
+**Price:** public access may be free for the documented files/feeds; actual
+engineering and storage cost remains. Historical L2 application/product
+terms are `QUOTE REQUIRED / UNKNOWN` until Binance confirms them.
+
+## BUILD/COLLECT option
+
+**Candidate source:** exchange-public WebSocket market-data feeds for one
+venue/instrument, initially Binance USD-M BTCUSDT only if that source passes
+the selection checks. Coinbase/Kraken public feeds remain alternatives but
+would change the venue/instrument hypothesis and must not be mixed silently.
+
+**Required collection capability:** immutable raw capture, exchange and local
+timestamps, subscription metadata, sequence/gap detection, snapshot recovery,
+reconnect logs, checksums, retention policy, normalized schema, deterministic
+replay, and a validation report for every collection interval.
+
+**Time-to-research:** no immediate historical OOS. A collection-first route
+requires the development/validation/OOS windows to accumulate prospectively.
+That delay is an explicit cost and makes BUILD/COLLECT inferior to BUY for the
+first falsification gate unless a suitable historical archive is discovered.
+
+**Price:** `NO VENDOR PRICE`; engineering, storage, operations, and feed access
+costs are `ENGINEERING ESTIMATE / MUST MEASURE`.
+
+**Decision:** do not authorize implementation under A3. Keep it as an LTDI
+option for a later gate.
+
+## HYBRID option
+
+**Candidate:** the smallest licensed Tardis or Kaiko historical seed that passes
+the MVRD checks, followed by collection from the same venue/instrument using
+the exchange-public feed.
+
+**Advantages:** immediate temporal development/OOS capability, independent
+future collection, cross-checking between purchased and self-collected data,
+and a clearer removal test if the provider is used only as a seed.
+
+**Risks:** source semantics may differ between seed and collection; exchange
+feed changes may require versioned adapters; license terms may restrict storing
+or replacing vendor data; two pipelines increase validation and maintenance.
+
+**Decision:** `PREFERRED CANDIDATE` only after commercial rights and a sample
+quality test. It is not an implementation authorization.
+
+## Provider shortlist and decision table
+
+| Candidate | MVRD fit | LTDI fit | Time-to-research | Rights status | Price status | Vendor dependency | Recommendation |
+|---|---|---|---|---|---|---|---|
+| Tardis Perpetuals/Derivatives + CSV/replay | Strong candidate | Seed | Fastest candidate, subject to sample | `QUOTE REQUIRED` | `QUOTE REQUIRED` | Medium/high while subscribed | First product to request a concrete quote/sample for |
+| Kaiko Level 1 & Level 2 Data | Strong candidate | Seed | Fast candidate, subject to exact delivery | `QUOTE REQUIRED` | `QUOTE REQUIRED` | Medium/high under contract | Parallel commercial alternative |
+| Binance Public Data + confirmed futures orderbook route | Partial until L2 confirmed | Stronger as collection input | Trades/candles fast; L2 unknown | Public terms/product terms require review | Public files may be free; L2 `QUOTE REQUIRED / UNKNOWN` | Lower provider dependency, higher engineering burden | Public fallback and collection source, not yet an MVRD decision |
+
+## Commercial request checklist
+
+If a future CTO/CEO gate authorizes vendor contact, request the following for
+the exact product rather than a generic sales demonstration:
+
+- `BTCUSDT` USD-M perpetual, exact venue and contract identity;
+- 14-day sample and 30-day quote, including raw file size;
+- trades plus incremental L2 and initial/recovery snapshots;
+- exchange timestamp precision, local capture timestamp, and tie-break rules;
+- sequence/gap semantics and documented completeness incidents;
+- whether data is raw, normalized, aggregated, or reconstructed;
+- historical start/end dates for the exact instrument;
+- download/API/replay limits, rate limits, and retention period;
+- internal research, derived-feature, backup, and re-analysis rights;
+- redistribution, publication, and team/seat restrictions;
+- data versioning and correction policy;
+- one-time setup fee, monthly/annual recurring fee, overage, and cancellation
+  behavior;
+- support/SLA terms, if any;
+- whether an archive remains usable after subscription termination.
+
+All unavailable answers remain `QUOTE REQUIRED` or `UNKNOWN`; they must not be
+filled with market guesses.
+
+## Acquisition comparison: MVRD and LTDI
+
+| Dimension | BUY | BUILD/COLLECT | HYBRID | HOLD / NO-GO |
+|---|---|---|---|---|
+| Cost | Quote-dependent recurring/one-time | Engineering/storage/operations estimate | Both, but seed can be minimized | Lowest immediate spend |
+| Time-to-research | Fastest if sample passes | Slow; no historical seed | Fast enough plus future continuity | No research progress |
+| Data richness | Potentially high | Depends on feed and collection quality | High if semantics align | None beyond current candles |
+| Scientific validity | High only after replay audit | High only after months of clean collection | Highest practical option if cross-validated | No Path M evidence |
+| Rights | Must be contracted | Must follow exchange/feed terms | Must cover both sources | No new rights needed |
+| Storage | Vendor or local, contract-dependent | Fully local responsibility | Local raw plus seed retention | Current workspace only |
+| Engineering effort | Medium adapter/validator | High collector/replay/operations | High but staged | None |
+| Maintenance | Vendor plus adapter | Continuous operational ownership | Both responsibilities | None |
+| Replay suitability | Candidate-dependent; verify | Must be built and validated | Can use seed as reference | Not applicable |
+| Trading-core reuse | Raw/normalized research layer can be reusable | Strong long-term reuse if well governed | Strongest, with schema discipline | No new capability |
+| Vendor dependency | Highest | Lowest | Medium | None |
+
+## CTO recommendation
+
+1. Keep `REQ-01B/C/D` on hold.
+2. Do not implement LTDI or contact vendors under this gate.
+3. If the program remains strategically justified, open a separate
+   acquisition gate for a **bounded MVRD quote/sample request** from Tardis and
+   Kaiko, with Binance's public/order-book route evaluated as the no/low-cost
+   fallback.
+4. Prefer **HYBRID** only if the purchased seed passes reconstruction and the
+   license allows the intended internal research; otherwise choose BUY for a
+   narrowly bounded study or HOLD/NO-GO.
+5. Do not select a product based on price alone. Rights, event semantics,
+   replayability, and temporal OOS validity are acceptance criteria.
+
+This is a recommendation to request a later decision gate, not a procurement
+authorization.
+
 ## Security and financial boundaries
 
 This audit crossed no exchange, wallet, order, capital, or production boundary.
