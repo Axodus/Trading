@@ -117,6 +117,7 @@ export * from './repositories/postgres/MigrationRunner.js';
 export * from './repositories/postgres/NodePostgresClient.js';
 export * from './repositories/postgres/PostgresConnectionPool.js';
 export * from './repositories/postgres/PostgresClient.js';
+export * from './repositories/postgres/PostgresDurableExecutionRepository.js';
 export * from './repositories/postgres/PostgresErrorMapper.js';
 export * from './repositories/postgres/PostgresBootstrapService.js';
 export * from './repositories/postgres/PostgresFillRepository.js';

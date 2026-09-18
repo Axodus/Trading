@@ -1,4 +1,4 @@
-import type { PostgresQueryClient, PostgresQueryResult } from './PostgresClient.js';
+import type { PostgresQueryClient, PostgresQueryResult, PostgresTransactionClient, TransactionalPostgresQueryClient } from './PostgresClient.js';
 import type { PgPoolLike, PostgresConnectionPoolConfig } from './PostgresConnectionPool.js';
 import { createPostgresConnectionPool } from './PostgresConnectionPool.js';
 import { isRetryablePostgresError, mapPostgresError, PostgresClientError } from './PostgresErrorMapper.js';
@@ -9,7 +9,7 @@ export interface NodePostgresClientConfig {
   maxRetries?: number;
 }
 
-export class NodePostgresClient implements PostgresQueryClient {
+export class NodePostgresClient implements TransactionalPostgresQueryClient {
   private closed = false;
 
   constructor(private readonly config: NodePostgresClientConfig) {}
@@ -54,15 +54,26 @@ export class NodePostgresClient implements PostgresQueryClient {
     throw mapPostgresError(lastError);
   }
 
-  async transaction<T>(callback: (client: PostgresQueryClient) => Promise<T>): Promise<T> {
-    await this.query('BEGIN');
+  async transaction<T>(callback: (client: PostgresTransactionClient) => Promise<T>): Promise<T> {
+    if (!this.config.pool.connect) {
+      throw new PostgresClientError('A dedicated PostgreSQL connection is required for transactions.', 'TRANSACTION_FAILED');
+    }
+    let connection;
     try {
-      const result = await callback(this);
-      await this.query('COMMIT');
+      connection = await this.config.pool.connect();
+    } catch (error) {
+      throw mapPostgresError(error, 'TRANSACTION_FAILED');
+    }
+    try {
+      await connection.query('BEGIN');
+      const result = await callback(connection);
+      await connection.query('COMMIT');
       return result;
     } catch (error) {
-      await this.query('ROLLBACK').catch(() => undefined);
+      await connection.query('ROLLBACK').catch(() => undefined);
       throw mapPostgresError(error, 'TRANSACTION_FAILED');
+    } finally {
+      await connection.release();
     }
   }
 

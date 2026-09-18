@@ -561,3 +561,30 @@ Results:
 Classification: `DURABLE ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`.
 
 Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
+
+## AXODUS-TRADING-IMP-02C0 — Durable Execution Persistence Primitives
+
+Date: 2026-09-17
+
+Status: `IMPLEMENTED / VALIDATION READY / CTO REVIEW PENDING`
+
+Commands executed from `trading-core/services/trading-core`:
+
+```bash
+npm run typecheck
+TRADING_POSTGRES_E2E=1 npm test
+npm run build
+git diff --check
+```
+
+Results:
+
+- typecheck: PASS;
+- full service suite: PASS, 9 test files, 0 failures;
+- real PostgreSQL C0 coverage: PASS for rollback atomicity, single-connection transaction use, CAS conflict, attempt/evidence/outbox atomic commit and restart visibility;
+- build: PASS;
+- diff check: PASS.
+
+The test uses local PostgreSQL only and does not use credentials, exchange connectivity, orders, WebSocket or upstream modifications. Full durable lifecycle recovery, worker coordination and crash-window validation remain future `VAL-02C` scope.
+
+Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.

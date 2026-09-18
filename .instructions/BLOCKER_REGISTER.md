@@ -154,3 +154,11 @@ Open: durable `SubmissionAttempt` persistence, atomic evidence/state/audit trans
 REQ-12 is `COMPLETE / DURABLE ARCHITECTURE PARTIAL / DEPENDENCY DECISION REQUIRED`. `IMP-02C` remains on hold until these architecture decisions are frozen. Historical blocker records remain preserved for provenance.
 
 Detailed record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
+
+### AXODUS-TRADING-IMP-02C0 persistence primitive status — 2026-09-17
+
+The first durable primitives are implemented and ready for `VAL-02C0`: PostgreSQL `SubmissionAttempt` and outbox schema, single-connection transaction context, optimistic CAS/versioning, atomic attempt/evidence/outbox persistence and recovery-candidate queries. These primitives do not close the blocker.
+
+Still open: durable integration of the full lifecycle, crash recovery across provider-call and local-commit windows, recovery-worker coordination and end-to-end durable restart semantics. `IMP-02C` remains unauthorized until `VAL-02C0` and a subsequent implementation gate.
+
+Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.

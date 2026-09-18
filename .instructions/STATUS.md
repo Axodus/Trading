@@ -220,3 +220,13 @@ Open decisions are the durable `SubmissionAttempt` schema/repository, transactio
 `IMP-02C` remains `HOLD`. `AXODUS-TRADING-BLOCKER-02` is durability-only. `BLOCKER-01` remains independent and open.
 
 Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
+
+## AXODUS-TRADING-IMP-02C0 — Durable Execution Persistence Primitives
+
+Status: `IMPLEMENTED / VALIDATION READY / CTO REVIEW PENDING`
+
+Implemented the first durable primitives selected by REQ-12: PostgreSQL `SubmissionAttempt` and outbox schema, repository persistence, single-connection transactions, optimistic CAS/versioning, recovery-candidate queries and typed concurrency/transaction boundaries. The in-memory lifecycle remains unchanged.
+
+Validation performed: typecheck, full service test suite, real PostgreSQL rollback/CAS/restart visibility and transactional attempt-plus-outbox coverage, build and diff check. `VAL-02C0` remains the next gate; `AXODUS-TRADING-BLOCKER-02` remains open for full durable lifecycle and crash recovery.
+
+Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.

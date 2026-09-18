@@ -962,3 +962,21 @@ durability validation and BLOCKER-02 closure review
 ```
 
 Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
+
+## AXODUS-TRADING-IMP-02C0 — Durable Execution Persistence Primitives
+
+Status: `IMPLEMENTED / VALIDATION READY / CTO REVIEW PENDING`
+
+```text
+REQ-12 accepted
+      ↓
+IMP-02C0 implemented
+      ↓
+VAL-02C0 PostgreSQL atomicity + CAS acceptance
+      ↓
+IMP-02C durable lifecycle and crash recovery
+```
+
+The increment establishes only the persistence primitives. `IMP-02C` remains blocked until validation and a separate implementation gate. `BLOCKER-02` remains open.
+
+Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.

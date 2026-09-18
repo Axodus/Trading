@@ -1447,3 +1447,21 @@ Completed:
 Next gate: CTO decision on transaction abstraction, durable schema/repository, CAS/claim fencing and outbox requirement, followed by a separately scoped `IMP-02C` implementation and crash/recovery validation.
 
 Record: `.instructions/TRADING_REQ_12_DURABLE_EXECUTION_STATE_RECOVERY_ARCHITECTURE_FREEZE.md`.
+
+## AXODUS-TRADING-IMP-02C0 — Durable Execution Persistence Primitives
+
+Status: `IMPLEMENTED / VALIDATION READY / CTO REVIEW PENDING`
+
+Tasks completed:
+
+- add durable `SubmissionAttempt` and transactional outbox migration;
+- add PostgreSQL repository with versioned CAS updates and typed concurrency errors;
+- require a dedicated checked-out connection for transaction callbacks;
+- persist attempt mutation and outbox event through one transaction context;
+- expose non-terminal recovery-candidate queries and restart visibility;
+- add real PostgreSQL rollback, CAS conflict, atomic outbox and recovery tests;
+- keep lifecycle integration, provider calls, recovery workers and operational execution out of scope.
+
+Next task: run and review `VAL-02C0` acceptance evidence before authorizing `IMP-02C`.
+
+Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.

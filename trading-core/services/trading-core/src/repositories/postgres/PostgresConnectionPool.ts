@@ -2,7 +2,13 @@ import type { PostgresQueryResult } from './PostgresClient.js';
 
 export interface PgPoolLike {
   query<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<PostgresQueryResult<T>>;
+  connect?(): Promise<PgClientLike>;
   end(): Promise<void>;
+}
+
+export interface PgClientLike {
+  query<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<PostgresQueryResult<T>>;
+  release(): void | Promise<void>;
 }
 
 export interface PgPoolConstructor {
