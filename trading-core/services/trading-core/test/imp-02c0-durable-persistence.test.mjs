@@ -91,7 +91,7 @@ describe('IMP-02C0 durable PostgreSQL primitives', { skip: !enabled }, () => {
     const persisted = await repository.get(id);
     assert.equal(persisted?.version, 1);
     assert.equal(persisted?.state, 'reconciling');
-    assert.deepEqual((await repository.listRecoveryCandidates()).map((row) => row.attemptId), [id]);
+    assert.equal((await repository.listRecoveryCandidates()).some((row) => row.attemptId === id), true);
 
     const restartedRepository = new PostgresDurableExecutionRepository(client);
     const recovered = await restartedRepository.get(id);

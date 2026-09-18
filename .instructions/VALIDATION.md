@@ -588,3 +588,34 @@ Results:
 The test uses local PostgreSQL only and does not use credentials, exchange connectivity, orders, WebSocket or upstream modifications. Full durable lifecycle recovery, worker coordination and crash-window validation remain future `VAL-02C` scope.
 
 Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.
+
+## AXODUS-TRADING-IMP-02C — Durable CEX Lifecycle & Crash Recovery
+
+Date: 2026-09-18
+
+Status: `IMPLEMENTED / VALIDATION EVIDENCE READY / CTO REVIEW PENDING`
+
+Validation commands and results:
+
+```bash
+npm run typecheck
+npm run build
+npm test
+TRADING_POSTGRES_E2E=1 node --test test/imp-02c-durable-lifecycle.test.mjs test/imp-02c0-durable-persistence.test.mjs
+npm run trading:local:e2e -- --json --cleanup
+git diff --check
+```
+
+Results:
+
+- typecheck: PASS;
+- build: PASS;
+- full service suite: PASS, 10 test files, 10 passed, 0 failed;
+- real PostgreSQL IMP-02C/IMP-02C0 targeted suite: PASS, 7 tests, 0 failed;
+- local simulation E2E: PASS, including migration 0003, health, schema validation, repository readiness, replay smoke and cleanup;
+- simulation-only safeguards: `mock=true`, `liveTradingEnabled=false`, `productionReady=false`;
+- no credentials, exchange connectivity, orders, WebSocket or upstream modifications.
+
+The evidence covers durable restart using new service/repository instances, concurrent CAS-safe recovery, exact reconciliation, cancellation ambiguity and no-blind-resubmission behavior. It does not yet prove OS-level crash injection or complete failure-window A–J acceptance. `VAL-02C` remains next and `BLOCKER-02` remains open.
+
+Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.

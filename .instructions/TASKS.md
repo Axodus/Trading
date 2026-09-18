@@ -1465,3 +1465,21 @@ Tasks completed:
 Next task: run and review `VAL-02C0` acceptance evidence before authorizing `IMP-02C`.
 
 Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.
+
+## AXODUS-TRADING-IMP-02C — Durable CEX Lifecycle & Crash Recovery
+
+Status: `IMPLEMENTED / VALIDATION EVIDENCE READY / CTO REVIEW PENDING`
+
+Tasks completed:
+
+- integrated durable `SubmissionAttempt` state with the accepted CEX lifecycle;
+- kept provider calls outside PostgreSQL transactions;
+- persisted exact reconciliation evidence and canonical transitions with CAS;
+- made concurrent recovery workers stale-write safe;
+- persisted cancellation ambiguity and recovered it without a second cancel;
+- preserved no-blind-resubmission behavior for `NOT_FOUND` and `INDETERMINATE`;
+- added real PostgreSQL restart/recovery and concurrency coverage with deterministic provider fakes.
+
+Next task: `VAL-02C — Durable Crash Recovery Acceptance`, including failure windows A–J and process crash/restart boundaries. `BLOCKER-02` remains open.
+
+Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.

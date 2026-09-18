@@ -230,3 +230,13 @@ Implemented the first durable primitives selected by REQ-12: PostgreSQL `Submiss
 Validation performed: typecheck, full service test suite, real PostgreSQL rollback/CAS/restart visibility and transactional attempt-plus-outbox coverage, build and diff check. `VAL-02C0` remains the next gate; `AXODUS-TRADING-BLOCKER-02` remains open for full durable lifecycle and crash recovery.
 
 Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.
+
+## AXODUS-TRADING-IMP-02C — Durable CEX Lifecycle & Crash Recovery
+
+Status: `IMPLEMENTED / VALIDATION EVIDENCE READY / CTO REVIEW PENDING`
+
+The accepted in-memory CEX lifecycle is now integrated with the durable PostgreSQL `SubmissionAttempt` repository. Canonical transitions use the single-connection transaction context and CAS; provider calls remain outside database transactions. Ambiguous submissions and cancellation outcomes recover through exact identity reconciliation without blind resubmission.
+
+Validation: targeted PostgreSQL suite passed 7/7; full service suite passed 10/10 test files; build and typecheck passed; local simulation E2E passed with migration 0003 and cleanup. `VAL-02C` remains the next gate. `AXODUS-TRADING-BLOCKER-02` remains open for crash-window, process-restart and end-to-end recovery acceptance.
+
+Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.

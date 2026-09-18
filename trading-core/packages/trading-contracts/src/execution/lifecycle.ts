@@ -10,6 +10,7 @@ export type CexExecutionLifecycleState =
   | 'reconciled-not-found'
   | 'reconciled-indeterminate'
   | 'cancel-requested'
+  | 'cancellation-unknown'
   | 'cancelled'
   | 'cancellation-rejected'
   | 'cancellation-failed';

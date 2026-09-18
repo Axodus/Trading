@@ -72,7 +72,7 @@ export class PostgresDurableExecutionRepository {
   async listRecoveryCandidates(queryClient: PostgresQueryClient = this.client): Promise<DurableSubmissionAttempt[]> {
     const result = await queryClient.query<SubmissionAttemptRow>(
       `SELECT * FROM trading_submission_attempts
-       WHERE state NOT IN ('provider-acknowledged', 'failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed')
+       WHERE state NOT IN ('provider-acknowledged', 'failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed', 'reconciled-found', 'reconciled-not-found')
        ORDER BY updated_at ASC, attempt_id ASC`,
     );
     return result.rows.map((row) => this.fromRow(row));

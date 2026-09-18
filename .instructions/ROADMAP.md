@@ -980,3 +980,21 @@ IMP-02C durable lifecycle and crash recovery
 The increment establishes only the persistence primitives. `IMP-02C` remains blocked until validation and a separate implementation gate. `BLOCKER-02` remains open.
 
 Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.
+
+## AXODUS-TRADING-IMP-02C — Durable CEX Lifecycle & Crash Recovery
+
+Status: `IMPLEMENTED / VALIDATION EVIDENCE READY / CTO REVIEW PENDING`
+
+```text
+IMP-02C0 persistence primitives
+            ↓
+IMP-02C durable lifecycle integration   ✓
+            ↓
+VAL-02C failure windows A–J             ← NEXT
+            ↓
+BLOCKER-02 closure review
+```
+
+IMP-02C establishes the durable runtime orchestration but does not close crash-recovery validation. WebSocket, Condor, Gateway/DEX, credentials, external orders and capital remain outside scope.
+
+Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.

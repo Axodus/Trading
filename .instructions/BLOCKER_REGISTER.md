@@ -162,3 +162,17 @@ The first durable primitives are implemented and ready for `VAL-02C0`: PostgreSQ
 Still open: durable integration of the full lifecycle, crash recovery across provider-call and local-commit windows, recovery-worker coordination and end-to-end durable restart semantics. `IMP-02C` remains unauthorized until `VAL-02C0` and a subsequent implementation gate.
 
 Record: `.instructions/TRADING_IMP_02C0_DURABLE_EXECUTION_PERSISTENCE_PRIMITIVES.md`.
+
+### AXODUS-TRADING-IMP-02C durable lifecycle integration — 2026-09-18
+
+The blocker is reduced to end-to-end crash recovery. IMP-02C now integrates the canonical CEX lifecycle with durable PostgreSQL `SubmissionAttempt` state, single-connection transactions, CAS transitions, evidence/event/outbox persistence, exact reconciliation recovery, concurrent stale-writer protection and durable cancellation ambiguity.
+
+Resolved by this increment: durable lifecycle integration, restart recovery through new service/repository instances, concurrent recovery orchestration, repeated evidence safety and no-blind-resubmission behavior for `NOT_FOUND` and `INDETERMINATE`.
+
+Still open: failure windows A–J under process termination and commit-boundary faults, end-to-end recovery-worker coordination, crash recovery across provider calls and local commits, and durable cancellation acceptance. `VAL-02C` is the next gate. The blocker remains:
+
+**`OPEN / CRASH RECOVERY VALIDATION / CTO CLOSURE PENDING`**
+
+No credentials, exchange connectivity, orders, capital, WebSocket, Condor, Gateway/DEX or production activation was used.
+
+Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
