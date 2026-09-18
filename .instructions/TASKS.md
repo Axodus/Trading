@@ -1516,3 +1516,26 @@ Tasks completed:
 - verified order history limitation does not block submission, exact reconciliation, or cancellation.
 
 Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
+
+## AXODUS-TRADING-VAL-04B1 — Testnet Credential & Authenticated Read
+
+Status: `FAILED / AUTHENTICATED READ REJECTED / EXTERNAL EXECUTION CLOSED`
+
+Tasks completed:
+
+- fixed the Binance USDⓈ-M Futures Testnet domain and authenticated account
+  read boundary;
+- rejected mainnet, withdrawal/transfer scopes, non-testnet credentials and
+  non-admitted paths before transport;
+- kept credential material ephemeral and sanitized all returned evidence;
+- validated the preparation harness with typecheck, build, 13/13 test files and
+  diff check;
+- preserved the closed external execution gate and the independent WebSocket
+  blocker.
+
+Next task: resolve the Binance Testnet credential rejection (`HTTP 401`, code
+`-2015`) and correct the `.env.local` permission finding before requesting a
+new authenticated-read attempt. Do not submit, cancel, or modify testnet
+orders; `VAL-04B2` remains on hold.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.

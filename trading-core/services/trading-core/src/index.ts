@@ -211,3 +211,6 @@ export * from './telemetry/ProviderObservabilityService.js';
 export * from './telemetry/RuntimeMetricsCollector.js';
 export * from './telemetry/RuntimeObservabilityService.js';
 export * from './telemetry/StrategyTelemetryAggregator.js';
+export * from './security/TradingExternalSafetyPreflightPolicy.js';
+export * from './external/Val04BPreCredentialHarness.js';
+export * from './external/Val04B1AuthenticatedReadHarness.js';

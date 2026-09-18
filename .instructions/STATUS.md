@@ -278,3 +278,60 @@ Defined the strict environment, credential, security, and operational capability
 - Order history timeout: DOCUMENTED NON-CRITICAL LIMITATION.
 
 Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
+
+## AXODUS-TRADING-VAL-04 Phase A — External Safety Preflight & Governance Freeze
+
+Status: `COMPLETE / CTO REVIEW READY`
+
+Classification: `EXTERNAL SAFETY PREFLIGHT VALIDATED / PHASE B READY FOR CTO REVIEW`
+
+Implemented and validated the strict offline safety preflight evaluation policy:
+- Environment admission: only testnet, sandbox, and paper are admitted; mainnet, production, live, and prod are deterministically rejected.
+- Zero-withdrawal credential enforcement: rejection of `withdraw`, `withdrawal`, `transfer`, and `universal_transfer` scopes.
+- Instrument allowlist: strict matching against allowed pairs.
+- Hard limits: enforces per-order maximum notional ceiling, maximum cumulative run notional budget, and maximum concurrent outstanding orders.
+- Duplicate/replay protection: rejects active concurrent reuse of `clientOrderId`.
+- Session and tenant isolation: enforces exact match of `tenantId` and `runSessionId`.
+- Kill switch: deterministic suspension of order dispatch.
+- Deterministic cleanup preflight: verifies automated cancellation list preparation and state clearing.
+- WebSocket independence: confirms full HTTP/REST execution boundary under `BLOCKER-01`.
+
+Validation: `npm run typecheck` passed; `npm test` passed 11/11 test files including `val-04a-safety-preflight.test.mjs`.
+
+Record: `.instructions/TRADING_VAL_04A_EXTERNAL_SAFETY_PREFLIGHT.md`
+
+## AXODUS-TRADING-VAL-04B — Pre-Credential External CEX Harness
+
+Status: `COMPLETE / PRE-CREDENTIAL VALIDATED / EXTERNAL EXECUTION HOLD`
+
+Implemented and validated the offline preparation boundary for the frozen
+`binance_perpetual_testnet` envelope. The harness derives BTC-USDT venue rules
+from runtime `exchangeInfo`, derives a minimum valid LIMIT order, applies the
+Axodus hard notional ceiling, rejects credential capability during the
+pre-credential stage, and keeps external execution closed by default behind an
+explicit approval gate.
+
+Validation: `npm run typecheck` passed; `npm test` passed 12/12 test files.
+No Binance credentials, private calls, testnet orders, WebSocket, capital, or
+mainnet activity were used.
+
+Record: `.instructions/TRADING_VAL_04B_PRE_CREDENTIAL_HARNESS.md`
+
+## AXODUS-TRADING-VAL-04B1 — Testnet Credential & Authenticated Read
+
+Status: `FAILED / AUTHENTICATED READ REJECTED / EXTERNAL EXECUTION CLOSED`
+
+The pre-credential boundary is implemented for Binance USDⓈ-M Futures Testnet:
+exact testnet domain, mainnet exclusion, credential environment/scope checks,
+read-only account GET admission, ephemeral signing, sanitized results and
+redaction validation. The process currently has no injected testnet
+credentials, so no authenticated private call was made.
+
+Validation: typecheck, build, 13/13 Trading Core test files and diff check
+passed. The authorized GET account read reached Binance Futures Testnet but
+returned HTTP 401 / code `-2015` (invalid API key, IP or permissions). The
+credential values were not logged. `.env.local` was found mode `0777` and was
+not modified. No order, cancellation, WebSocket, mainnet or capital activity
+occurred. `VAL-04B2` remains `HOLD`.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.
