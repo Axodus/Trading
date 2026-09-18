@@ -1619,6 +1619,29 @@ Status: `COMPLETE / CTO REVIEW REQUIRED`
 Audit deliverable: `.instructions/TRADING_REQ_14_OPERATIONAL_TRADING_READINESS_FAILURE_RECOVERY.md`.
 
 The audit separates the accepted single-order Testnet lifecycle from
-continuous/autonomous readiness. Proposed follow-on work is `IMP-05A` through
-`IMP-05E`, followed by `VAL-05`; no implementation or new Testnet mutation is
-authorized by REQ-14.
+continuous/autonomous readiness. Authorized execution sequence is `AEES-05` (`IMP-05A` through `IMP-05E`).
+
+## AXODUS-TRADING-AEES-05 / IMP-05A — Continuous Execution Runtime & Durable Ownership
+
+Status: `COMPLETE / ADVANCING TO IMP-05B`
+
+Tasks completed:
+- implemented `ContinuousExecutionRuntime` with preflight gating, durable attempt creation before mutation, deterministic client order ID, and failure safety;
+- added `transaction` support to `InMemoryPostgresClient` satisfying `TransactionalPostgresQueryClient`;
+- added unit test suite `test/imp-05a-continuous-runtime.test.mjs` testing preflight rejections, durable state creation, network timeout unknown-state recording, exact reconciliation, concurrent duplicate suppression, and sequential executions;
+- verified full regression (16/16 test files pass, typecheck pass, build pass, diff-check pass);
+- preserved all safety boundaries: 0 real Testnet orders, 0 mainnet requests, 0 secrets leaked.
+
+## AXODUS-TRADING-AEES-05 / IMP-05B — Failure Recovery & Order Reconciliation
+
+Status: `COMPLETE / ADVANCING TO IMP-05C`
+
+Tasks completed:
+- implemented `ContinuousOrderRecoveryService` supporting candidate discovery, startup scan, and single/batch deterministic reconciliation;
+- verified zero blind resubmission during recovery: recovery exclusively queries provider state;
+- fixed in-flight active order release on ambiguous POST network errors;
+- added unit test suite `test/imp-05b-recovery-reconciliation.test.mjs` testing discovery after crash, provider accepted (found) recovery, provider missing (not-found) recovery, lookup failure handling, idempotency, and batch recovery;
+- verified full regression (17/17 test files pass, typecheck pass, build pass, diff-check pass);
+- preserved all safety boundaries: 0 real Testnet orders, 0 mainnet requests, 0 secrets leaked.
+
+Next task: execute IMP-05C (Position Reconciliation, Risk Envelope & Kill Switch).

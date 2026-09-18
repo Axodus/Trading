@@ -1,4 +1,8 @@
-import type { PostgresQueryClient, PostgresQueryResult } from './PostgresClient.js';
+import type {
+  PostgresQueryResult,
+  PostgresTransactionClient,
+  TransactionalPostgresQueryClient,
+} from './PostgresClient.js';
 
 type Row = Record<string, unknown>;
 
@@ -12,6 +16,8 @@ export interface InMemoryPostgresStorage {
   trading_runtime_instances: Row[];
   trading_provider_state: Row[];
   trading_runtime_audit: Row[];
+  trading_submission_attempts: Row[];
+  trading_execution_outbox: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -25,11 +31,17 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     trading_runtime_instances: [],
     trading_provider_state: [],
     trading_runtime_audit: [],
+    trading_submission_attempts: [],
+    trading_execution_outbox: [],
   };
 }
 
-export class InMemoryPostgresClient implements PostgresQueryClient {
+export class InMemoryPostgresClient implements TransactionalPostgresQueryClient {
   constructor(private readonly storage: InMemoryPostgresStorage = createInMemoryPostgresStorage()) {}
+
+  async transaction<T>(callback: (client: PostgresTransactionClient) => Promise<T>): Promise<T> {
+    return callback(this);
+  }
 
   async query<T = Row>(sql: string, params: unknown[] = []): Promise<PostgresQueryResult<T>> {
     const normalized = sql.toLowerCase().trim();
@@ -133,6 +145,84 @@ export class InMemoryPostgresClient implements PostgresQueryClient {
     }
     if (normalized.includes('from trading_provider_state')) {
       return { rows: this.storage.trading_provider_state.filter((row) => row.provider_id === params[0]) as T[] };
+    }
+    if (normalized.startsWith('insert into trading_submission_attempts')) {
+      this.upsert('trading_submission_attempts', 'attempt_id', {
+        attempt_id: params[0],
+        intent_id: params[1],
+        correlation_id: params[2],
+        provider_id: params[3],
+        connector: params[4],
+        market: params[5],
+        side: params[6],
+        order_type: params[7],
+        quantity: params[8],
+        price: params[9],
+        execution_client_order_id: params[10],
+        state: params[11],
+        provider_order_id: params[12],
+        evidence: params[13],
+        last_failure: params[14],
+        version: params[15],
+        created_at: params[16],
+        updated_at: params[17],
+      });
+      return { rows: [] };
+    }
+    if (normalized.startsWith('update trading_submission_attempts set')) {
+      const attemptId = params[15];
+      const expectedVersion = Number(params[16]);
+      const existing = this.storage.trading_submission_attempts.find((row) => row.attempt_id === attemptId);
+      if (!existing || Number(existing.version) !== expectedVersion) {
+        return { rows: [], rowCount: 0 };
+      }
+      Object.assign(existing, {
+        intent_id: params[0],
+        correlation_id: params[1],
+        provider_id: params[2],
+        connector: params[3],
+        market: params[4],
+        side: params[5],
+        order_type: params[6],
+        quantity: params[7],
+        price: params[8],
+        execution_client_order_id: params[9],
+        state: params[10],
+        provider_order_id: params[11],
+        evidence: params[12],
+        last_failure: params[13],
+        updated_at: params[14],
+        version: expectedVersion + 1,
+      });
+      return { rows: [existing] as T[], rowCount: 1 };
+    }
+    if (normalized.includes('from trading_submission_attempts')) {
+      if (normalized.includes('where attempt_id = $1')) {
+        return { rows: this.storage.trading_submission_attempts.filter((row) => row.attempt_id === params[0]) as T[] };
+      }
+      const terminalStates = ['provider-acknowledged', 'failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed', 'reconciled-found', 'reconciled-not-found'];
+      return { rows: this.storage.trading_submission_attempts.filter((row) => !terminalStates.includes(String(row.state))) as T[] };
+    }
+    if (normalized.startsWith('insert into trading_execution_outbox')) {
+      this.storage.trading_execution_outbox.push({
+        outbox_id: params[0],
+        aggregate_id: params[1],
+        aggregate_version: params[2],
+        event_type: params[3],
+        correlation_id: params[4],
+        payload: params[5],
+        created_at: params[6],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from trading_execution_outbox')) {
+      if (normalized.includes('where aggregate_id = $1')) {
+        return { rows: this.storage.trading_execution_outbox.filter((row) => row.aggregate_id === params[0]) as T[] };
+      }
+      if (normalized.includes('where outbox_id = $1')) {
+        return { rows: this.storage.trading_execution_outbox.filter((row) => row.outbox_id === params[0]) as T[] };
+      }
+      return { rows: this.storage.trading_execution_outbox as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }

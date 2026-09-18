@@ -418,3 +418,43 @@ admission, continuous risk limits, unified kill switch, strategy intent
 ownership and operational observability. Mainnet is out of scope.
 
 Record: `.instructions/TRADING_REQ_14_OPERATIONAL_TRADING_READINESS_FAILURE_RECOVERY.md`.
+
+## AXODUS-TRADING-AEES-05 / IMP-05A — Continuous Execution Runtime & Durable Execution Ownership
+
+Status: `COMPLETE / PERSISTED IN COMMIT`
+
+Continuous execution runtime establishes canonical, durable execution creation before any external mutation can occur. Deterministic client order identity is bound prior to mutation submission. Preflight gates reject unadmitted environments and notional limit breaches fail-closed. In-flight network ambiguities transition explicitly to `execution-unknown` requiring reconciliation, strictly preventing blind resubmission.
+
+Validation: 16 test files pass, typecheck passes, build passes.
+
+## AXODUS-TRADING-AEES-05 / IMP-05B — Failure Recovery & Order Reconciliation
+
+Status: `COMPLETE / PERSISTED IN COMMIT`
+
+Continuous order recovery service provides discovery and deterministic reconciliation for non-terminal attempts after crash, restart, or lost response. Discovered attempts are looked up via read-only exact client order identity query without issuing any new order mutations. Idempotency across repeated recovery passes is proven.
+
+Validation: 17 test files pass, typecheck passes, build passes.
+
+## AXODUS-TRADING-AEES-05 / IMP-05C — Position Reconciliation, Risk Envelope & Kill Switch
+
+Status: `COMPLETE / PERSISTED IN WORKTREE (GIT RO)`
+
+Position reconciliation, continuous risk envelope, and fail-closed kill switch services are fully implemented. Risk envelope enforces symbol allowlists, testnet/sandbox environments, stale quote rejections, limit price deviation bounds, order/position notional ceilings, and active order counts. Kill switch operates fail-closed across operator stops and divergence signals.
+
+Validation: 18 test files pass, typecheck passes, build passes.
+
+## AXODUS-TRADING-AEES-05 / IMP-05D — Trading Intent Admission & Operational Concurrency
+
+Status: `COMPLETE / PERSISTED IN WORKTREE (GIT RO)`
+
+Continuous intent admission service defines the canonical boundary between Strategy/Agent and Execution Runtime without sharing exchange credentials. Concurrency controls enforce symbol-level mutual exclusion, idempotent duplicate intent suppression, and active execution collision gating.
+
+Validation: 19 test files pass, typecheck passes, build passes.
+
+## AXODUS-TRADING-AEES-05 / IMP-05E — Operational Hardening, Observability & Continuous Runtime Integration
+
+Status: `COMPLETE / READY FOR VAL-05 / ALL 20 TEST SUITES PASS`
+
+Continuous observability collector and simulation runner integrate telemetry with strict secret sanitization redaction. Comprehensive failure-injection suite validates persistence drops, ambiguous mutation responses, post-POST crash recovery, sanitized telemetry, and multi-intent simulation sessions.
+
+Validation: 20 test files pass (100% pass), typecheck passes, build passes.
