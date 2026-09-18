@@ -361,21 +361,22 @@ Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R4-R3 — Phase B Entrypoint Completion
+## AXODUS-TRADING-VAL-04B2-R4-R4 — Built Entrypoint Correction
 
 Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
-The `val-04b2-live-runner.ts` entrypoint was extended on baseline `9b611c8`
-to provide explicitly separated `--public` and `--execute` modes. The `--execute`
-mode requires the dedicated operational confirmation
-`AXODUS_VAL_04B2_EXECUTE_CONFIRMATION=EXECUTE_SINGLE_TESTNET_ORDER` and delegates
-directly to `Val04B2ControlledOrderHarness`. Full typecheck, build, 15/15 test
-files, diff-check and secret protection checks all pass.
+The live runner execution targets were corrected to run from the built JavaScript
+output (`dist/services/trading-core/trading-core/services/trading-core/src/external/val-04b2-live-runner.js`),
+resolving the `.js` module resolution defect without altering canonical source
+imports or the frozen harness. A dedicated verification script
+`scripts/verify-val-04b2-built-runner.mjs` was added to assert that all built
+dependencies resolve and that `--execute` without operational confirmation fails
+closed. Typecheck, build, 15/15 test files, diff-check and secret protection pass.
 
-Historical Phase B attempts summary: Attempt #1 and Attempt #2 both aborted safely
-prior to credential loading or order submission; total orders submitted across both
-attempts: 0; mutation authority consumed: no. Phase B mutation remains strictly on
-HOLD pending explicit CTO authorization.
+Historical Phase B attempts summary: Attempts #1, #2, and #3 all aborted safely
+prior to credential loading, private calls, or order submission; total orders
+submitted across all attempts: 0; mutation authority consumed: no. Phase B
+mutation remains strictly on HOLD pending explicit CTO authorization.
 
 The CTO-authorized public network qualification was attempted for
 `testnet.binancefuture.com` with zero credentials. The command sandbox

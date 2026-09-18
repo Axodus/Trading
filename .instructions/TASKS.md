@@ -1573,20 +1573,20 @@ Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORD
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R4-R3 — Phase B Entrypoint Completion
+## AXODUS-TRADING-VAL-04B2-R4-R4 — Built Entrypoint Correction
 
 Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
 Tasks completed:
-- extended `val-04b2-live-runner.ts` on `9b611c8` with explicit `--public` and `--execute` modes;
-- added operational confirmation gate `AXODUS_VAL_04B2_EXECUTE_CONFIRMATION=EXECUTE_SINGLE_TESTNET_ORDER`;
-- added `val:04b2:r4:execute` script to package.json;
-- updated unit tests in `val-04b2-r4-runner.test.mjs` verifying fail-closed invocation and single mock delegation;
-- ran full verification (typecheck, build, 15/15 test files, diff-check);
-- recorded safe aborts for Phase B Attempt #1 and Attempt #2 with zero orders submitted and zero credentials loaded;
+- corrected package scripts to execute from the built JS output instead of source TypeScript with node strip-types;
+- added `scripts/verify-val-04b2-built-runner.mjs` and `npm run val:04b2:r4:verify-built`;
+- verified built dependency graph resolution and fail-closed operational gate offline;
+- updated `val-04b2-r4-runner.test.mjs` asserting package scripts target the built JS artifacts;
+- ran full verification (typecheck, build, 15/15 test files, diff-check, built runner verification);
+- recorded safe aborts for Phase B Attempts #1, #2, and #3 with zero orders submitted and zero credentials loaded;
 - preserved all safety boundaries with Phase B strictly on HOLD.
 
-Next task: obtain explicit CTO Phase B execution authorization against the persisted R3 commit.
+Next task: obtain explicit CTO Phase B execution authorization against the persisted R4 commit.
 
 The authorized public DNS, TCP/TLS, and `exchangeInfo` preflight was attempted.
 Local sandbox network isolation prevented socket creation, and escalation was

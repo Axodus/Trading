@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import {
@@ -134,4 +135,12 @@ test('R4 execute mode delegates exactly once with the technical approval token a
 test('R4 runner rejects non-Testnet execution targets', () => {
   assert.doesNotThrow(() => assertVal04B2ExecutionTarget(VAL_04B2_BASE_URL));
   assert.throws(() => assertVal04B2ExecutionTarget('https://fapi.binance.com'), /Futures Testnet endpoint/);
+});
+
+test('R4 package entrypoints target built output rather than source TypeScript', () => {
+  const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+  assert.match(packageJson.scripts['val:04b2:r4:public'], /dist\/services\/trading-core\/trading-core\/services\/trading-core\/src\/external\/val-04b2-live-runner\.js/);
+  assert.match(packageJson.scripts['val:04b2:r4:execute'], /dist\/services\/trading-core\/trading-core\/services\/trading-core\/src\/external\/val-04b2-live-runner\.js/);
+  assert.doesNotMatch(packageJson.scripts['val:04b2:r4:public'], /src\/external\/val-04b2-live-runner\.ts/);
+  assert.doesNotMatch(packageJson.scripts['val:04b2:r4:execute'], /src\/external\/val-04b2-live-runner\.ts/);
 });
