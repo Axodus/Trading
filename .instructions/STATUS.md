@@ -406,3 +406,15 @@ The authorized public-only preflight could not resolve
 orders, cancellations, WebSocket or mainnet endpoints were used. The mutation
 authority from the prior B2 attempt is consumed and closed; a future retry
 requires a new CTO authorization after public reachability is proven.
+## AXODUS-TRADING-REQ-14 — Operational Trading Readiness & Failure Recovery
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+The audit confirms that controlled Testnet execution is validated, while
+continuous Testnet trading and autonomous Agent trading are not ready. The
+remaining gaps are the continuous execution supervisor, complete fill/terminal
+state coverage, startup recovery orchestration, durable position/order drift
+admission, continuous risk limits, unified kill switch, strategy intent
+ownership and operational observability. Mainnet is out of scope.
+
+Record: `.instructions/TRADING_REQ_14_OPERATIONAL_TRADING_READINESS_FAILURE_RECOVERY.md`.

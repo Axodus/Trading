@@ -1612,3 +1612,13 @@ outbound networking or resolve the proxy evaluator model configuration, then
 report validated `BTCUSDT` filters before requesting order authorization.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
+## AXODUS-TRADING-REQ-14 — Operational Trading Readiness & Failure Recovery
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Audit deliverable: `.instructions/TRADING_REQ_14_OPERATIONAL_TRADING_READINESS_FAILURE_RECOVERY.md`.
+
+The audit separates the accepted single-order Testnet lifecycle from
+continuous/autonomous readiness. Proposed follow-on work is `IMP-05A` through
+`IMP-05E`, followed by `VAL-05`; no implementation or new Testnet mutation is
+authorized by REQ-14.
