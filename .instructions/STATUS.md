@@ -240,3 +240,25 @@ The accepted in-memory CEX lifecycle is now integrated with the durable PostgreS
 Validation: targeted PostgreSQL suite passed 7/7; full service suite passed 10/10 test files; build and typecheck passed; local simulation E2E passed with migration 0003 and cleanup. `VAL-02C` remains the next gate. `AXODUS-TRADING-BLOCKER-02` remains open for crash-window, process-restart and end-to-end recovery acceptance.
 
 Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
+
+## AXODUS-TRADING-VAL-02C — Durable Crash Recovery Acceptance
+
+Status: `COMPLETE / CTO ACCEPTED`
+
+Classification: `DURABLE CEX LIFECYCLE & CRASH RECOVERY VALIDATED / BLOCKER-02 CLOSURE ACCEPTED`.
+
+Evidence accepted: PostgreSQL-backed lifecycle recovery, exact REST reconciliation, ambiguous submission and cancellation recovery, CAS-safe concurrent workers, restart using new service/repository instances, 7/7 targeted PostgreSQL tests, 10/10 full service test files, typecheck, build, local simulated E2E with cleanup and diff check. This validates the controlled Axodus/provider boundary only; real venue execution remains unvalidated.
+
+## AXODUS-TRADING-BLOCKER-02 — Closure
+
+Status: `RESOLVED / CTO CLOSED` on 2026-09-18.
+
+The blocker evolution is preserved in `.instructions/BLOCKER_REGISTER.md`. Identity continuity, exact CEX reconciliation, durable persistence, CAS, outbox and crash-recovery integration are resolved within the simulated/provider boundary. `BLOCKER-01` remains open; Gateway/DEX reconciliation, Condor, live execution and capital remain outside scope and authority.
+
+## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
+
+Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / EXTERNAL LIVE TRADING HOLD`.
+
+The gate validates the materialized Python runtime, API/Core imports, controlled connector behavior, Axodus integration and runtime fault injection without credentials, exchange connectivity, orders, WebSocket, Condor, DEX or capital. Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7 and Trading Core regression pass. The full controlled lifespan harness now passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. Temporary `hummingbot==20260901` is validation-only and is not a baseline change.
+
+Controlled FastAPI HTTP and full-lifespan harness evidence is now available: submission identity, exact lookup, cancellation, malformed request rejection, provider failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and deterministic cleanup all pass. The order-history timeout remains unaccepted and is proposed for CTO review as a documented non-critical limitation because it is outside submission, exact reconciliation, cancellation and crash recovery.

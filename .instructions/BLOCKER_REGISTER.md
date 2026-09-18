@@ -176,3 +176,19 @@ Still open: failure windows A–J under process termination and commit-boundary 
 No credentials, exchange connectivity, orders, capital, WebSocket, Condor, Gateway/DEX or production activation was used.
 
 Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
+
+### AXODUS-TRADING-VAL-02C closure — 2026-09-18
+
+`AXODUS-TRADING-BLOCKER-02` is **`RESOLVED / CTO CLOSED`**.
+
+Closure evidence: durable CEX lifecycle integration, PostgreSQL authoritative state, restart recovery, exact REST reconciliation, ambiguous submission/cancellation recovery, CAS-safe concurrent workers, no-blind-resubmission protection and accepted local validation. The closure applies to the controlled Axodus/provider boundary; it is not real-venue execution approval.
+
+The historical blocker record is retained. Independent boundaries remain active: `AXODUS-TRADING-BLOCKER-01` is `OPEN / KEEP BLOCKED / DO NOT USE`; Gateway/DEX reconciliation is deferred to a separate transaction model; Condor and operational trading remain on hold; capital authority remains none.
+
+### AXODUS-TRADING-VAL-03 runtime acceptance dependency — 2026-09-18
+
+VAL-03 is `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`. The full application lifespan, local PostgreSQL, Core initialization and controlled CEX provider path have passed without external exchange access. External live trading, credentials, exchange connectivity, WebSocket, Condor, DEX and capital remain prohibited.
+
+Current evidence includes Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7, Trading Core regression, real lifespan startup/shutdown, local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and deterministic cleanup. The history pagination test exceeded a 30-second timeout and remains unaccepted. The temporary `hummingbot==20260901` package is not a selected dependency baseline.
+
+The controlled FastAPI HTTP and full-lifespan harnesses pass submission identity, exact lookup, cancellation, failure normalization, no-blind-retry behavior and service reconstruction. Order history is proposed as a documented non-critical limitation because source inspection places it outside submission, exact reconciliation, cancellation and crash recovery; this remains subject to CTO review and does not authorize external provider activity.

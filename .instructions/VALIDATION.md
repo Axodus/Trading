@@ -619,3 +619,58 @@ Results:
 The evidence covers durable restart using new service/repository instances, concurrent CAS-safe recovery, exact reconciliation, cancellation ambiguity and no-blind-resubmission behavior. It does not yet prove OS-level crash injection or complete failure-window A–J acceptance. `VAL-02C` remains next and `BLOCKER-02` remains open.
 
 Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
+
+## AXODUS-TRADING-VAL-02C — Durable Crash Recovery Acceptance
+
+Date: 2026-09-18
+
+Status: `COMPLETE / CTO ACCEPTED`
+
+Classification: `DURABLE CEX LIFECYCLE & CRASH RECOVERY VALIDATED / BLOCKER-02 CLOSURE ACCEPTED`.
+
+Accepted evidence:
+
+- typecheck: PASS;
+- build: PASS;
+- full service suite: 10/10 test files passed;
+- targeted IMP-02C/IMP-02C0 PostgreSQL suite: 7/7 passed;
+- local simulated E2E with migrations, health/schema/readiness/replay smoke and cleanup: PASS;
+- `git diff --check`: PASS;
+- restart with new service/repository instances, exact reconciliation, ambiguous submission/cancellation recovery and stale-worker CAS protection: PASS.
+
+Boundary: this validates the Axodus-controlled simulated/provider path. It does not validate a real exchange, real credentials, real orders or production behavior. `BLOCKER-02` was closed by CTO review on 2026-09-18; `BLOCKER-01` remains open and WebSocket remains prohibited from the correctness path.
+
+## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
+
+Date: 2026-09-18
+
+Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`
+
+Current evidence:
+
+- isolated Python 3.12.14 environment created;
+- materialized API imports with `hummingbot==20260901` installed only in the isolated environment;
+- `hummingbot-api-client/test/test_calls_match_api_spec.py`: 337 passed;
+- API service tests that import `TradingService` require the controlled service dependency/runtime surface and are not yet accepted as a complete VAL-03 result;
+- no credentials, exchange connectivity, orders, WebSocket, Condor, DEX or capital used.
+
+Additional evidence collected on 2026-09-18:
+
+- Python 3.12.14 isolated runtime;
+- Core compatibility: 5/5 passed;
+- API order synchronization: 6/6 passed;
+- API reconciliation batching: 7/7 passed;
+- client contract suite under Python 3.12: 337/337 passed;
+- Trading Core typecheck, build and 10/10 test files: PASS;
+- history pagination service test: bounded 30-second run exceeded timeout and remains unaccepted;
+- the earlier broad API service test batch was interrupted after entering service/database-dependent execution and is not reported as passing.
+
+The temporary `hummingbot==20260901` installation is validation-only. It is not a new Axodus dependency baseline and does not replace the frozen repository gitlinks.
+
+The full controlled lifespan layer is now complete for the accepted scope; final VAL-03 status remains pending CTO review of the isolated order-history timeout.
+
+Controlled harness update on 2026-09-18: PASS for health, submission identity preservation, exact lookup, cancellation, malformed request rejection before provider invocation, provider rejection, transport failure normalization, no blind retry after transport ambiguity and service reconstruction over a controlled local store. The full lifespan harness additionally passed real startup/shutdown hooks, PostgreSQL schema/repository wiring, Core import/initialization in the service process, controlled connector submission/lookup/cancellation, restart visibility and deterministic cleanup. It used no external provider or WebSocket.
+
+The materialized API validation handler was minimally corrected to stringify exception values in Pydantic validation context before JSON serialization. The order-history cursor test remains `NOT ACCEPTED` after a finite 30-second timeout. Source inspection indicates order history is outside submission, exact reconciliation, cancellation and crash-recovery correctness paths; it is proposed as a documented non-critical limitation, pending CTO review. The temporary `hummingbot==20260901` installation is validation-only.
+
+Record: `.instructions/TRADING_VAL_03_HUMMINGBOT_RUNTIME_CEX_PROVIDER_ACCEPTANCE.md`.

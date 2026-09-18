@@ -2,9 +2,9 @@
 
 Date: 2026-09-18
 
-Status: `NEXT / CTO REVIEW REQUIRED AFTER IMP-02C`
+Status: `COMPLETE / CTO ACCEPTED`
 
-Classification: `DURABLE RECOVERY VALIDATION PENDING / BLOCKER-02 OPEN`
+Classification: `DURABLE CEX LIFECYCLE & CRASH RECOVERY VALIDATED / BLOCKER-02 CLOSURE ACCEPTED`
 
 ## Acceptance scope
 
@@ -35,10 +35,14 @@ Each case must record durable state before the window, external/provider evidenc
 - no correctness path depends on WebSocket;
 - no credentials, exchanges, orders, capital, Condor, DEX or production services are used.
 
-## Current evidence boundary
+## Accepted evidence
 
-IMP-02C currently provides PostgreSQL-backed orchestration, deterministic restart using new service/repository instances, CAS-safe concurrent recovery and durable cancellation ambiguity handling. That evidence is sufficient to open VAL-02C, but it does not itself prove OS-level crash atomicity or production provider behavior.
+IMP-02C and VAL-02C provide PostgreSQL-backed orchestration, deterministic restart using new service/repository instances, CAS-safe concurrent recovery, exact reconciliation and durable cancellation ambiguity handling. The accepted evidence covers the controlled Axodus/provider boundary and does not claim real-venue execution validation.
 
-## Closure rule
+Accepted results: typecheck, build, full service suite (10/10 files), targeted IMP-02C/IMP-02C0 PostgreSQL suite (7/7), local simulation E2E with cleanup, and `git diff --check` all passed. No credentials, exchange connectivity, orders, WebSocket, Condor, DEX or capital were used.
 
-VAL-02C may propose `DURABLE CEX LIFECYCLE & CRASH RECOVERY VALIDATED / BLOCKER-02 CLOSURE CANDIDATE`. It must not close `BLOCKER-02`; closure remains a separate CTO decision.
+The following distinction remains normative: durable crash recovery validated under deterministic providers is not real exchange execution validation.
+
+## Closure decision
+
+The CTO accepted VAL-02C on 2026-09-18 and closed `AXODUS-TRADING-BLOCKER-02`. The blocker register preserves its historical evolution. Independent boundaries remain open: `BLOCKER-01` WebSocket is still `KEEP BLOCKED / DO NOT USE`; Gateway/DEX reconciliation, Condor, live execution and capital remain outside authority.

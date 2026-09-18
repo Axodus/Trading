@@ -1483,3 +1483,19 @@ Tasks completed:
 Next task: `VAL-02C — Durable Crash Recovery Acceptance`, including failure windows A–J and process crash/restart boundaries. `BLOCKER-02` remains open.
 
 Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
+
+## AXODUS-TRADING-VAL-02C — Durable Crash Recovery Acceptance
+
+Status: `COMPLETE / CTO ACCEPTED`.
+
+Accepted the PostgreSQL durable lifecycle and crash-recovery evidence: 7/7 targeted PostgreSQL tests, 10/10 full service test files, typecheck, build, local simulated E2E with cleanup and diff check passed. `BLOCKER-02` is now `RESOLVED / CTO CLOSED`; real venue execution remains unvalidated.
+
+## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
+
+Status: `IN PROGRESS / FULL CONTROLLED RUNTIME / CTO REVIEW PENDING`.
+
+Evidence update: Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7 and Trading Core regression all pass. The full controlled lifespan harness also passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. The history pagination test exceeded a bounded 30-second run and remains unaccepted. Temporary `hummingbot==20260901` is not a dependency-baseline selection.
+
+Controlled FastAPI HTTP and full-lifespan harness update: submission identity, exact lookup, cancellation, malformed request rejection, provider failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and deterministic cleanup pass. The order-history timeout remains unaccepted and is proposed as a documented non-critical limitation, pending CTO review.
+
+Next tasks: obtain CTO disposition of the isolated order-history timeout, preserve the full-runtime evidence, and keep credentials, exchange connectivity, orders, WebSocket, Condor, DEX and capital disabled.

@@ -998,3 +998,27 @@ BLOCKER-02 closure review
 IMP-02C establishes the durable runtime orchestration but does not close crash-recovery validation. WebSocket, Condor, Gateway/DEX, credentials, external orders and capital remain outside scope.
 
 Record: `.instructions/TRADING_IMP_02C_DURABLE_CEX_LIFECYCLE_CRASH_RECOVERY.md`.
+
+## AXODUS-TRADING-VAL-02C — Durable Crash Recovery Acceptance
+
+Status: `COMPLETE / CTO ACCEPTED`.
+
+```text
+IMP-02C durable lifecycle
+          ↓
+VAL-02C accepted
+          ↓
+BLOCKER-02 RESOLVED / CTO CLOSED
+          ↓
+VAL-03 controlled runtime acceptance
+```
+
+The closure is limited to the Axodus-controlled simulated/provider boundary. Real venue execution, WebSocket correctness, Condor, Gateway/DEX and capital remain outside scope.
+
+## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
+
+Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`.
+
+The gate validates Python runtime imports, API/Core integration, controlled connector behavior, full Axodus integration and runtime fault injection before any external paper/shadow or live connectivity decision. The controlled full-lifespan harness now passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. One history pagination service test exceeded the controlled timeout; the temporary Hummingbot package install is validation-only and does not alter the frozen baseline.
+
+The controlled FastAPI HTTP and full-lifespan harnesses pass identity, lookup, cancellation, failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and cleanup. Order history remains unaccepted and is proposed as a documented non-critical limitation because it is outside the correctness paths; CTO review is pending.
