@@ -1492,10 +1492,27 @@ Accepted the PostgreSQL durable lifecycle and crash-recovery evidence: 7/7 targe
 
 ## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
 
-Status: `IN PROGRESS / FULL CONTROLLED RUNTIME / CTO REVIEW PENDING`.
+Status: `COMPLETE / CTO ACCEPTED`.
 
 Evidence update: Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7 and Trading Core regression all pass. The full controlled lifespan harness also passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. The history pagination test exceeded a bounded 30-second run and remains unaccepted. Temporary `hummingbot==20260901` is not a dependency-baseline selection.
 
 Controlled FastAPI HTTP and full-lifespan harness update: submission identity, exact lookup, cancellation, malformed request rejection, provider failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and deterministic cleanup pass. The order-history timeout remains unaccepted and is proposed as a documented non-critical limitation, pending CTO review.
 
 Next tasks: obtain CTO disposition of the isolated order-history timeout, preserve the full-runtime evidence, and keep credentials, exchange connectivity, orders, WebSocket, Condor, DEX and capital disabled.
+
+## AXODUS-TRADING-REQ-13 — External CEX Validation & Paper/Shadow Readiness Freeze
+
+Date: 2026-09-18
+
+Status: `COMPLETE / CTO REVIEW READY`
+
+Tasks completed:
+- froze admissible external environments (Testnet / Sandbox / Paper only; no mainnet or real funds);
+- defined zero-withdrawal, read-and-trade minimal credential scope;
+- established secret storage boundary via Credential Vault reference injection without checking keys into repos;
+- set hard order ceilings, single-tenant isolation, and rate limit protections;
+- established deterministic testnet cleanup requirements (no orphaned orders);
+- confirmed BLOCKER-01 (WebSocket) remains excluded from the initial external validation gate;
+- verified order history limitation does not block submission, exact reconciliation, or cancellation.
+
+Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`

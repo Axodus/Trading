@@ -644,7 +644,7 @@ Boundary: this validates the Axodus-controlled simulated/provider path. It does 
 
 Date: 2026-09-18
 
-Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`
+Status: `COMPLETE / CTO ACCEPTED`
 
 Current evidence:
 
@@ -674,3 +674,20 @@ Controlled harness update on 2026-09-18: PASS for health, submission identity pr
 The materialized API validation handler was minimally corrected to stringify exception values in Pydantic validation context before JSON serialization. The order-history cursor test remains `NOT ACCEPTED` after a finite 30-second timeout. Source inspection indicates order history is outside submission, exact reconciliation, cancellation and crash-recovery correctness paths; it is proposed as a documented non-critical limitation, pending CTO review. The temporary `hummingbot==20260901` installation is validation-only.
 
 Record: `.instructions/TRADING_VAL_03_HUMMINGBOT_RUNTIME_CEX_PROVIDER_ACCEPTANCE.md`.
+
+## AXODUS-TRADING-REQ-13 — External CEX Validation & Paper/Shadow Readiness Freeze
+
+Date: 2026-09-18
+
+Status: `COMPLETE / CTO REVIEW READY`
+
+Validation definition and readiness freeze only. No external connectivity was executed. No credentials or keys were created or injected.
+
+Preserved boundaries:
+- Testnet / Sandbox only
+- Zero real capital
+- Zero withdrawal scope
+- HTTP/REST only (BLOCKER-01 preserved)
+- Mandatory cleanup
+
+Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`

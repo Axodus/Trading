@@ -12,5 +12,6 @@ hummingbot-api
 mcp
 quants-lab
 tradingbot
-.env
+.env.*
+!.env.example
 *.sql

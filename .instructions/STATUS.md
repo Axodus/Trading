@@ -257,8 +257,24 @@ The blocker evolution is preserved in `.instructions/BLOCKER_REGISTER.md`. Ident
 
 ## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
 
-Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / EXTERNAL LIVE TRADING HOLD`.
+Status: `COMPLETE / CTO ACCEPTED`.
 
 The gate validates the materialized Python runtime, API/Core imports, controlled connector behavior, Axodus integration and runtime fault injection without credentials, exchange connectivity, orders, WebSocket, Condor, DEX or capital. Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7 and Trading Core regression pass. The full controlled lifespan harness now passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. Temporary `hummingbot==20260901` is validation-only and is not a baseline change.
 
 Controlled FastAPI HTTP and full-lifespan harness evidence is now available: submission identity, exact lookup, cancellation, malformed request rejection, provider failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and deterministic cleanup all pass. The order-history timeout remains unaccepted and is proposed for CTO review as a documented non-critical limitation because it is outside submission, exact reconciliation, cancellation and crash recovery.
+
+## AXODUS-TRADING-REQ-13 — External CEX Validation & Paper/Shadow Readiness Freeze
+
+Status: `COMPLETE / CTO REVIEW READY`
+
+Classification: `PAPER/SHADOW READINESS FROZEN / EXTERNAL CONNECTIVITY HOLD`
+
+Defined the strict environment, credential, security, and operational capability boundaries required before Axodus Trading can enter testnet, sandbox, paper, or shadow environments:
+- External connectivity: HOLD
+- Credentials: HOLD
+- Orders: NOT AUTHORIZED
+- Capital: NONE
+- BLOCKER-01 (WebSocket): OPEN / KEEP BLOCKED / DO NOT USE; the external validation path relies strictly on HTTP/REST.
+- Order history timeout: DOCUMENTED NON-CRITICAL LIMITATION.
+
+Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`

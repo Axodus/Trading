@@ -1017,8 +1017,14 @@ The closure is limited to the Axodus-controlled simulated/provider boundary. Rea
 
 ## AXODUS-TRADING-VAL-03 — Hummingbot Runtime & CEX Provider Integration Acceptance
 
-Status: `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`.
+Status: `COMPLETE / CTO ACCEPTED`.
 
 The gate validates Python runtime imports, API/Core integration, controlled connector behavior, full Axodus integration and runtime fault injection before any external paper/shadow or live connectivity decision. The controlled full-lifespan harness now passes with local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and cleanup. One history pagination service test exceeded the controlled timeout; the temporary Hummingbot package install is validation-only and does not alter the frozen baseline.
 
 The controlled FastAPI HTTP and full-lifespan harnesses pass identity, lookup, cancellation, failure normalization, no-blind-retry behavior, PostgreSQL persistence, service reconstruction and cleanup. Order history remains unaccepted and is proposed as a documented non-critical limitation because it is outside the correctness paths; CTO review is pending.
+
+## AXODUS-TRADING-REQ-13 — External CEX Validation & Paper/Shadow Readiness Freeze
+
+Status: `COMPLETE / CTO REVIEW READY`
+
+Froze the precise isolation, credential mapping, order size ceiling, cleanup, and capability verification requirements for external testnet/sandbox connectivity. External execution remains HOLD until a subsequent validation gate is authorized.
