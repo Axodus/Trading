@@ -1,10 +1,10 @@
 # AXODUS-TRADING-VAL-04B1 — Testnet Credential & Authenticated Read
 
-Status: `FAILED / AUTHENTICATED READ REJECTED / EXTERNAL EXECUTION CLOSED`
+Status: `COMPLETE / R2 PASS / AUTHENTICATED READ ACCEPTED / EXTERNAL EXECUTION CLOSED`
 
 Classification: `TESTNET REST READ HARNESS VALIDATED / MUTATION GATE CLOSED`
 
-Date: 2026-09-18
+Date: 2026-09-18 (R2 PASS: 2026-09-18)
 
 ## Scope
 
@@ -72,17 +72,38 @@ which returned HTTP 401 with Binance code `-2015` (`Invalid API-key, IP, or
 permissions for action`). No mutating request was made.
 
 The `.env.local` file is currently mode `0777`. It was not changed because the
-authorized procedure prohibited modifying the file; this is a security finding
-that must be corrected before another credentialed attempt.
+authorized procedure prohibited modifying the file; this was corrected during
+`VAL-04B1-R1` to mode `0600`.
+
+`VAL-04B1-R1` confirmed that `.env.local` is ignored and untracked by Git, and
+repeated the same single read-only request after the permission correction. The
+retry still returned HTTP 401 due to credential provenance mismatch (old testnet key).
+
+`VAL-04B1-R2` was authorized by CTO after the operator refreshed the Binance
+USDⓈ-M Futures Testnet API key pair in `.env.local`. A single `GET /fapi/v2/account`
+call to `testnet.binancefuture.com` returned HTTP 200 with the following sanitized evidence:
+
+- httpStatus: 200
+- environment: binance_perpetual_testnet
+- domain: testnet.binancefuture.com
+- mainnetExcluded: true
+- authenticated: true
+- canTrade: true
+- assetCount: 8
+- mutatingCallsMade: false
+- websocketUsed: false
+- secretRedacted: true
+
+The ephemeral executor at `/tmp/axodus-val04b1-r2.mjs` was zeroed after use.
+No credentials were logged or committed.
 
 ## Decision state
 
-`VAL-04B1` failed authenticated-read acceptance. The credential source is
-present and structurally well-formed, but Binance did not accept the key for
-the requested testnet account read. The likely classes are wrong environment,
-IP restriction, permission configuration, or a key pair that does not belong
-to this testnet account; this audit did not distinguish them further.
-`VAL-04B2` remains `HOLD`.
+`VAL-04B1-R2` passed authenticated-read acceptance. The Binance USDⓈ-M Futures
+Testnet account was successfully authenticated; `canTrade: true` and 8 assets are
+confirmed in the testnet account. The credential source is valid, the domain
+assertion is correct, and all mutation, WebSocket, and mainnet boundaries held.
+`VAL-04B2` remains `HOLD` pending separate CTO authorization.
 
 Preserved boundaries: no mainnet, no real funds, no testnet order, no
 cancellation, no WebSocket, no Condor, no DEX, no capital authority.

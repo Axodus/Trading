@@ -319,19 +319,22 @@ Record: `.instructions/TRADING_VAL_04B_PRE_CREDENTIAL_HARNESS.md`
 
 ## AXODUS-TRADING-VAL-04B1 — Testnet Credential & Authenticated Read
 
-Status: `FAILED / AUTHENTICATED READ REJECTED / EXTERNAL EXECUTION CLOSED`
+Status: `COMPLETE / R2 PASS / AUTHENTICATED READ ACCEPTED / EXTERNAL EXECUTION CLOSED`
 
 The pre-credential boundary is implemented for Binance USDⓈ-M Futures Testnet:
 exact testnet domain, mainnet exclusion, credential environment/scope checks,
 read-only account GET admission, ephemeral signing, sanitized results and
 redaction validation. The process currently has no injected testnet
-credentials, so no authenticated private call was made.
+credentials, so no authenticated private call was made. `VAL-04B1-R2` then
+performed the single CTO-authorized authenticated read with the refreshed
+testnet credential pair.
 
 Validation: typecheck, build, 13/13 Trading Core test files and diff check
-passed. The authorized GET account read reached Binance Futures Testnet but
-returned HTTP 401 / code `-2015` (invalid API key, IP or permissions). The
-credential values were not logged. `.env.local` was found mode `0777` and was
-not modified. No order, cancellation, WebSocket, mainnet or capital activity
-occurred. `VAL-04B2` remains `HOLD`.
+passed. R2 returned HTTP 200 from the exact Binance USDⓈ-M Futures Testnet
+account endpoint with authenticated account evidence. `.env.local` is mode
+`0600`, ignored and untracked. Sanitized evidence recorded `canTrade: true`,
+8 assets, `mutatingCallsMade: false`, `websocketUsed: false`, and secret
+redaction. No order, cancellation, WebSocket, mainnet or capital activity
+occurred. `VAL-04B2` remains `HOLD` pending separate CTO authorization.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.

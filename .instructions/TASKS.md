@@ -1519,7 +1519,7 @@ Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
 
 ## AXODUS-TRADING-VAL-04B1 — Testnet Credential & Authenticated Read
 
-Status: `FAILED / AUTHENTICATED READ REJECTED / EXTERNAL EXECUTION CLOSED`
+Status: `COMPLETE / R2 PASS / AUTHENTICATED READ ACCEPTED / EXTERNAL EXECUTION CLOSED`
 
 Tasks completed:
 
@@ -1533,9 +1533,10 @@ Tasks completed:
 - preserved the closed external execution gate and the independent WebSocket
   blocker.
 
-Next task: resolve the Binance Testnet credential rejection (`HTTP 401`, code
-`-2015`) and correct the `.env.local` permission finding before requesting a
-new authenticated-read attempt. Do not submit, cancel, or modify testnet
-orders; `VAL-04B2` remains on hold.
+The single CTO-authorized R2 read completed successfully with HTTP 200 against
+Binance USDⓈ-M Futures Testnet. Sanitized evidence confirms authentication,
+`canTrade: true`, 8 assets, no mutation, no WebSocket, and secret redaction.
+`.env.local` is `0600`, ignored and untracked. Next task: await a separate CTO
+decision for `VAL-04B2`; do not submit, cancel, or modify testnet orders.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.
