@@ -341,21 +341,36 @@ Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_
 
 ## AXODUS-TRADING-VAL-04B2 — First Controlled Testnet Order Acceptance
 
-Status: `INCOMPLETE / EXTERNAL NETWORK BLOCKED / SAFE ABORT VALIDATED`
+Status: `EXECUTED / PASS CANDIDATE / CTO REVIEW REQUIRED`
 
-The CTO-authorized single mutation run was attempted on 2026-09-18. Local
-preflight confirmed `.env.local` mode `0600`, Git-ignored and untracked. The
-mandatory public Testnet `exchangeInfo` request failed before mutation because
-the execution host could not resolve `testnet.binancefuture.com` (`EAI_AGAIN`).
-No private call, order submission, cancellation, WebSocket, mainnet contact or
-blind retry occurred. The mutation gate remains closed; no external cleanup is
-required because no order was created.
+The native-host execution completed the authorized single Testnet lifecycle.
+Runtime venue rules were derived dynamically for `BTCUSDT / PERPETUAL`, one
+LIMIT order was submitted, exact client identity was preserved through lookup,
+the same order was canceled and terminally reconciled, and cleanup confirmed
+zero active validation orders and zero residual position. Sanitized evidence is
+recorded in the validation record. CTO final review remains required.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
 
 ## AXODUS-TRADING-VAL-04B2-R1 — Network Preflight
 
 Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
+
+## AXODUS-TRADING-VAL-04B2-R5 — Native Host Public Qualification
+
+Status: `COMPLETE / CTO ACCEPTED / NATIVE HOST PATH QUALIFIED`
+
+The native host `whostler` passed DNS, TLS, public REST and built-runner
+qualification for `BTCUSDT / PERPETUAL / TRADING` with runtime-derived venue
+filters. The Agent sandbox restriction remains an external environment fact.
+
+## AXODUS-TRADING-VAL-04B2 — Controlled Testnet Order Lifecycle
+
+Status: `EXECUTED / PASS CANDIDATE / CTO REVIEW REQUIRED`
+
+One authorized Testnet LIMIT order was submitted and canceled successfully.
+Exact identity lookup, terminal reconciliation and zero-residual cleanup passed;
+blind retries, WebSocket and mainnet contact were zero.
 
 ## AXODUS-TRADING-VAL-04B2-R2 — Public Network Qualification
 

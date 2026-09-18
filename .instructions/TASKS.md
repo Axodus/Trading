@@ -1543,19 +1543,33 @@ Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_
 
 ## AXODUS-TRADING-VAL-04B2 — First Controlled Testnet Order Acceptance
 
-Status: `EXECUTED / FAILED / CTO REVIEW REQUIRED`
+Status: `EXECUTED / PASS CANDIDATE / CTO REVIEW REQUIRED`
 
-The single CTO-authorized run aborted at the public Testnet metadata preflight:
-`testnet.binancefuture.com` could not be resolved by the execution host
-(`EAI_AGAIN`). No order, cancellation, private call, WebSocket or mainnet
-contact occurred; no retry or second mutation is authorized. Await CTO review
-for any subsequent execution decision.
+The native-host execution completed the single authorized Testnet lifecycle.
+One LIMIT order was submitted, exact identity lookup returned `NEW`, the order
+was canceled and terminally reconciled as `CANCELED`, and cleanup confirmed no
+active validation orders and no residual position. No blind retry, WebSocket or
+mainnet contact occurred. Await CTO final review.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
 
 ## AXODUS-TRADING-VAL-04B2-R1 — Network Preflight
 
 Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
+
+## AXODUS-TRADING-VAL-04B2-R5 — Native Host Public Qualification
+
+Status: `COMPLETE / CTO ACCEPTED / NATIVE HOST PATH QUALIFIED`
+
+The native host passed public Testnet qualification and derived the current
+BTCUSDT venue rules through the built runner.
+
+## AXODUS-TRADING-VAL-04B2 — Controlled Testnet Order Lifecycle
+
+Status: `EXECUTED / PASS CANDIDATE / CTO REVIEW REQUIRED`
+
+Sanitized evidence confirms one order, preserved identity, exact lookup,
+terminal cancellation and cleanup with zero residual orders or position.
 
 The public-only DNS, TCP/TLS and `exchangeInfo` preflight was attempted without
 credentials. The execution host could not resolve `testnet.binancefuture.com`,

@@ -1,38 +1,58 @@
 # Trading Blocker Register
 
-Last updated: 2026-06-08
+Last updated: 2026-09-18
 
 ## AXODUS-TRADING-BLOCKER-03 - External Testnet DNS/Network Reachability
 
 Severity: HIGH
 
-Status: OPEN / EXTERNAL EXECUTION ENVIRONMENT REQUIRED
+Status: RESOLVED / NATIVE HOST PATH QUALIFIED / AGENT SANDBOX RESTRICTION PRESERVED
 
 Description: `VAL-04B2-R1` and `R2` confirmed that the local sandbox environment
 isolates network sockets and that escalation is rejected by automated approval
 reviewer provider limits.
 
-Impact: The first controlled Testnet order lifecycle cannot proceed. The
-mutation gate remains closed; no credentials, private calls, orders or
-cancellations were used during R1.
+Impact: The Agent execution environment cannot perform the external Testnet
+request because DNS resolution is restricted. The native host `whostler` has
+qualified the public Testnet path, so this blocker no longer prevents the
+native-host execution path. The mutation gate remains governed separately by
+explicit CTO authorization.
 
-Resolution path: Execute the public-only DNS, TCP/TLS and
-`GET /fapi/v1/exchangeInfo` qualification harness in a runtime/host with normal
-outbound network access (or configure the approval reviewer model routing so
-escalated execution can be evaluated without provider 400 errors). Stop after
-public metadata succeeds and obtain a new CTO authorization before any
-authenticated or mutating call.
+Resolution: Native host `whostler` confirmed DNS, TLS and public REST access to
+`https://testnet.binancefuture.com`. The built public runner passed for
+`BTCUSDT` / `PERPETUAL` / `TRADING` and derived runtime venue rules including
+`tickSize=0.1`, `stepSize=0.0001`, `minQty=0.0001` and `minNotional=50`.
+The Agent sandbox restriction remains an external environment limitation; it
+is not a Trading implementation failure.
 
 R4-R4 status: the runner package scripts now target the built JavaScript output,
 resolving module resolution without changing canonical `.js` source imports.
 Built dependency resolution is verified offline and `--execute` fails closed
 without the operational gate. Native-host public connectivity to Binance Futures
-Testnet is established. Agent sandbox networking remains restricted. Phase B
-mutation gate is closed pending separate CTO execution authorization.
+Testnet is established. Phase B remains subject to the separately recorded CTO
+execution authorization and its one-order boundary. R5 public qualification and
+the authorized native-host lifecycle then completed successfully: one Testnet
+order was submitted, exactly reconciled by client identity, canceled and
+verified terminal, with zero residual orders and zero residual position.
 
 Preserved boundaries: `BLOCKER-01` remains open and WebSocket is prohibited;
-`BLOCKER-02` remains resolved; mainnet, credentials for R1, private calls and
-testnet mutation remain unauthorized.
+`BLOCKER-02` remains resolved; mainnet, credential exposure, blind retry and
+unrelated mutation remain prohibited.
+
+## AXODUS-TRADING-BLOCKER-04 - Git Metadata Filesystem Write Failure
+
+Severity: MEDIUM
+
+Status: RESOLVED
+
+Description: The repository working tree was writable while the `.git`
+metadata mount was exposed read-only, preventing normal index-lock creation.
+
+Resolution: The validated R4-R4 artifact was persisted by the accepted manual
+commit `409151acb8020b44ef5d9aa861e084d8937b964f`. The branch is `dev`, the
+working tree is clean and `origin/dev` is aligned with the accepted commit.
+The historical filesystem condition remains recorded for provenance; no Git
+workaround or destructive recovery is part of the resolution.
 
 ## TRADING-BLOCKER-001 - Live Trading Blocked
 

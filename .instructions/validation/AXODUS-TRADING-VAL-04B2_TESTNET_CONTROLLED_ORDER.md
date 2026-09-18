@@ -1,10 +1,57 @@
 # AXODUS-TRADING-VAL-04B2 — First Controlled Testnet Order Acceptance
 
-Status: `INCOMPLETE / EXTERNAL NETWORK BLOCKED / SAFE ABORT VALIDATED`
+Status: `EXECUTED / PASS CANDIDATE / CTO REVIEW REQUIRED`
 
-Classification: `CONTROLLED ORDER HARNESS VALIDATED OFFLINE / LIVE ATTEMPT BLOCKED BEFORE MUTATION BY CONTAINER NETWORK RESTRICTION / MUTATION GATE CLOSED`
+Classification: `CONTROLLED TESTNET ORDER LIFECYCLE EXECUTED / IDENTITY, CANCELLATION AND CLEANUP VALIDATED / CTO REVIEW REQUIRED`
 
 Date: 2026-09-18
+
+## 4G. Native-host public qualification — 2026-09-18
+
+The native host `whostler` qualified the exact public Binance USDⓈ-M Futures
+Testnet path using the built runner. DNS, TLS, public `ping` and public
+`exchangeInfo` succeeded for `BTCUSDT`, which was reported as `TRADING` and
+`PERPETUAL`. Runtime venue rules were derived from the response:
+
+- `tickSize`: `0.1`
+- `stepSize`: `0.0001`
+- `minQty`: `0.0001`
+- `minNotional`: `50`
+
+The public qualification loaded zero credentials and performed zero private or
+mutating calls.
+
+## 4H. Phase B controlled Testnet lifecycle — 2026-09-18
+
+The single CTO-authorized execution completed on the native host against
+`https://testnet.binancefuture.com`. Evidence was sanitized before recording.
+
+| Field | Result |
+| --- | --- |
+| Environment | `binance_perpetual_testnet` |
+| Symbol / instrument | `BTCUSDT` / `BTC-USDT` |
+| Provider order ID | `28590788741` |
+| Axodus execution client order ID | `axd_v04b2_1789765915553_555549` |
+| Submitted price | `64923.9` |
+| Submitted quantity | `0.0008` |
+| Submitted notional | `51.93912` USDT |
+| Safety preflight | PASS |
+| Submission status | `NEW` |
+| Lookup after submit | `NEW` |
+| Identity preserved | `true` |
+| Cancellation status | `CANCELED` |
+| Terminal reconciliation | `CANCELED` |
+| Orders submitted | `1` |
+| Blind retries | `0` |
+| WebSocket used | `false` |
+| Mainnet excluded | `true` |
+| Residual active orders | `0` |
+| Residual position amount | `0` |
+| Cleanup | PASS |
+| Secrets exposed | `false` |
+
+This is a Testnet validation result and does not authorize operational trading,
+mainnet access, WebSocket use or additional orders.
 
 ## 4B. VAL-04B2-R1 Network Preflight — 2026-09-18
 
