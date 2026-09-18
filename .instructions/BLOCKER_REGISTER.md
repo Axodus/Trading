@@ -2,6 +2,31 @@
 
 Last updated: 2026-06-08
 
+## AXODUS-TRADING-BLOCKER-03 - External Testnet DNS/Network Reachability
+
+Severity: HIGH
+
+Status: OPEN / EXTERNAL EXECUTION ENVIRONMENT REQUIRED
+
+Description: `VAL-04B2-R1` and `R2` confirmed that the local sandbox environment
+isolates network sockets and that escalation is rejected by automated approval
+reviewer provider limits.
+
+Impact: The first controlled Testnet order lifecycle cannot proceed. The
+mutation gate remains closed; no credentials, private calls, orders or
+cancellations were used during R1.
+
+Resolution path: Execute the public-only DNS, TCP/TLS and
+`GET /fapi/v1/exchangeInfo` qualification harness in a runtime/host with normal
+outbound network access (or configure the approval reviewer model routing so
+escalated execution can be evaluated without provider 400 errors). Stop after
+public metadata succeeds and obtain a new CTO authorization before any
+authenticated or mutating call.
+
+Preserved boundaries: `BLOCKER-01` remains open and WebSocket is prohibited;
+`BLOCKER-02` remains resolved; mainnet, credentials for R1, private calls and
+testnet mutation remain unauthorized.
+
 ## TRADING-BLOCKER-001 - Live Trading Blocked
 
 Severity: CRITICAL

@@ -1540,3 +1540,55 @@ Binance USDⓈ-M Futures Testnet. Sanitized evidence confirms authentication,
 decision for `VAL-04B2`; do not submit, cancel, or modify testnet orders.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.
+
+## AXODUS-TRADING-VAL-04B2 — First Controlled Testnet Order Acceptance
+
+Status: `EXECUTED / FAILED / CTO REVIEW REQUIRED`
+
+The single CTO-authorized run aborted at the public Testnet metadata preflight:
+`testnet.binancefuture.com` could not be resolved by the execution host
+(`EAI_AGAIN`). No order, cancellation, private call, WebSocket or mainnet
+contact occurred; no retry or second mutation is authorized. Await CTO review
+for any subsequent execution decision.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
+
+## AXODUS-TRADING-VAL-04B2-R1 — Network Preflight
+
+Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
+
+The public-only DNS, TCP/TLS and `exchangeInfo` preflight was attempted without
+credentials. The execution host could not resolve `testnet.binancefuture.com`,
+so TCP/TLS and HTTP were not reached. The escalated network attempt was
+rejected by the approval layer; no workaround was used. No private calls,
+orders, cancellations, WebSocket or mainnet contact occurred.
+
+Next task: run the same public preflight in an approved environment with normal
+network resolution, stop after successful BTC-USDT metadata retrieval, and
+obtain a new CTO authorization before any authenticated or mutating activity.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
+
+## AXODUS-TRADING-VAL-04B2-R2 — Public Network Qualification
+
+Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
+
+## AXODUS-TRADING-VAL-04B2-R3 — Host Runtime Public Qualification
+
+Status: `READY / HOLD — REQUIRES EXECUTION ON NETWORK-CAPABLE HOST`
+
+Next task: execute the public-only qualification harness (`GET /fapi/v1/exchangeInfo?symbol=BTCUSDT`)
+on an outbound network-capable host runtime without credentials. Validate `BTCUSDT`
+filters, stop immediately, and present evidence to CTO for review before requesting
+order authorization.
+
+The authorized public DNS, TCP/TLS, and `exchangeInfo` preflight was attempted.
+Local sandbox network isolation prevented socket creation, and escalation was
+rejected by the auto-review evaluator (`opencodex structured output` limitation).
+No credentials, private calls, orders, cancellations, or WebSocket usage occurred.
+
+Next task: execute the public-only preflight in an environment with functional
+outbound networking or resolve the proxy evaluator model configuration, then
+report validated `BTCUSDT` filters before requesting order authorization.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.

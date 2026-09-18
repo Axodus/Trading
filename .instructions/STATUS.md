@@ -338,3 +338,48 @@ redaction. No order, cancellation, WebSocket, mainnet or capital activity
 occurred. `VAL-04B2` remains `HOLD` pending separate CTO authorization.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-04B1_TESTNET_AUTHENTICATED_READ.md`.
+
+## AXODUS-TRADING-VAL-04B2 — First Controlled Testnet Order Acceptance
+
+Status: `INCOMPLETE / EXTERNAL NETWORK BLOCKED / SAFE ABORT VALIDATED`
+
+The CTO-authorized single mutation run was attempted on 2026-09-18. Local
+preflight confirmed `.env.local` mode `0600`, Git-ignored and untracked. The
+mandatory public Testnet `exchangeInfo` request failed before mutation because
+the execution host could not resolve `testnet.binancefuture.com` (`EAI_AGAIN`).
+No private call, order submission, cancellation, WebSocket, mainnet contact or
+blind retry occurred. The mutation gate remains closed; no external cleanup is
+required because no order was created.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORDER.md`.
+
+## AXODUS-TRADING-VAL-04B2-R1 — Network Preflight
+
+Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
+
+## AXODUS-TRADING-VAL-04B2-R2 — Public Network Qualification
+
+Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
+
+## AXODUS-TRADING-VAL-04B2-R3 — Host Runtime Public Qualification
+
+Status: `READY / HOLD — REQUIRES EXECUTION ON NETWORK-CAPABLE HOST`
+
+Public-only DNS, TCP/TLS and `exchangeInfo` preflight gate for `BTCUSDT`.
+Execution within the sandboxed environment is completed/concluded. Execution
+will resume only on an outbound network-capable host runtime. Zero credentials,
+zero private calls, zero orders, zero WebSocket, zero mainnet.
+
+The CTO-authorized public network qualification was attempted for
+`testnet.binancefuture.com` with zero credentials. The command sandbox
+isolates network sockets, and an escalated execution request failed automated
+approval review due to the upstream provider issue (`structured output is not
+implemented by opencodex`). The gate aborted safely without private calls,
+orders, cancellations, WebSocket, or mainnet contact.
+
+The authorized public-only preflight could not resolve
+`testnet.binancefuture.com` in the current execution host. TCP/TLS and public
+`GET /fapi/v1/exchangeInfo` were not reached. No credentials, private calls,
+orders, cancellations, WebSocket or mainnet endpoints were used. The mutation
+authority from the prior B2 attempt is consumed and closed; a future retry
+requires a new CTO authorization after public reachability is proven.
