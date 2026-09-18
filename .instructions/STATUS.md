@@ -458,3 +458,16 @@ Status: `COMPLETE / READY FOR VAL-05 / ALL 20 TEST SUITES PASS`
 Continuous observability collector and simulation runner integrate telemetry with strict secret sanitization redaction. Comprehensive failure-injection suite validates persistence drops, ambiguous mutation responses, post-POST crash recovery, sanitized telemetry, and multi-intent simulation sessions.
 
 Validation: 20 test files pass (100% pass), typecheck passes, build passes.
+
+## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
+
+Status: `BLOCKED / G3 LIVE RUNTIME INTEGRATION GAP`
+
+G0 local regression, G1 public Testnet preflight and G2 authenticated/read-only
+initial-state checks passed. The current continuous services expose abstract
+mutation, reconciliation and cancellation provider interfaces, but the
+repository does not contain a live Binance Testnet adapter composition for the
+continuous runtime. The existing VAL-04B2 single-order harness remains a
+separate controlled lifecycle and cannot substitute for this gate.
+
+Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.

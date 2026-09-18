@@ -244,3 +244,25 @@ VAL-03 is `IN PROGRESS / FULL CONTROLLED RUNTIME EVIDENCE / CTO REVIEW PENDING`.
 Current evidence includes Core compatibility 5/5, client contract 337/337, deterministic API synchronization 6/6, deterministic API reconciliation 7/7, Trading Core regression, real lifespan startup/shutdown, local PostgreSQL, Core initialization, controlled connector submission/lookup/cancellation, restart visibility and deterministic cleanup. The history pagination test exceeded a 30-second timeout and remains unaccepted. The temporary `hummingbot==20260901` package is not a selected dependency baseline.
 
 The controlled FastAPI HTTP and full-lifespan harnesses pass submission identity, exact lookup, cancellation, failure normalization, no-blind-retry behavior and service reconstruction. Order history is proposed as a documented non-critical limitation because source inspection places it outside submission, exact reconciliation, cancellation and crash recovery; this remains subject to CTO review and does not authorize external provider activity.
+
+## AXODUS-TRADING-BLOCKER-05 — Continuous Live Provider Composition Gap
+
+Severity: `HIGH / P0`
+
+Status: `OPEN / VAL-05 BLOCKING`
+
+VAL-05 G0–G2 passed on the current HEAD `e00ad8f3`. The IMP-05 services
+provide durable runtime, recovery, risk, admission and observability primitives,
+but `ContinuousExecutionRuntime` is wired only to abstract mutation,
+reconciliation and cancellation interfaces. No live Binance Futures Testnet
+adapter composition exists for the continuous path, including exact client
+order lookup, cancellation and position reconciliation.
+
+The existing VAL-04B2 harness is a separate single-order validation stack and
+must not be used to claim VAL-05 continuous-runtime acceptance.
+
+Required resolution: implement and separately validate the minimum live
+provider/reconciliation/position adapter and canonical VAL-05 runner. No new
+Testnet mutation is authorized until that boundary passes G3.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
