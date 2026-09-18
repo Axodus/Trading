@@ -363,12 +363,13 @@ Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
 ## AXODUS-TRADING-VAL-04B2-R3 — Host Runtime Public Qualification
 
-Status: `READY / HOLD — REQUIRES EXECUTION ON NETWORK-CAPABLE HOST`
+Status: `EXECUTED / BLOCKED / CTO REVIEW REQUIRED`
 
-Public-only DNS, TCP/TLS and `exchangeInfo` preflight gate for `BTCUSDT`.
-Execution within the sandboxed environment is completed/concluded. Execution
-will resume only on an outbound network-capable host runtime. Zero credentials,
-zero private calls, zero orders, zero WebSocket, zero mainnet.
+Baseline and local regression passed at `251ca7f6db8a8a2ce4018e4dedc54a6ded82f6d7`.
+The network command was rejected before execution by the automated approval
+reviewer provider limitation. No DNS, TLS or public Binance response was
+obtained. Zero credentials, zero private calls, zero orders, zero WebSocket,
+zero mainnet.
 
 The CTO-authorized public network qualification was attempted for
 `testnet.binancefuture.com` with zero credentials. The command sandbox

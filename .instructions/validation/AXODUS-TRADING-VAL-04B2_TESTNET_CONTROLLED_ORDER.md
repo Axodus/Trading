@@ -75,6 +75,39 @@ Scope for R3:
 - Credentials: `MUST NOT BE LOADED`
 - Private calls, orders, cancellations, WebSocket, mainnet: `PROHIBITED`
 
+## 4E. VAL-04B2-R3 Host Runtime Qualification Attempt — 2026-09-18
+
+Baseline verification passed:
+
+- HEAD: `251ca7f6db8a8a2ce4018e4dedc54a6ded82f6d7`
+- branch: `dev`
+- working tree before validation: clean
+- typecheck: PASS
+- tests: `14/14 PASS`
+- build: PASS
+
+The authorized public network command was submitted with no credentials and
+would have performed only DNS, TLS and unauthenticated
+`GET /fapi/v1/exchangeInfo?symbol=BTCUSDT`. The request was rejected before
+execution by the automated approval reviewer because the provider returned:
+`google cloud-code-assist structured output is not implemented by opencodex`.
+
+No DNS, TCP/TLS or Binance HTTP result was obtained from R3. No workaround,
+indirect execution, sandbox modification or alternate mutation path was used.
+
+R3 result: `EXECUTED / BLOCKED / CTO REVIEW REQUIRED`.
+
+- Credentials loaded: `0`
+- Authenticated/private calls: `0`
+- Orders: `0`
+- Cancellations: `0`
+- WebSocket: `0`
+- Mainnet: `0`
+- Secret exposure: `NO`
+- BTCUSDT filters: `NOT DERIVED`
+- Axodus public preflight: `NOT REACHED`
+- Mutation authority: `CLOSED / NOT AUTHORIZED`
+
 ## 4A. CTO-Authorized Execution Attempt — 2026-09-18
 
 The local security preflight passed without exposing credential material:

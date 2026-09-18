@@ -23,6 +23,11 @@ escalated execution can be evaluated without provider 400 errors). Stop after
 public metadata succeeds and obtain a new CTO authorization before any
 authenticated or mutating call.
 
+R3 evidence: required baseline `251ca7f6db8a8a2ce4018e4dedc54a6ded82f6d7`
+and local validation passed, but the network-capable execution request was
+rejected before execution by the provider/auto-review limitation. Binance
+Testnet was not reached and remains unclassified.
+
 Preserved boundaries: `BLOCKER-01` remains open and WebSocket is prohibited;
 `BLOCKER-02` remains resolved; mainnet, credentials for R1, private calls and
 testnet mutation remain unauthorized.
