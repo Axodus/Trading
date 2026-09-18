@@ -151,7 +151,13 @@ Host qualification on native host (`whostler`):
 - Symbol: `BTCUSDT` (`TRADING`, `PERPETUAL`)
 - Dynamic rules derived: `tickSize=0.10`, `stepSize=0.0001`, `minQty=0.0001`, `minNotional=50`
 
-Phase B status: `HOLD / AWAITING EXPLICIT CTO AUTHORIZATION`.
+Phase B attempts summary:
+- **Phase B attempt #1**: ABORTED — reviewed Phase A artifact unavailable in checkout.
+- **Phase B attempt #2**: ABORTED — persisted runner was public-only (`--public` mode only).
+- **Orders submitted across both attempts**: `0`.
+- **Mutation authority consumed**: `no`.
+
+Phase B status: `HOLD / AWAITING EXPLICIT CTO AUTHORIZATION AFTER R4-R3 COMPLETION`.
 
 ## 4A. CTO-Authorized Execution Attempt — 2026-09-18
 

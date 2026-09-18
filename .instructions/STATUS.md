@@ -361,19 +361,21 @@ Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R4-R2 — Recovery Implementation & Phase A Revalidation
+## AXODUS-TRADING-VAL-04B2-R4-R3 — Phase B Entrypoint Completion
 
 Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
-The three Phase A runner components (`Val04B2CredentialSource`,
-`Val04B2LiveTransport`, `val-04b2-live-runner`) and runner unit tests were
-reconstructed on baseline `49995ba`. Typecheck, build, 15/15 test files,
-diff-check and secret-exclusion checks all pass.
+The `val-04b2-live-runner.ts` entrypoint was extended on baseline `9b611c8`
+to provide explicitly separated `--public` and `--execute` modes. The `--execute`
+mode requires the dedicated operational confirmation
+`AXODUS_VAL_04B2_EXECUTE_CONFIRMATION=EXECUTE_SINGLE_TESTNET_ORDER` and delegates
+directly to `Val04B2ControlledOrderHarness`. Full typecheck, build, 15/15 test
+files, diff-check and secret protection checks all pass.
 
-Public host qualification remains established on the native host. Zero
-credentials were loaded, zero private calls were made, zero orders were
-submitted, zero WebSocket was used and zero mainnet contact occurred.
-Phase B mutation remains strictly on HOLD pending CTO authorization.
+Historical Phase B attempts summary: Attempt #1 and Attempt #2 both aborted safely
+prior to credential loading or order submission; total orders submitted across both
+attempts: 0; mutation authority consumed: no. Phase B mutation remains strictly on
+HOLD pending explicit CTO authorization.
 
 The CTO-authorized public network qualification was attempted for
 `testnet.binancefuture.com` with zero credentials. The command sandbox

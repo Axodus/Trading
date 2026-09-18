@@ -23,10 +23,12 @@ escalated execution can be evaluated without provider 400 errors). Stop after
 public metadata succeeds and obtain a new CTO authorization before any
 authenticated or mutating call.
 
-R4-R2 status: runner artifacts are reconstructed and version-controlled.
-Native-host public connectivity to Binance Futures Testnet is established.
-Agent sandbox networking remains restricted. Phase B mutation gate is closed
-pending separate CTO execution authorization.
+R4-R3 status: the runner now has explicitly separated `--public` and
+`--execute` modes. The execute mode requires the validation-specific
+operational confirmation and delegates once to the canonical controlled-order
+harness. Native-host public connectivity to Binance Futures Testnet is
+established. Agent sandbox networking remains restricted. Phase B mutation gate
+is closed pending separate CTO execution authorization.
 
 Preserved boundaries: `BLOCKER-01` remains open and WebSocket is prohibited;
 `BLOCKER-02` remains resolved; mainnet, credentials for R1, private calls and

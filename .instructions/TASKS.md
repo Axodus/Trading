@@ -1573,20 +1573,20 @@ Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORD
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R4-R2 — Recovery Implementation & Phase A Revalidation
+## AXODUS-TRADING-VAL-04B2-R4-R3 — Phase B Entrypoint Completion
 
 Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
 Tasks completed:
-- reconstructed `Val04B2CredentialSource.ts` on `49995ba`;
-- reconstructed `Val04B2LiveTransport.ts` with strict Binance Futures Testnet endpoint assertion;
-- reconstructed `val-04b2-live-runner.ts` with explicit `--public` mode and harness factory;
-- added `val-04b2-r4-runner.test.mjs` (15/15 test files pass);
-- verified `.env.local` ignore and zero secret tracking;
-- documented native-host public qualification evidence;
-- preserved zero-credential, zero-private-call, zero-mutation boundaries.
+- extended `val-04b2-live-runner.ts` on `9b611c8` with explicit `--public` and `--execute` modes;
+- added operational confirmation gate `AXODUS_VAL_04B2_EXECUTE_CONFIRMATION=EXECUTE_SINGLE_TESTNET_ORDER`;
+- added `val:04b2:r4:execute` script to package.json;
+- updated unit tests in `val-04b2-r4-runner.test.mjs` verifying fail-closed invocation and single mock delegation;
+- ran full verification (typecheck, build, 15/15 test files, diff-check);
+- recorded safe aborts for Phase B Attempt #1 and Attempt #2 with zero orders submitted and zero credentials loaded;
+- preserved all safety boundaries with Phase B strictly on HOLD.
 
-Next task: obtain explicit CTO Phase B execution authorization before any live order submission.
+Next task: obtain explicit CTO Phase B execution authorization against the persisted R3 commit.
 
 The authorized public DNS, TCP/TLS, and `exchangeInfo` preflight was attempted.
 Local sandbox network isolation prevented socket creation, and escalation was
