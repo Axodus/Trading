@@ -215,3 +215,6 @@ export * from './security/TradingExternalSafetyPreflightPolicy.js';
 export * from './external/Val04BPreCredentialHarness.js';
 export * from './external/Val04B1AuthenticatedReadHarness.js';
 export * from './external/Val04B2ControlledOrderHarness.js';
+export * from './external/Val04B2CredentialSource.js';
+export * from './external/Val04B2LiveTransport.js';
+export * from './external/val-04b2-live-runner.js';

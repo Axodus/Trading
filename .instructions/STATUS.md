@@ -361,15 +361,19 @@ Status: `BLOCKED / DNS OR SANDBOX NETWORKING / SAFE STOP`
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R3 — Host Runtime Public Qualification
+## AXODUS-TRADING-VAL-04B2-R4-R2 — Recovery Implementation & Phase A Revalidation
 
-Status: `EXECUTED / BLOCKED / CTO REVIEW REQUIRED`
+Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
-Baseline and local regression passed at `251ca7f6db8a8a2ce4018e4dedc54a6ded82f6d7`.
-The network command was rejected before execution by the automated approval
-reviewer provider limitation. No DNS, TLS or public Binance response was
-obtained. Zero credentials, zero private calls, zero orders, zero WebSocket,
-zero mainnet.
+The three Phase A runner components (`Val04B2CredentialSource`,
+`Val04B2LiveTransport`, `val-04b2-live-runner`) and runner unit tests were
+reconstructed on baseline `49995ba`. Typecheck, build, 15/15 test files,
+diff-check and secret-exclusion checks all pass.
+
+Public host qualification remains established on the native host. Zero
+credentials were loaded, zero private calls were made, zero orders were
+submitted, zero WebSocket was used and zero mainnet contact occurred.
+Phase B mutation remains strictly on HOLD pending CTO authorization.
 
 The CTO-authorized public network qualification was attempted for
 `testnet.binancefuture.com` with zero credentials. The command sandbox

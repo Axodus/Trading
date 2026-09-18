@@ -108,6 +108,51 @@ R3 result: `EXECUTED / BLOCKED / CTO REVIEW REQUIRED`.
 - Axodus public preflight: `NOT REACHED`
 - Mutation authority: `CLOSED / NOT AUTHORIZED`
 
+## 4F. VAL-04B2-R4-R2 Recovery Implementation & Phase A Revalidation — 2026-09-18
+
+Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
+
+Per CTO authorization on baseline `49995ba12849306b711b3f00bac7a314e5d9167e`, the
+three Phase A runner components were cleanly reconstructed:
+
+1. `trading-core/services/trading-core/src/external/Val04B2CredentialSource.ts`
+   - metadata: `binance_perpetual_testnet`, scopes: `['account-info', 'futures-trading']`
+   - ephemeral resolution from approved environment variables (`TRADING_BINANCE_API_KEY`, `TRADING_BINANCE_API_SECRET`)
+   - zero credential loading during Phase A / public validation
+2. `trading-core/services/trading-core/src/external/Val04B2LiveTransport.ts`
+   - strict assertion to `https://testnet.binancefuture.com`
+   - rejection of non-HTTPS or mainnet endpoints
+   - zero automatic retry on POST
+3. `trading-core/services/trading-core/src/external/val-04b2-live-runner.ts`
+   - explicit public-only entrypoint (`--public` / `runVal04B2PublicQualification`)
+   - factory wiring to the canonical `Val04B2ControlledOrderHarness`
+   - mutation paths remain closed behind explicit token gates and separate command-line modes
+
+Validation evidence:
+- Typecheck: `PASS`
+- Test suite: `15/15 files PASS / 0 FAIL` (including new `val-04b2-r4-runner.test.mjs`)
+- Build: `PASS`
+- `git diff --check`: `PASS`
+- `.env.local` ignore check: `PASS` (rule from root `.gitignore`)
+- Secret tracking check: `PASS` (zero `.env` or `.env.local` tracked)
+- Safety counters:
+  - `credentialsLoaded: 0`
+  - `privateCalls: 0`
+  - `postAttempts: 0`
+  - `deleteAttempts: 0`
+  - `ordersSubmitted: 0`
+  - `websocketUsed: 0`
+  - `mainnetCalls: 0`
+  - `secretsExposed: false`
+
+Host qualification on native host (`whostler`):
+- Public `GET /fapi/v1/ping`: `HTTP 200`
+- Public `GET /fapi/v1/exchangeInfo?symbol=BTCUSDT`: `HTTP 200`
+- Symbol: `BTCUSDT` (`TRADING`, `PERPETUAL`)
+- Dynamic rules derived: `tickSize=0.10`, `stepSize=0.0001`, `minQty=0.0001`, `minNotional=50`
+
+Phase B status: `HOLD / AWAITING EXPLICIT CTO AUTHORIZATION`.
+
 ## 4A. CTO-Authorized Execution Attempt — 2026-09-18
 
 The local security preflight passed without exposing credential material:

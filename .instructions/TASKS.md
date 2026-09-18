@@ -1573,14 +1573,20 @@ Record: `.instructions/validation/AXODUS-TRADING-VAL-04B2_TESTNET_CONTROLLED_ORD
 
 Status: `COMPLETE / CTO ACCEPTED / SANDBOX NETWORK ISOLATION CONFIRMED`
 
-## AXODUS-TRADING-VAL-04B2-R3 — Host Runtime Public Qualification
+## AXODUS-TRADING-VAL-04B2-R4-R2 — Recovery Implementation & Phase A Revalidation
 
-Status: `EXECUTED / BLOCKED / CTO REVIEW REQUIRED`
+Status: `COMPLETE / CTO REVIEW READY / PHASE B NOT AUTHORIZED`
 
-The required baseline and local regression passed. The public-only command was
-rejected before execution by the automated approval reviewer provider
-limitation, so DNS/TLS/`exchangeInfo` and BTCUSDT filter derivation were not
-reached. No credentials or mutations occurred.
+Tasks completed:
+- reconstructed `Val04B2CredentialSource.ts` on `49995ba`;
+- reconstructed `Val04B2LiveTransport.ts` with strict Binance Futures Testnet endpoint assertion;
+- reconstructed `val-04b2-live-runner.ts` with explicit `--public` mode and harness factory;
+- added `val-04b2-r4-runner.test.mjs` (15/15 test files pass);
+- verified `.env.local` ignore and zero secret tracking;
+- documented native-host public qualification evidence;
+- preserved zero-credential, zero-private-call, zero-mutation boundaries.
+
+Next task: obtain explicit CTO Phase B execution authorization before any live order submission.
 
 The authorized public DNS, TCP/TLS, and `exchangeInfo` preflight was attempted.
 Local sandbox network isolation prevented socket creation, and escalation was
