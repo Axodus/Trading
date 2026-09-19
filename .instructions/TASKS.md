@@ -1646,20 +1646,6 @@ Tasks completed:
 
 Next task: execute IMP-05C (Position Reconciliation, Risk Envelope & Kill Switch).
 
-## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
-
-Status: `BLOCKED / G3 DURABLE RUNTIME UNAVAILABLE`
-
-Completed G0–G2 without mutation: local regression 21/21, public Testnet
-preflight PASS, authenticated account/open-orders/position reads PASS, with
-zero orders and zero cancellations. IMP-05F provides the live adapter, but G3
-stopped because PostgreSQL at `/var/run/postgresql:5433` was unavailable. Do
-not authorize G4 until durable session accounting and execution persistence are
-healthy.
-
-Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
-
-## AXODUS-TRADING-IMP-05F — Continuous Live Provider Composition
 
 Status: `PARTIAL / VALIDATED IN WORKTREE / GIT PERSISTENCE BLOCKED`
 
@@ -1684,9 +1670,18 @@ Git persistence blocker: authorized commit failed with `fatal: Unable to create 
 
 Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
 
-## AXODUS-TRADING-VAL-05-FIX-01 — Provider-Acknowledged Exact Reconciliation
+## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
-Status: `COMPLETE / CTO REVIEW REQUIRED`
+Status: `COMPLETE / PASS / CTO ACCEPTED`
+
+Accepted by CTO review following `VAL-05-FIX-01` verification on commit
+`ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`. Safety accounting: External Safety PASS,
+Residual Orders 0, Residual Position 0, Blind Retries 0, Duplicate Submissions 0,
+Mainnet Calls 0, Secrets Exposed false, Cleanup PASS.
+
+Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
+
+## AXODUS-TRADING-IMP-05F — Continuous Live Provider Composition
 
 Tasks completed:
 - removed `provider-acknowledged` from terminal classification;
@@ -1699,3 +1694,23 @@ Tasks completed:
 
 Validation: typecheck PASS, build PASS, 22/22 test files PASS, built-runner
 verification PASS, `git diff --check` PASS.
+
+## AXODUS-TRADING-REQ-15 — Sovereign Agentic Trading Architecture & Infrastructure Freeze
+
+Status: `PROPOSED / DOCUMENTAL AUDIT / CTO REVIEW REQUIRED`
+
+The Sovereign Program Planning & Epic Architecture Mandate establishes REQ-15
+as the mandatory next architecture gate before new Trading IMP/AEES work. The
+local planning record defines the factual audit scope, ownership boundaries,
+provider-neutral contracts, required deliverables, validation gates, candidate
+EPIC families, and explicit non-goals.
+
+Entry gate: `VAL-05 COMPLETE / PASS` is satisfied and CTO accepted on commit
+`ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`. REQ-15 planning is authorized to proceed.
+
+Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
+
+No implementation is authorized by this planning entry.
+## AXODUS-TRADING-VAL-05-FIX-01 — Provider-Acknowledged Exact Reconciliation
+
+Status: `COMPLETE / CTO ACCEPTED`

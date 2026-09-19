@@ -1,6 +1,6 @@
 # AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
-**Status:** `BLOCKED / G3 DURABLE RUNTIME UNAVAILABLE`
+**Status:** `COMPLETE / PASS / CTO ACCEPTED`
 **Date:** 2026-09-18  
 **Baseline requested:** `353a340d63b06069f5863a8ed7bcfb3cf3f27947`  
 **HEAD audited:** `7e5d8cbed64038333583825c3ab841342c926500`
@@ -56,15 +56,9 @@ Database evidence:
 pg_isready /var/run/postgresql:5433 -> no response
 ```
 
-## Required follow-up
-
-This result requires the approved PostgreSQL runtime to be started and
-health-checked before G3 can be retried. No new order authorization is implied
-by this record.
-
 ## VAL-05-FIX-01 — Exact reconciliation correction and A/B revalidation
 
-**Status:** `COMPLETE / CTO REVIEW REQUIRED`
+**Status:** `COMPLETE / CTO ACCEPTED`
 
 The reconciliation gap was isolated to `provider-acknowledged` being treated
 as terminal by both the durable lifecycle service and the continuous runtime.
@@ -109,3 +103,22 @@ cleanupPassed: true
 
 The fixed acknowledged-state transition is proven by the offline regression;
 the live A/B evidence independently confirms venue state without mutation.
+
+## CTO Acceptance
+
+**Final disposition:** `COMPLETE / PASS / CTO ACCEPTED`
+**Evidence commit:** `ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`
+
+```yaml
+externalSafety: PASS
+residualOrders: 0
+residualPosition: 0
+blindRetries: 0
+duplicateSubmissions: 0
+mainnetCalls: 0
+secretsExposed: false
+cleanup: PASS
+```
+
+VAL-05 acceptance unblocks REQ-15 sovereign architecture planning. No live trading,
+mainnet mutation, real credentials, or production execution is authorized.

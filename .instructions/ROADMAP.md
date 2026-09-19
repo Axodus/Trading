@@ -1,5 +1,35 @@
 # Trading Roadmap
 
+## Sovereign Architecture Gate — REQ-15
+
+Status: `PROPOSED / DOCUMENTAL AUDIT / CTO REVIEW REQUIRED`
+
+The next program architecture gate is `AXODUS-TRADING-REQ-15 — Sovereign
+Agentic Trading Architecture & Infrastructure Freeze`. It must audit ACS,
+Trading Harness ownership, Hummingbot, Condor, the standalone Binance runtime,
+current risk/reconciliation state, market data, `quants-lab`, and runtime
+boundaries before any new Trading implementation is authorized.
+
+Planning deliverables include the sovereign architecture diagram, ownership and
+component classification matrices, Agent/Workforce model, provider-neutral
+contracts, data and execution architecture, Quant Lab and security boundaries,
+strategy lifecycle, gap register, and proposed EPIC sequence.
+
+Entry gate: `VAL-05 COMPLETE / PASS` is satisfied and CTO accepted on commit
+`ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`. REQ-15 planning is authorized to proceed.
+
+Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
+
+Candidate post-acceptance families, subject to REQ-15 sequencing: Sovereign
+Trading Harness; Execution Plane integration; `AXODUS-TRADING-EPIC-QUANT`
+Quantitative Research & Strategy Validation Laboratory; Strategy Research &
+Qualification; Trading Feedback & Performance Intelligence; and Axodus Trading
+Pocket.
+
+Until acceptance: documentation, factual audits, evidence preservation, and
+authorized validation closure only. No strategy, Agent, Quant Lab, Pocket,
+Hummingbot/Condor integration, new exchange adapter, or production enablement.
+
 # Phase 0 - Trading Architecture and Product Economy
 
 Status: IN PROGRESS

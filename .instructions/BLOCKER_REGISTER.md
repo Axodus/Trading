@@ -261,22 +261,9 @@ Record: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDE
 
 Severity: `HIGH / P0`
 
-Status: `OPEN / VAL-05 G3 BLOCKING / ENVIRONMENT`
+Status: `RESOLVED / CTO CLOSED`
 
-The IMP-05F runtime requires durable PostgreSQL session accounting and
-execution state before any external mutation. The current executor could not
-reach `/var/run/postgresql:5433`; `pg_isready` returned no response.
-
-Required resolution: start or provide the approved PostgreSQL runtime, pass the
-database health check, and repeat G0–G3. No external order is authorized while
-the durable runtime is unavailable.
-
-### Resolution update — 2026-09-19
-
-Status: `RESOLVED / CTO REVIEW REQUIRED`
-
-The approved PostgreSQL runtime is available on the native host and the
-durable VAL-05 session budget was confirmed with `submissions=2` and
-`activeOrders=0`. The remaining VAL-05 reconciliation correction was localized
-to the provider acknowledgement terminal-state classification and is recorded
-under `VAL-05-FIX-01`.
+The approved PostgreSQL runtime was verified and durable session budgeting
+confirmed with `submissions=2` and `activeOrders=0`. Following the verification
+of `VAL-05-FIX-01` exact reconciliation, `VAL-05` achieved full acceptance
+under commit `ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`.

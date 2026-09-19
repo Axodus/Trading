@@ -471,19 +471,22 @@ Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVI
 
 ## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
-Status: `BLOCKED / G3 DURABLE RUNTIME UNAVAILABLE`
+Status: `COMPLETE / PASS / CTO ACCEPTED`
 
-IMP-05F provides the live Binance Testnet provider composition. G0 local
-regression, G1 public Testnet preflight and G2 authenticated/read-only
-initial-state checks passed. G3 stopped before mutation because PostgreSQL at
-`/var/run/postgresql:5433` returned no response to `pg_isready`; durable
-session accounting was unavailable.
+Reconciled and formally accepted by CTO review following `VAL-05-FIX-01`.
+The continuous live provider composition, durable PostgreSQL session accounting,
+and exact client-order reconciliation are validated. Final evidence commit:
+`ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`.
+
+Safety accounting: External Safety PASS, Residual Orders 0, Residual Position 0,
+Blind Retries 0, Duplicate Submissions 0, Mainnet Calls 0, Secrets Exposed false,
+Cleanup PASS.
 
 Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
 
 ## AXODUS-TRADING-VAL-05-FIX-01 — Provider-Acknowledged Exact Reconciliation
 
-Status: `COMPLETE / CTO REVIEW REQUIRED`
+Status: `COMPLETE / CTO ACCEPTED`
 
 Corrected the lifecycle so `provider-acknowledged` requires exact provider
 reconciliation instead of being treated as terminal. Added deterministic
@@ -497,3 +500,15 @@ cancellations, zero residual position, and durable session budget preserved at
 Validation: typecheck PASS, build PASS, 22/22 test files PASS, built-runner
 verification PASS, `git diff --check` PASS.
 Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
+
+## AXODUS-TRADING-REQ-15 — Sovereign Agentic Trading Architecture & Infrastructure Freeze
+
+Status: `PROPOSED / DOCUMENTAL AUDIT / CTO REVIEW REQUIRED`
+
+Authorized by the Sovereign Program Planning & Epic Architecture Mandate following
+the acceptance of `VAL-05`. Covers the documentary audits of Trading, ACS, Hummingbot,
+Condor, and `quants-lab`, the Sovereign Architecture Freeze, ownership and component
+classification matrices, domain contracts, data architecture, security boundaries,
+strategy lifecycle, gap register, and candidate EPIC sequencing.
+
+Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
