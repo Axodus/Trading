@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: axodus-trading-postgres
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:55433:5432"
+    environment:
+      POSTGRES_DB: ${TRADING_DB_NAME:-axodus_trading_local}
+      POSTGRES_USER: ${TRADING_DB_USER:-axodus_trading}
+      POSTGRES_PASSWORD: ${TRADING_DB_PASSWORD:-axodus_trading_local_password}
+    volumes:
+      - axodus-trading-postgres18-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  axodus-trading-postgres18-data:
