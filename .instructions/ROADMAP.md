@@ -35,6 +35,8 @@ Deliverable completed: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_A
 
 Sequenced post-acceptance EPIC roadmap:
 1. `AXODUS-TRADING-EPIC-01`: Sovereign Trading Contracts & Intelligence Foundations
+   - `REQ-01`: Canonical Harness Contract Foundations (`COMPLETE / CTO REVIEW REQUIRED`)
+   - `REQ-02`: Market Intelligence & MarketState Foundations (`PLANNED`)
 2. `AXODUS-TRADING-EPIC-QUANT`: Quantitative Research & Strategy Validation Laboratory
 3. `AXODUS-TRADING-EPIC-02`: Strategy Research, Specialization & Workforce Modeling
 4. `AXODUS-TRADING-EPIC-03`: Portfolio Allocation & Sovereign Risk Authority

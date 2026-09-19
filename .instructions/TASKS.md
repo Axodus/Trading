@@ -1,23 +1,47 @@
-## AXODUS-TRADING-EPIC-QUANT — Quantitative Research & Strategy Validation Laboratory Planning
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-01 — Canonical Quant Foundations
 
-Status: COMPLETE / DOCUMENTAL AUDIT & ARCHITECTURE PLAN / CTO REVIEW REQUIRED
+Status: `COMPLETE / LOCAL VALIDATED / CTO REVIEW REQUIRED`
 
 Completed:
-- Executed comprehensive factual audit of legacy quants-lab repository (126 Python files, 32 notebooks).
-- Classified all subsystems (REUSE, ADAPT, EXTEND, REBUILD, REFERENCE, DEPRECATE, REJECT).
-- Rejected legacy MongoDB persistence, unpinned/floating dependencies, and okx_dex_api.py DEX signing surfaces.
-- Designed canonical Quant Lab architecture spanning Dataset Registry, Experiment Engine, Mass Trial Engine, Statistical Robustness Suite, StrategyEvidence Package, and Promotion Gate.
-- Formulated overfitting defenses including Deflated Sharpe Ratio (DSR), Probability of Backtest Overfitting (PBO), Combinatorial Purged Cross-Validation (CPCV), and Walk-Forward analysis.
-- Defined cross-EPIC Shared Contract Requirements for reconciliation with EPIC-01 (StrategyIdentity, StrategyRevision, MarketState, FeatureDefinition, DatasetReference, StrategyEvidence, StrategyHealth, PromotionEligibility).
-- Defined storage architecture (PostgreSQL for metadata + Parquet/Arrow for time-series + DuckDB for analytics) and compute scaling strategy.
-- Verified presence and authority of /opt/Axodus/.instructions/AGENT_COORDINATION_PROTOCOL.md.
-- Created comprehensive EPIC planning deliverable at .instructions/AXODUS_TRADING_EPIC_QUANT_PLAN.md.
+- Audited legacy `quants-lab` assets against REQ-15 / SCF-01; explicitly rejected MongoDB, DEX signing (`okx_dex_api.py`), floating dependencies, and direct live capital mutations as canonical Quant authorities.
+- Implemented Python canonical Quant foundations under `quants-lab/core/quant_foundations/` without adding external runtime dependencies.
+- Implemented `DatasetManifest` with content addressing, gap/integrity tracking, and non-leaking `to_shared_reference()` mapping.
+- Implemented immutable `ExperimentDefinition` with explicit parameter space, execution assumptions, methodology, seed policy, and runtime provenance.
+- Implemented `TrialDefinition` and deterministic `TrialIdentity` with seed semantics distinguishing stochastic trials from strategy changes.
+- Implemented `ExperimentResult` with strict status semantics (`completed` vs `partial`).
+- Implemented `StrategyEvidence` and validated its envelope mapping to the actual ACS `EvidenceRecordV2` contract in `ACS/dist/native-core/evidence.js`.
+- Added unit test suites for Python Quant foundations (`quants-lab/tests/test_quant_foundations.py`) and TypeScript ACS Evidence conformance (`trading-core/services/trading-core/test/epic-quant-req01-acs.test.mjs`).
+
+Validation:
+- `quants-lab` unit tests: `PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_*.py' -v` — PASS (9/9 tests)
+- `trading-core` test suite: `npm test` — PASS (24/24 tests across all suites, including `epic-quant-req01-acs.test.mjs`)
+- `trading-core` typecheck: `npm run typecheck` — PASS
 
 Next Gate:
-- CTO review and approval of AXODUS-TRADING-EPIC-QUANT plan.
-- Joint reconciliation of EPIC-01 and EPIC-QUANT shared contracts in SHARED_CONTRACT_FREEZE.
-- Implementation remains on HOLD; mainnet and real capital remain PROHIBITED.
+- CTO acceptance of REQ-QUANT-01 foundations.
+- Proceed to Phase 2: Dataset Engine & Historical Ingestion.
 ## AXODUS-TRADING-CROSS-EPIC-SCF-01 — Trading Harness & Quant Lab Shared Contract Freeze
+
+## AXODUS-TRADING-EPIC-01 / REQ-01 — Canonical Harness Contract Foundations
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Materialized `.instructions/AXODUS_TRADING_EPIC_01_PLAN.md` to resolve GAP-SCF-01 baseline persistence.
+- Created canonical domain contract packages:
+  - `trading-core/packages/trading-contracts/src/strategy/types.ts` (`StrategyIdentity`, `StrategyRevision`, `StrategyLifecycleRecord`, `FeatureDefinition`, `StrategyHealth`)
+  - `trading-core/packages/trading-contracts/src/research/types.ts` (`DatasetReference`, `ExperimentReference`, `StrategyEvidence`, `PromotionEligibility`)
+  - `trading-core/packages/trading-contracts/src/market/types.ts` (`MarketState`, `Opportunity`)
+  - `trading-core/packages/trading-contracts/src/governance/types.ts` (`TradeProposal`, `PortfolioDecision`, `RiskDecision`, `TradingIntent`)
+  - `trading-core/packages/trading-contracts/src/foundation/validation.ts` (pure validators for lineage, freshness, eligibility and kill-switch invariant)
+- Added test fixtures under `trading-core/services/trading-core/test/epic01-req01-contracts.test.mjs` verifying positive/negative validation, lineage, historical equivalence, and risk authority separation.
+
+Validation:
+- `npm run typecheck` in contracts package: PASS
+- `npm run typecheck` in service: PASS
+- `npm run build`: PASS
+- `npm test`: PASS (all existing + new tests green)
+- `git diff --check`: PASS
 
 Status: COMPLETE / CTO REVIEW REQUIRED / IMPLEMENTATION HOLD
 

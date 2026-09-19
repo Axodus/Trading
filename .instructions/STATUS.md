@@ -1,6 +1,21 @@
 # Trading Status
 
-Last updated: 2026-09-17
+## AXODUS-TRADING-EPIC-01 / REQ-01
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Canonical Harness domain contracts and pure contract validators are implemented in
+`trading-core/packages/trading-contracts`. The milestone includes StrategyIdentity,
+StrategyRevision, lifecycle, feature, research references, MarketState, Opportunity,
+TradeProposal, PortfolioDecision, RiskDecision and TradingIntent. Runtime intelligence,
+portfolio optimization, complete risk admission and Execution Plane integration remain
+out of scope.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests
+PASS, 23 passed / 0 failed / 0 skipped; `git diff --check` PASS. No external orders,
+mainnet calls, real capital or production credentials were used.
+
+Last updated: 2026-09-19
 
 ## Portfolio Normalization
 
