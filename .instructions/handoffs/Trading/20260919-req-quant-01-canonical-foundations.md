@@ -1,0 +1,33 @@
+### Global Coordination Handoff
+
+- Workspace: Trading
+- Handoff ID / time: 20260919-req-quant-01-canonical-foundations / 2026-09-19T21:45:00-03:00
+- Request / branch / HEAD: AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-01 / dev / a15c27e5a6191541bcba207cffc627691164b3f8
+- Scope: Implemented canonical Quant domain foundations (DatasetManifest, ExperimentDefinition, ExperimentReference, TrialDefinition, TrialIdentity, ExperimentResult, StrategyEvidence), deterministic canonical serialization, and ACS EvidenceRecordV2 conformance testing.
+- Local status: LOCAL_VALIDATED / CTO_REVIEW_REQUIRED
+- Validation:
+  - quants-lab unit tests: `PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_*.py' -v` -> PASS (9/9 tests pass, 0 failures, 0 errors)
+  - trading-core tests: `npm test` -> PASS (24/24 tests pass, including epic-quant-req01-acs.test.mjs)
+  - trading-core typecheck: `npm run typecheck` -> PASS
+  - diff check: `git diff --check` -> PASS
+- Changed local records:
+  - .instructions/TASKS.md
+  - .instructions/handoffs/Trading/20260919-req-quant-01-canonical-foundations.md
+  - quants-lab/core/quant_foundations/__init__.py
+  - quants-lab/core/quant_foundations/canonical.py
+  - quants-lab/core/quant_foundations/models.py
+  - quants-lab/tests/test_quant_foundations.py
+  - trading-core/services/trading-core/test/epic-quant-req01-acs.test.mjs
+- Dependencies: Trading -> ACS for canonical EvidenceRecordV2 envelope validation; Trading -> SCF-01 for shared contract conformance.
+- Blockers / risks: None. SCF-01 semantic conformance preserved without unilateral modifications.
+- Priority impact: Current priority unchanged; next milestone is Phase 2 (Dataset Engine & Historical Ingestion).
+- Portfolio action: Root coordinator may record REQ-QUANT-01 completion in portfolio status.
+- Boundaries preserved:
+  - Exchange order POST = 0
+  - Exchange order DELETE = 0
+  - DEX transaction signing = 0
+  - Mainnet mutation = 0
+  - Real capital = 0
+  - Production credentials used = 0
+  - Customer credentials used = 0
+  - MongoDB rejected and unused; no live execution authority created.
