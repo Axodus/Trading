@@ -1841,3 +1841,25 @@ Validation:
 Next Gate:
 - CTO review of REQ-QUANT-02.
 - Proceed to REQ-QUANT-03 Backtest & Simulation Foundation.
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-03 — Backtest & Simulation Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Added an isolated provider-neutral simulation foundation under `quants-lab/core/quant_simulation/`.
+- Enforced exact experiment, StrategyRevision and DatasetReference lineage before execution.
+- Added deterministic historical MarketState validation, point-in-time feature checks and fail-closed look-ahead detection.
+- Added explicit execution assumptions for fees, spread, slippage, latency steps, fill ratio and leverage boundary metadata.
+- Added deterministic simulated orders, fills, cash/equity accounting, realized/unrealized mark-to-market foundation, cost attribution, equity series and core metrics.
+- Added a reference threshold strategy and no-action strategy for offline conformance fixtures.
+- Added projection from a completed simulation to the canonical `ExperimentResult` contract.
+- Did not implement mass trials, parameter search, Monte Carlo, walk-forward, promotion, live execution or credentials.
+
+Validation:
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (21/21 tests)
+- `npm --prefix trading-core/services/trading-core test` — PASS (26/26 tests)
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Next Gate:
+- CTO review, then REQ-QUANT-04 or the next approved Quant milestone.
