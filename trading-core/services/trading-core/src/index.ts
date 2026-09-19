@@ -89,6 +89,8 @@ export * from './market-data/providers/hummingbot/HummingbotHttpMarketDataProvid
 export * from './market/MarketObservationNormalizer.js';
 export * from './market/MarketStateBuilder.js';
 export * from './market/MarketStateFreshnessPolicy.js';
+export * from './opportunity/OpportunityDiscoveryService.js';
+export * from './opportunity/OpportunityRankingService.js';
 export * from './product/EntitlementEvaluator.js';
 export * from './product/ProductExecutionGate.js';
 export * from './product/RuntimeQuotaEvaluator.js';

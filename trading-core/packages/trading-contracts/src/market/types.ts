@@ -51,6 +51,14 @@ export interface MarketState {
 }
 
 export type OpportunityQualification = 'qualified' | 'unqualified' | 'expired' | 'invalid';
+export type OpportunityApplicability = 'APPLICABLE' | 'NOT_APPLICABLE' | 'UNKNOWN';
+export type OpportunityStatus = 'DETECTED' | 'QUALIFIED' | 'REJECTED' | 'EXPIRED' | 'INVALIDATED';
+
+export interface OpportunityDetectorRef {
+  detectorId: string;
+  detectorVersion: string;
+  methodologyRef: string;
+}
 
 export interface Opportunity {
   opportunityId: string;
@@ -65,4 +73,13 @@ export interface Opportunity {
   evidenceRefs: readonly string[];
   createdAt: string;
   expiresAt: string;
+  opportunityType?: string;
+  applicability?: OpportunityApplicability;
+  status?: OpportunityStatus;
+  detector?: OpportunityDetectorRef;
+  validityContext?: MarketStateValidityContext;
+  discoveryRunId?: string;
+  correlationId?: string;
+  qualificationReason?: string;
+  idempotencyKey?: string;
 }

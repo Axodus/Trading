@@ -26,6 +26,26 @@ Next Gate:
 
 ## AXODUS-TRADING-EPIC-01 / REQ-02 — Market Intelligence & MarketState Foundation
 
+## AXODUS-TRADING-EPIC-01 / REQ-03 — Opportunity Discovery Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited existing Trinity/recommendation and strategy surfaces; retained them as advisory `REFERENCE / ADAPT` candidates.
+- Extended the provider-neutral Opportunity contract with applicability, lifecycle status, detector identity/version, validity context, discovery lineage and idempotency references.
+- Implemented `OpportunityDiscoveryService` with contextual strategy discovery, detector applicability, required-feature fail-closed behavior, stale-live rejection, deterministic identity and duplicate suppression.
+- Implemented `revalidateOpportunity` for expiry, supporting MarketState changes and stale-live invalidation.
+- Implemented `OpportunityRankingService` for explicit strategy/timeframe/methodology context only; no universal pair score, capital allocation or risk authority.
+- Added REQ-03 fixtures for multi-strategy behavior, historical discovery, expiry, detector revisions, duplicate suppression, provenance and contextual ranking.
+
+Validation:
+- Contracts typecheck: PASS
+- Trading Core typecheck: PASS
+- Trading Core build: PASS
+- Tests: PASS, 26 tests / 0 failures / 0 skipped
+- `git diff --check`: PASS
+- External mutations: 0
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Delivered:

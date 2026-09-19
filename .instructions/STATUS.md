@@ -4,6 +4,14 @@
 
 ## AXODUS-TRADING-EPIC-01 / REQ-02
 
+## AXODUS-TRADING-EPIC-01 / REQ-03
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Opportunity Discovery foundation is implemented. Discovery consumes canonical MarketState, applies versioned detector and strategy-context semantics, fails closed on stale or incomplete inputs, emits deterministic contextual Opportunities, suppresses duplicates, supports expiry/revalidation and provides methodology-scoped comparison. TradeProposal, Portfolio, Risk and Execution authority remain out of scope.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests PASS (26 passed / 0 failed / 0 skipped); `git diff --check` PASS. Zero external trading mutations.
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Market Intelligence and MarketState construction foundations are implemented. Market observations are normalized into provider-neutral records, live freshness is evaluated against policy without invalidating historical data, feature-version compatibility is enforced, and deterministic `MarketState` objects are built with complete provenance and sequence quality tracking.
