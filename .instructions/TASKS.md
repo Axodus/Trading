@@ -24,6 +24,26 @@ Next Gate:
 
 ## AXODUS-TRADING-EPIC-01 / REQ-01 — Canonical Harness Contract Foundations
 
+## AXODUS-TRADING-EPIC-01 / REQ-02 — Market Intelligence & MarketState Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited existing market-data HTTP adapters, candles, tickers, funding and order-book snapshots.
+- Defined provider-neutral `MarketObservation`, `MarketObservationType`, `MarketObservationQuality` and `MarketSequenceStatus` in contracts package.
+- Implemented `MarketObservationNormalizer` converting raw HTTP observations to canonical typed observations with deterministic deduplication and conflicting-value detection.
+- Implemented `MarketStateFreshnessPolicy` distinguishing live freshness windows from historical temporal validity.
+- Implemented `MarketStateBuilder` with deterministic ID generation, provenance tracking, feature-version validation, closed-failure on missing required features and sequence-gap recording.
+- Added comprehensive offline fixtures in `trading-core/services/trading-core/test/epic01-req02-market-intelligence.test.mjs` covering live/historical, stale detection, feature-dependency rejection, duplicate handling and sequence-gap reporting.
+
+Validation:
+- Contracts typecheck: PASS
+- Trading Core typecheck: PASS
+- Trading Core build: PASS
+- Tests: PASS, 25 test files / 25 suites / 0 failures / 0 skipped
+- `git diff --check`: PASS
+- External mutations: 0
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Delivered:
@@ -1778,3 +1798,26 @@ contracts, Quant Lab lifecycle, gap register, and sequenced EPIC roadmap.
 Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
 
 No implementation is authorized by this planning entry.
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-02 — Historical Data & Dataset Foundation
+
+Status: `COMPLETE / LOCAL VALIDATED / CTO REVIEW REQUIRED`
+
+Completed:
+- Audited legacy historical-data assets: `Candles`, `SimpleCandlesDownloader`, CLOB/market-feed sources, Mongo-backed data paths, and notebook-oriented loaders.
+- Classified legacy data paths as `ADAPT` for candle normalization concepts, `REFERENCE` for provider feed adapters, `REBUILD` for canonical dataset construction and quality, and `REJECT` for MongoDB-backed authority and execution/signing coupling.
+- Implemented provider-neutral historical source and candle normalization boundaries under `quants-lab/core/quant_data/`.
+- Implemented deterministic ordering, decimal-string numeric normalization, UTC timestamp normalization, duplicate handling, cadence gap detection, invalid-record reporting, quality status, and source anomaly capture.
+- Operationalized `DatasetManifest` with finalized content digest, exact DatasetReference export, integrity metadata, and storage-locator neutrality.
+- Implemented exact-version `DatasetRegistry`, immutable in-memory storage, and a deterministic JSONL fixture storage adapter without adding `pyarrow`, DuckDB, MongoDB, or new dependencies.
+- Implemented historical `MarketState` reconstruction using the shared MarketState semantic shape, historical validity context, DatasetReference provenance, feature-version references, and basic causality/look-ahead rejection.
+- Added deterministic local fixtures for valid, duplicate, missing-cadence, invalid, corrected-version, exact-resolution, integrity, and historical MarketState scenarios.
+
+Validation:
+- `quants-lab`: `PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_*.py' -v` — PASS (16/16 tests)
+- `trading-core`: `npm test` — PASS (25/25 tests, including REQ-QUANT-01 ACS Evidence, EPIC-01 REQ-01, and EPIC-01 REQ-02)
+- `trading-core`: `npm run typecheck` — PASS
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Next Gate:
+- CTO review of REQ-QUANT-02.
+- Proceed to REQ-QUANT-03 Backtest & Simulation Foundation.

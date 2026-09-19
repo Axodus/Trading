@@ -1,0 +1,36 @@
+### Global Coordination Handoff
+
+- Workspace: Trading
+- Handoff ID / time: 20260919-req-quant-02-historical-data-foundation / 2026-09-19T22:30:00-03:00
+- Request / branch / HEAD: AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-02 / dev / d2ba70be23e42586a08cdb5c34f1410fce0a875d
+- Scope: Historical source boundary, deterministic normalization, dataset quality/integrity, exact-version registry, storage-neutral persistence interfaces, and historical MarketState reconstruction.
+- Local status: LOCAL_VALIDATED / CTO_REVIEW_REQUIRED
+- Validation:
+  - `cd quants-lab && PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_*.py' -v` -> PASS (16/16 tests, 0 failures, 0 errors)
+  - `cd trading-core/services/trading-core && npm test` -> PASS (25/25 tests, 0 failures, 0 skipped)
+  - `cd trading-core/services/trading-core && npm run typecheck` -> PASS
+  - `git diff --check` and `git -C quants-lab diff --check` -> PASS
+- Changed local records:
+  - `.instructions/TASKS.md`
+  - `.instructions/handoffs/Trading/20260919-req-quant-02-historical-data-foundation.md`
+  - `quants-lab/core/quant_data/`
+  - `quants-lab/tests/test_quant_data.py`
+- Legacy classification:
+  - `ADAPT`: candle normalization concepts from `Candles` and `SimpleCandlesDownloader`.
+  - `REFERENCE`: provider feed/source adapters and existing historical loader concepts.
+  - `REBUILD`: canonical dataset pipeline, quality report, exact registry, integrity and historical MarketState reconstruction.
+  - `REJECT`: MongoDB-backed dataset authority and any DEX/signing/execution coupling.
+- Physical storage: deterministic in-memory and JSONL fixture adapters only. `pyarrow` is absent from the environment; no dependency was installed. Parquet/Arrow and DuckDB remain deferred physical adapters behind the storage interface.
+- Dependencies: Quant -> SCF-01 shared DatasetReference/MarketState semantics; Quant -> EPIC-01 MarketObservation/MarketState semantics; root coordinator for portfolio consolidation.
+- Blockers / risks: None. No SCF semantic change required. Full Parquet/Arrow physical integration remains a later infrastructure step.
+- Priority impact: Current priority unchanged; next milestone is REQ-QUANT-03 Backtest & Simulation Foundation.
+- Portfolio action: Root coordinator may record REQ-QUANT-02 completion after CTO review.
+- Boundaries preserved:
+  - Exchange order POST = 0
+  - Exchange order DELETE = 0
+  - DEX transaction signing = 0
+  - Mainnet mutation = 0
+  - Real capital = 0
+  - Production credentials used = 0
+  - Customer credentials used = 0
+  - MongoDB, Hummingbot, Condor, and live execution remain outside the implementation.
