@@ -13,6 +13,7 @@ import {
   TradingExternalSafetyPreflightPolicy,
   type ExternalSafetyPreflightConfig,
 } from '../../security/TradingExternalSafetyPreflightPolicy.js';
+import { ContinuousBinanceProviderRejectedError } from '../providers/binance/ContinuousBinanceTestnetProvider.js';
 
 export interface ContinuousVenueOrderMutationRequest {
   attemptId: string;
@@ -234,6 +235,21 @@ export class ContinuousExecutionRuntime {
         executionClientOrderId,
       });
     } catch (networkError) {
+      if (networkError instanceof ContinuousBinanceProviderRejectedError) {
+        const rejectedAttempt = await this.lifecycleService.recordRejected(
+          options.attemptId,
+          `Provider rejected mutation with HTTP ${networkError.status}`,
+        );
+        this.activeClientOrderIds.delete(executionClientOrderId);
+        return {
+          attemptId: options.attemptId,
+          executionClientOrderId,
+          status: 'REJECTED',
+          durableAttempt: rejectedAttempt,
+          reconciliationRequired: false,
+          error: networkError.message,
+        };
+      }
       const reason = 'Mutation ambiguous / failed: ' + (networkError instanceof Error ? networkError.message : String(networkError));
       this.activeClientOrderIds.delete(executionClientOrderId);
       const unknownAttempt = await this.lifecycleService.recordUnknown(options.attemptId, reason);

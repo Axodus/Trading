@@ -18,6 +18,7 @@ export interface InMemoryPostgresStorage {
   trading_runtime_audit: Row[];
   trading_submission_attempts: Row[];
   trading_execution_outbox: Row[];
+  trading_val05_session_budgets: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -33,6 +34,7 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     trading_runtime_audit: [],
     trading_submission_attempts: [],
     trading_execution_outbox: [],
+    trading_val05_session_budgets: [],
   };
 }
 
@@ -214,6 +216,18 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         created_at: params[6],
       });
       return { rows: [] };
+    }
+    if (normalized.startsWith('insert into trading_val05_session_budgets')) {
+      this.upsert('trading_val05_session_budgets', 'session_id', {
+        session_id: params[0],
+        submissions: params[1],
+        active_orders: params[2],
+        updated_at: params[3],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from trading_val05_session_budgets')) {
+      return { rows: this.storage.trading_val05_session_budgets.filter((row) => row.session_id === params[0]) as T[] };
     }
     if (normalized.includes('from trading_execution_outbox')) {
       if (normalized.includes('where aggregate_id = $1')) {

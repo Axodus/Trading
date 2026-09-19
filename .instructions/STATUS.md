@@ -459,6 +459,16 @@ Continuous observability collector and simulation runner integrate telemetry wit
 
 Validation: 20 test files pass (100% pass), typecheck passes, build passes.
 
+## AXODUS-TRADING-AEES-05 / IMP-05F — Continuous Live Provider Composition
+
+Status: `PARTIAL / VALIDATED IN WORKTREE / GIT PERSISTENCE BLOCKED / ALL 21 TEST SUITES PASS`
+
+Implemented canonical `ContinuousBinanceTestnetProvider` providing live mutation (`POST /order`), exact lookup (`GET /order` by `origClientOrderId`), cancellation (`DELETE /order`), open orders (`GET /openOrders`), and position risk (`GET /positionRisk`). Implemented `Val05ContinuousRunner` with explicit session envelope, durable session budgeting (`PostgresVal05SessionBudgetStore`), and guarded runner modes. Deterministic integration tests cover all 20 required scenarios.
+
+Validation: 21 test files pass (100% pass), typecheck passes, build passes, live public Testnet read verified, `BLOCKER-05` remediated in worktree. Authorized commit blocked by read-only `.git`.
+
+Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
+
 ## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
 Status: `BLOCKED / G3 LIVE RUNTIME INTEGRATION GAP`

@@ -1658,3 +1658,28 @@ cancellation and position reconciliation. Do not use the VAL-04B2 harness as a
 substitute and do not authorize G4 until the integration boundary is provided.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
+
+## AXODUS-TRADING-IMP-05F — Continuous Live Provider Composition
+
+Status: `PARTIAL / VALIDATED IN WORKTREE / GIT PERSISTENCE BLOCKED`
+
+Tasks completed:
+- implemented `ContinuousBinanceTestnetProvider` over the accepted Binance Testnet transport and signing primitives;
+- composed submit, exact client-order lookup, controlled cancellation, open-order reads, dynamic venue rules/reference price, and authenticated position reads;
+- wired provider composition into the canonical continuous runtime, recovery service, position reconciliation, risk envelope, kill switch, intent admission, and observability path;
+- implemented `Val05ContinuousRunner` with public, authenticated-read-only, and explicitly gated controlled-execute modes;
+- implemented explicit VAL-05 session envelope and transactional `PostgresVal05SessionBudgetStore` enforcing one active external order and three submissions per session;
+- added deterministic integration matrix covering the 20 IMP-05F scenarios plus runner safety and durable budget checks;
+- preserved the historical VAL-05 attempt record as `G0 PASS / G1 PASS / G2 PASS / G3 BLOCKED / 0 mutations`.
+
+Validation:
+- `npm run typecheck` PASS;
+- `npm test` PASS, 21/21 test files;
+- `npm run build` PASS;
+- built runner verification PASS;
+- public Testnet runner read PASS, BTCUSDT rules/reference loaded, credentials 0, POST 0, DELETE 0;
+- `git diff --check` PASS.
+
+Git persistence blocker: authorized commit failed with `fatal: Unable to create '/opt/Axodus/Trading/.git/index.lock': Read-only file system`; do not resume VAL-05 mutation until a deterministic Git baseline is materialized.
+
+Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.

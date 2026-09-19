@@ -78,6 +78,8 @@ export * from './execution/providers/hummingbot/HummingbotTelemetryAdapter.js';
 export * from './execution/providers/simulation/SimulationExecutionEngine.js';
 export * from './execution/providers/simulation/SimulationProvider.js';
 export * from './execution/providers/simulation/SimulationRuntime.js';
+export * from './execution/providers/binance/ContinuousBinanceTestnetProvider.js';
+export * from './external/Val05ContinuousRunner.js';
 export * from './governance/ConstitutionalStandingEvaluator.js';
 export * from './governance/FederationExecutionEvaluator.js';
 export * from './governance/GovernanceExecutionGuard.js';

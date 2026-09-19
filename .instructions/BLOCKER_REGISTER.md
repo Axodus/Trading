@@ -249,20 +249,10 @@ The controlled FastAPI HTTP and full-lifespan harnesses pass submission identity
 
 Severity: `HIGH / P0`
 
-Status: `OPEN / VAL-05 BLOCKING`
+Status: `REMEDIATED IN WORKTREE / GIT PERSISTENCE BLOCKED`
 
-VAL-05 G0–G2 passed on the current HEAD `e00ad8f3`. The IMP-05 services
-provide durable runtime, recovery, risk, admission and observability primitives,
-but `ContinuousExecutionRuntime` is wired only to abstract mutation,
-reconciliation and cancellation interfaces. No live Binance Futures Testnet
-adapter composition exists for the continuous path, including exact client
-order lookup, cancellation and position reconciliation.
+Resolved in `IMP-05F`: Implemented `ContinuousBinanceTestnetProvider` binding `ContinuousExecutionRuntime` to Binance Testnet mutations, exact order lookup (`origClientOrderId`), cancellation, open orders, and positions risk reads. Implemented `Val05ContinuousRunner` with explicit session envelope, durable PostgreSQL session budget store (`PostgresVal05SessionBudgetStore`), and guarded runner modes (public, authenticated-read-only, controlled-execute).
 
-The existing VAL-04B2 harness is a separate single-order validation stack and
-must not be used to claim VAL-05 continuous-runtime acceptance.
+Deterministic integration suite `imp-05f-live-provider-composition.test.mjs` verifies all 20 composition scenarios. Built public runner validated against real Testnet public endpoint. Formal resolution remains pending Git persistence because the authorized commit could not create `.git/index.lock` on the read-only filesystem.
 
-Required resolution: implement and separately validate the minimum live
-provider/reconciliation/position adapter and canonical VAL-05 runner. No new
-Testnet mutation is authorized until that boundary passes G3.
-
-Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
+Record: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
