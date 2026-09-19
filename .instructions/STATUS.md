@@ -603,3 +603,32 @@ Validated all five remediations delivered by `AEES-AUDIT-01` through independent
 
 Result: `VAL-AUDIT-01 RESULT: PASS WITH REMEDIATIONS`
 Track Gates: `EPIC-01 / REQ-06` (Risk Authority) and `EPIC-QUANT / REQ-QUANT-06` (Strategy Evidence Qualification & Promotion Gate) are READY for CTO unblocking.
+
+
+## AXODUS-TRADING-EPIC-01 / REQ-06  14 Risk Authority & Execution Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Implemented deterministic, non-agentic `RiskAuthorityService` in `trading-core/services/trading-core/src/risk/`.
+- Implemented canonical `RiskDecisionValidator` enforcing pure contracts, evaluation context validation, monotonicity constraints, and kill-switch verification.
+- Enforced complete frozen disposition precedence: `HALT > REJECT > MODIFY > ALLOW`.
+- Enforced explicit `HaltScope` model: `PROPOSAL`, `STRATEGY`, `INSTRUMENT`, `PORTFOLIO`, `SYSTEM`.
+- Enforced exact `FixedDecimal` BigInt arithmetic (12 decimal places) for financial boundaries, preventing IEEE-754 floating-point drift.
+- Enforced risk monotonicity: Risk Authority can only reduce or reject capital and leverage; it can never increase upstream exposure.
+- Enforced gross exposure vs net exposure: gross concentration cannot be masked by netting.
+- Enforced opposing position protection: opposing directional proposals fail closed absent explicit policy.
+- Enforced StrategyHealth gating: `SUSPENDED` and `RETIRED` strictly fail closed; `UNKNOWN` and `REVALIDATION_REQUIRED` fail closed; `DEGRADED` is strictly policy-governed.
+- Enforced temporal determinism & freshness: stale or expired MarketState and PortfolioDecision fail closed.
+- Strict boundary preservation: zero `TradingIntent` or execution plane emission.
+
+Validation:
+- `npm --prefix trading-core/services/trading-core run typecheck`  14 PASS (0 errors)
+- `npm --prefix trading-core/services/trading-core run build`  14 PASS (0 errors)
+- `npm --prefix trading-core/services/trading-core test`  14 PASS (29/29 test suites, including all 18 REQ-06 tests)
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py'`  14 PASS (45/45 tests)
+- `git diff --check`  14 PASS (0 errors)
+
+Next Gate:
+- CTO review and acceptance of `EPIC-01 / REQ-06`.
+- Authorization to advance to `EPIC-01 / REQ-07` (Canonical TradingIntent & Execution Boundary Integration).

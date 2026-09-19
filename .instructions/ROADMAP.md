@@ -1080,3 +1080,10 @@ The controlled FastAPI HTTP and full-lifespan harnesses pass identity, lookup, c
 Status: `COMPLETE / CTO REVIEW READY`
 
 Froze the precise isolation, credential mapping, order size ceiling, cleanup, and capability verification requirements for external testnet/sandbox connectivity. External execution remains HOLD until a subsequent validation gate is authorized.
+
+
+## AXODUS-TRADING-EPIC-01 / REQ-06  14 Risk Authority & Execution Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Completed implementation and deterministic testing of the canonical Risk Authority. The Risk Authority enforces non-agentic, fail-closed, policy-driven verification between Portfolio allocation and future execution intent. Validated against exact arithmetic, risk monotonicity, gross exposure concentration, opposing position fail-closed, StrategyHealth, and time freshness.
