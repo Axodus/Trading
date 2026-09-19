@@ -2000,3 +2000,43 @@ Validation:
 Next Gate:
 - CTO review and acceptance of `VAL-AUDIT-01`.
 - Authorization to unblock `EPIC-01 / REQ-06` (Risk Authority) and `EPIC-QUANT / REQ-QUANT-06` (Strategy Evidence Qualification & Promotion Gate).
+
+
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-06   Strategy Evidence Qualification & Promotion Gate
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Implemented canonical `StrategyEvidenceQualificationGate` in `quants-lab/core/quant_promotion/`.
+- Implemented `StrategyEvidencePackage` and immutable versioned `StrategyQualificationPolicy` per lifecycle transition.
+- Enforced frozen identity rule (qualification binds strictly to exact `StrategyRevision`).
+- Maintained AUD-Q-01 invariant: partial walk-forward validations with failed folds fail closed (`WALK_FORWARD_INCOMPLETE`).
+- Enforced execution realism: zero-latency simulations rejected for higher lifecycle stages (`ZERO_LATENCY_DISALLOWED`).
+- Parameter robustness: required parameter stability (`STABLE_REGION`), rejecting isolated peaks.
+- Full preservation of boundaries: PromotionEligibility does not mutate StrategyLifecycleState, does not create RiskDecision, and does not allocate capital.
+
+Validation:
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v`   PASS (45/45 tests)
+- `PYTHONPATH=quants-lab python3 -m unittest quants-lab/tests/test_quant_promotion.py -v`   PASS (9/9 tests)
+- `npm --prefix trading-core/services/trading-core run typecheck`   PASS (0 errors)
+- `git diff --check` & `git -C quants-lab diff --check`   PASS (0 errors)
+
+Next Gate:
+- CTO review and acceptance of REQ-QUANT-06.
+
+
+## AXODUS-TRADING-EPIC-01 / REQ-06  14 Risk Authority & Execution Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Implemented canonical deterministic Risk Authority (`RiskAuthorityService`, `RiskDecisionValidator`, `RiskTypes`).
+- Enforced strict fail-closed evaluations, exact `FixedDecimal` arithmetic, risk monotonicity, and explicit halt scopes.
+- Preserved audit invariants AUD-A-01, AUD-A-02, and AUD-C-01. Retained DEBT-AUD-A-03.
+- Stopped strictly at `RiskDecision`; zero `TradingIntent` or execution plane implementation.
+
+Validation:
+- TypeScript typecheck & build: PASS
+- Test suite: 29/29 suites pass (including 18/18 REQ-06 risk tests)
+- Quant regression: 45/45 tests pass
+- Zero external mutations, zero mainnet, zero real capital.
