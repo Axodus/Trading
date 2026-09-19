@@ -46,6 +46,28 @@ Validation:
 - `git diff --check`: PASS
 - External mutations: 0
 
+## AXODUS-TRADING-EPIC-01 / REQ-04 — Strategy Intelligence & TradeProposal Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited legacy strategy, trading agent and recommendation assets (`WhiteRabbit*`, `Trinity*`, `AgentAutonomy*`); classified them as `REFERENCE / ADAPT` for heuristics and `DEPRECATE / REJECT` as canonical TradeProposal authorities.
+- Enforced strict `StrategyIdentity` vs `AgentIdentity` separation: strategies represent trading methodologies, agents represent ACS execution actors.
+- Established canonical `StrategyContext` and `StrategySpecialist` boundaries consuming qualified Opportunities, exact StrategyRevisions, MarketStates, PromotionEligibility, StrategyEvidence, and StrategyHealth.
+- Implemented `StrategyProposalValidator` providing fail-closed validation for context lineage, required features, operational health guards, promotion eligibility, and structured candidate proposals.
+- Implemented canonical `TradeProposal` construction, deterministic proposal identity, idempotency key generation, and pure immutable `revalidateTradeProposal`.
+- Implemented `StrategyIntelligenceService` with specialist registry, deduplication suppression, and fail-closed error handling.
+- Implemented reference deterministic specialists (`DirectionalSwingSpecialist`, `FuturesScalpingSpecialist`) and extensible `AgentAssistedStrategySpecialist` with fail-closed structured candidate validation.
+- Added comprehensive REQ-04 tests covering deterministic proposals, NO_PROPOSAL, Opportunity lineage, StrategyRevision attribution, deterministic replay, deduplication, requested leverage/sizing, expiry, immutable revalidation, multi-strategy specialization, Agent structured validation, health/promotion guards, missing features, and research/historical compatibility.
+
+Validation:
+- Contracts typecheck: PASS
+- Trading Core typecheck: PASS
+- Trading Core build: PASS
+- Tests: PASS, 27 test suites / 0 failures / 0 skipped
+- `git diff --check`: PASS
+- External mutations: 0
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Delivered:
@@ -1863,3 +1885,26 @@ Validation:
 
 Next Gate:
 - CTO review, then REQ-QUANT-04 or the next approved Quant milestone.
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-04 — Mass Trials & Parameter Robustness Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited legacy `quants-lab` optimization and search modules (`core/backtesting/optimizer.py`, Optuna, notebooks); rejected blind `maximize(backtest_profit)` and floating dependency optimization as canonical Quant authority.
+- Operationalized `ParameterDefinition`, `ParameterConstraint`, and `ParameterSpace` with explicit bounds, types (integer, decimal, boolean, categorical), and pre-simulation validation.
+- Implemented deterministic Cartesian `GridTrialGenerator` with explicit `TrialBudget` evaluation, preventing silent combinatorial explosion.
+- Reused accepted `SimulationEngine` from REQ-QUANT-03 without creating a parallel execution engine.
+- Implemented `MassTrialRunner` supporting duplicate trial suppression, resumability/idempotency from existing results, and failure tracking without silent drops.
+- Implemented `ParameterRobustnessAnalyzer` delivering multidimensional robustness reporting (`ParameterRobustnessReport`): metric distribution summaries (min, max, median, quantiles), neighbor adjacency, isolated peak detection, boundary sensitivity diagnostics, candidate regions, and explicit limitations.
+- Mapped `ParameterRobustnessReport` into canonical ACS `EvidenceRecordV2` envelope preserving payload digest and provenance.
+- Added comprehensive unit and integration tests covering parameter space, constraints, trial budget, deterministic replay, duplicate suppression, resume idempotency, distributions, failure preservation, and isolated peak detection.
+- Did not implement Bayesian/genetic optimization, Monte Carlo, walk-forward, CPCV, or strategy promotion.
+
+Validation:
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (29/29 tests)
+- `npm --prefix trading-core/services/trading-core test` — PASS (27/27 test suites)
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Next Gate:
+- CTO review of REQ-QUANT-04, then REQ-QUANT-05 (Out-of-Sample, Walk-Forward & Statistical Validation).
