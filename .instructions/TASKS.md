@@ -1978,3 +1978,25 @@ Next Gate:
 - Execution of independent adversarial validation `VAL-AUDIT-01`.
 - Unblocking of `EPIC-01 / REQ-06` and `EPIC-QUANT / REQ-QUANT-06` upon `VAL-AUDIT-01` acceptance.
 
+## AXODUS-TRADING-CROSS-EPIC / VAL-AUDIT-01 — Independent Adversarial Remediation Validation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Conducted independent adversarial validation of AEES-AUDIT-01 remediations across Track A (Harness), Track B (Quant), and Cross-Track contracts.
+- Executed metamorphic property fuzzing (1,000 randomized micro-allocations) verifying BigInt capital conservation.
+- Tested opposing direction fail-closed gating and gross exposure calculation.
+- Verified failed-fold handling and suppression of moment/Sharpe calculations in walk-forward validation.
+- Validated 14 positive and negative cross-language MarketState fixtures between TypeScript and Python.
+- Generated comprehensive adversarial validation report in `.instructions/audits/Trading/AXODUS-TRADING-CROSS-EPIC-VAL-AUDIT-01-REPORT.md`.
+
+Validation:
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS (0 errors)
+- `npm --prefix trading-core/services/trading-core test` — PASS (28/28 test suites)
+- `npm --prefix trading-core/services/trading-core run build` — PASS
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (36/36 tests)
+- `git diff --check` & `git -C quants-lab diff --check` — PASS (0 errors)
+
+Next Gate:
+- CTO review and acceptance of `VAL-AUDIT-01`.
+- Authorization to unblock `EPIC-01 / REQ-06` (Risk Authority) and `EPIC-QUANT / REQ-QUANT-06` (Strategy Evidence Qualification & Promotion Gate).

@@ -590,3 +590,16 @@ Validation:
 - `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (36/36 tests)
 - `git diff --check` & `git -C quants-lab diff --check` — PASS
 
+## AXODUS-TRADING-CROSS-EPIC / VAL-AUDIT-01 — Independent Adversarial Remediation Validation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Validated all five remediations delivered by `AEES-AUDIT-01` through independent adversarial property testing, fuzzing, boundary replay, and cross-language schema conformance:
+1. `AUD-A-01` (P0): CLOSED. `FixedDecimal` BigInt arithmetic strictly conserves capital (`Σ approved ≤ available`) across 1,000 micro-allocations and large edge cases without IEEE-754 drift.
+2. `AUD-A-02` (P0): CLOSED. Opposing directional proposals fail closed by default; explicit policy strictly bounds allocations to remaining gross headroom.
+3. `AUD-A-03` (P2): PARTIALLY REMEDIATED (non-blocking). `processedProposalsTombstone` prevents re-submission attacks within service lifetime; durable deduplication is enforced downstream by Postgres repository.
+4. `AUD-Q-01` (P1): CLOSED. Walk-forward executions with failed folds set status to `PARTIAL` and withhold aggregate statistical diagnostics, preventing survivorship bias.
+5. `AUD-C-01` (P1): CLOSED. 100% agreement on positive and negative `MarketState` feature validation fixtures across TypeScript and Python.
+
+Result: `VAL-AUDIT-01 RESULT: PASS WITH REMEDIATIONS`
+Track Gates: `EPIC-01 / REQ-06` (Risk Authority) and `EPIC-QUANT / REQ-QUANT-06` (Strategy Evidence Qualification & Promotion Gate) are READY for CTO unblocking.
