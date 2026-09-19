@@ -26,6 +26,7 @@ export * from './market/types.js';
 export * from './research/types.js';
 export * from './governance/types.js';
 export * from './foundation/validation.js';
+export * from './foundation/decimal.js';
 export * from './telemetry/types.js';
 export * from './treasury/types.js';
 export * from './whiterabbit/types.js';

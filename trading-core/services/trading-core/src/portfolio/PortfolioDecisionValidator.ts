@@ -5,6 +5,7 @@ import type {
   TradeProposal,
 } from '../../../../packages/trading-contracts/src/index.js';
 import {
+  FixedDecimal,
   TradingContractValidationError,
   validateTradeProposal,
 } from '../../../../packages/trading-contracts/src/index.js';
@@ -36,11 +37,11 @@ export function validatePortfolioContext(context: PortfolioContext): ContextVali
     if (!isNonNegativeNumber(snap.totalCapital)) issues.push('totalCapital must be non-negative number');
     if (!isNonNegativeNumber(snap.availableCapital)) issues.push('availableCapital must be non-negative number');
     if (!isNonNegativeNumber(snap.reservedCapital)) issues.push('reservedCapital must be non-negative number');
-    const total = Number(snap.totalCapital);
-    const avail = Number(snap.availableCapital);
-    const reserved = Number(snap.reservedCapital);
-    if (avail + reserved > total + 0.0001) {
-      issues.push(`availableCapital (${avail}) + reservedCapital (${reserved}) exceeds totalCapital (${total})`);
+    const total = FixedDecimal.from(snap.totalCapital);
+    const avail = FixedDecimal.from(snap.availableCapital);
+    const reserved = FixedDecimal.from(snap.reservedCapital);
+    if (avail.add(reserved).gt(total)) {
+      issues.push(`availableCapital (${avail.toString()}) + reservedCapital (${reserved.toString()}) exceeds totalCapital (${total.toString()})`);
     }
   }
 
@@ -146,10 +147,10 @@ export function revalidatePortfolioDecision(
     }
   }
 
-  const approved = Number(decision.approvedCapital);
-  const available = Number(context.currentSnapshot.availableCapital);
-  if (approved > available + 0.0001 && decision.outcome === 'APPROVED') {
-    return { valid: false, status: 'INVALIDATED', reason: `Portfolio capital no longer sufficient: approved=${approved}, available=${available}` };
+  const approved = FixedDecimal.from(decision.approvedCapital);
+  const available = FixedDecimal.from(context.currentSnapshot.availableCapital);
+  if (approved.gt(available) && decision.outcome === 'APPROVED') {
+    return { valid: false, status: 'INVALIDATED', reason: `Portfolio capital no longer sufficient: approved=${approved.toString()}, available=${available.toString()}` };
   }
 
   return { valid: true, status: 'ALLOCATED' };

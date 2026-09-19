@@ -34,8 +34,28 @@ export function validateMarketState(value: unknown): asserts value is import('..
   required(input.instrument, 'instrument', issues);
   required(input.timeframe, 'timeframe', issues);
   required(input.schemaVersion, 'schemaVersion', issues);
-  if (!Array.isArray(input.features)) issues.push({ path: 'features', message: 'array required' });
-  if (input.validityContext === 'live' && input.freshness !== 'current') issues.push({ path: 'freshness', message: 'live state must be current' });
+  required(input.validityContext, 'validityContext', issues);
+
+  if (!Array.isArray(input.features)) {
+    issues.push({ path: 'features', message: 'array required' });
+  } else {
+    input.features.forEach((feat, index) => {
+      if (!feat || typeof feat !== 'object') {
+        issues.push({ path: `features[${index}]`, message: 'feature object required' });
+      } else {
+        required(feat.featureId, `features[${index}].featureId`, issues);
+        required(feat.featureVersion, `features[${index}].featureVersion`, issues);
+        required(feat.computedAt, `features[${index}].computedAt`, issues);
+        if (feat.value === undefined) {
+          issues.push({ path: `features[${index}].value`, message: 'feature value is required' });
+        }
+      }
+    });
+  }
+
+  if (input.validityContext === 'live' && input.freshness !== 'current') {
+    issues.push({ path: 'freshness', message: 'live state must be current' });
+  }
   if (issues.length) throw new TradingContractValidationError(issues);
 }
 

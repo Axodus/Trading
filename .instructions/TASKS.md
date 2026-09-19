@@ -1954,3 +1954,27 @@ Validation:
 
 Next Gate:
 - CTO review of REQ-QUANT-05, then REQ-QUANT-06 (Strategy Evidence Qualification & Promotion Gate).
+
+## AXODUS-TRADING-AEES-AUDIT-01 — Critical Audit Remediation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Implemented `FixedDecimal` (12 decimal scale BigInt) in `trading-contracts` and refactored `CapitalAllocationService` and `PortfolioDecisionValidator` to eliminate IEEE 754 precision drift (FIX-A-01).
+- Implemented fail-closed rejection for opposing directional exposures unless explicit `allowOpposingPositions` policy is enabled (FIX-A-02).
+- Implemented durable proposal tombstones preventing duplicate proposal submissions across subsequent contexts (FIX-A-03).
+- Updated walk-forward executor in `quants-lab` to withhold aggregated statistical diagnostics when failed folds are present, preventing survivorship bias (FIX-Q-01).
+- Implemented and synchronized `MarketState` feature validation schemas across TypeScript contracts and Python pipelines (FIX-C-01).
+- Added comprehensive unit tests in TypeScript and Python for all 5 remediations.
+
+Validation:
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS
+- `npm --prefix trading-core/services/trading-core test` — PASS (28/28 test suites)
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (36/36 tests)
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Next Gate:
+- CTO review of `AXODUS-TRADING-AEES-AUDIT-01`.
+- Execution of independent adversarial validation `VAL-AUDIT-01`.
+- Unblocking of `EPIC-01 / REQ-06` and `EPIC-QUANT / REQ-QUANT-06` upon `VAL-AUDIT-01` acceptance.
+

@@ -62,6 +62,7 @@ export interface CapitalPolicyLimits {
   defaultMaxInstrumentConcentrationPct: number;
   maxTotalGrossLeverage: number;
   reserveBufferPct?: number;
+  allowOpposingPositions?: boolean;
 }
 
 export interface PortfolioContext {

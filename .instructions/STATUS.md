@@ -572,3 +572,21 @@ versioning, immutability and shared-file change control.
 Readiness remains `PARALLEL IMPLEMENTATION READY: NO`: the formal EPIC-01 plan
 was not found in the local audit surface and ACS adapter conformance is not yet
 validated. No runtime implementation or trading authority is granted.
+
+## AXODUS-TRADING-AEES-AUDIT-01 — Critical Audit Remediation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Remediated all five defects identified in the adversarial audit `AXODUS-TRADING-CROSS-EPIC-AUDIT-01-REPORT`:
+1. `FIX-A-01` (AUD-A-01 / P0): Replaced native JS floating-point arithmetic in `CapitalAllocationService` with exact `FixedDecimal` BigInt arithmetic (12 decimal places), eliminating precision drift and fractional over-allocation.
+2. `FIX-A-02` (AUD-A-02 / P0): Opposing directional proposals fail closed and are rejected when `policy.allowOpposingPositions` is not explicitly enabled.
+3. `FIX-A-03` (AUD-A-03 / P2): Implemented durable proposal tombstones preventing duplicate proposal submission attacks across allocation batches.
+4. `FIX-Q-01` (AUD-Q-01 / P1): Walk-forward validation with failed folds withholds aggregate moment/Sharpe diagnostics to eliminate survivorship bias.
+5. `FIX-C-01` (AUD-C-01 / P1): Enforced schema validation for `MarketState` feature objects across TypeScript contracts and Python data pipelines.
+
+Validation:
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS
+- `npm --prefix trading-core/services/trading-core test` — PASS (28/28 test suites)
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (36/36 tests)
+- `git diff --check` & `git -C quants-lab diff --check` — PASS
+

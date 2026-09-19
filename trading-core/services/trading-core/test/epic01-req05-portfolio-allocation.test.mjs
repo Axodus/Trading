@@ -129,8 +129,6 @@ function buildContext(overrides = {}) {
 describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
   it('evaluates proposal competition and strictly conserves available capital', () => {
     const service = new CapitalAllocationService();
-    // Snapshot has 50k available
-    // Proposal A requests 35k, Proposal B requests 30k (total 65k > 50k available)
     const propA = buildProposal('prop-A', {
       confidence: 0.9,
       sizing: { requestedQuantity: '0.5', requestedCapital: '35000' },
@@ -144,31 +142,54 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     });
 
     const context = buildContext({
-      proposals: [propB, propA], // test that confidence sorting prioritizes propA
+      proposals: [propB, propA],
     });
 
     const result = service.allocate(context);
 
     assert.equal(result.decisions.length, 2);
     assert.equal(result.totalRequestedCapital, '65000');
-    assert.equal(result.totalApprovedCapital, '50000'); // propA gets 28k (capped by strat-swing budget 40k - 12k existing = 28k), propB gets 22k (remaining available = 22k <= strat-scalp budget 30k)
+    assert.equal(result.totalApprovedCapital, '50000');
     assert.equal(Number(result.totalApprovedCapital), 50000);
     assert.equal(Number(result.remainingAvailableCapital), 0);
 
-    // Decisions check
     const decA = result.decisions.find((d) => d.proposalIds.includes('prop-A'));
     const decB = result.decisions.find((d) => d.proposalIds.includes('prop-B'));
     assert.ok(decA);
     assert.ok(decB);
-    assert.equal(decA.outcome, 'MODIFIED'); // reduced from 35k to 28k due to strategy budget cap
+    assert.equal(decA.outcome, 'MODIFIED');
     assert.equal(decA.approvedCapital, '28000');
-    assert.equal(decB.outcome, 'MODIFIED'); // reduced from 30k to 22k
+    assert.equal(decB.outcome, 'MODIFIED');
     assert.equal(decB.approvedCapital, '22000');
+  });
+
+  it('FIX-A-01: avoids floating point precision drift and enforces exact decimal math (0.1 + 0.2 = 0.3)', () => {
+    const service = new CapitalAllocationService();
+    const snap = buildSnapshot({ totalCapital: '1000', availableCapital: '0.3', reservedCapital: '0', positions: [] });
+    const prop1 = buildProposal('prop-dec-1', {
+      confidence: 0.9,
+      sizing: { requestedQuantity: '0.001', requestedCapital: '0.1' },
+    });
+    const prop2 = buildProposal('prop-dec-2', {
+      confidence: 0.8,
+      sizing: { requestedQuantity: '0.002', requestedCapital: '0.2' },
+    });
+
+    const context = buildContext({
+      portfolioSnapshot: snap,
+      proposals: [prop1, prop2],
+    });
+
+    const result = service.allocate(context);
+    assert.equal(result.totalRequestedCapital, '0.3');
+    assert.equal(result.totalApprovedCapital, '0.3');
+    assert.equal(result.remainingAvailableCapital, '0');
+    assert.equal(result.decisions[0].approvedCapital, '0.1');
+    assert.equal(result.decisions[1].approvedCapital, '0.2');
   });
 
   it('enforces strategy-level budget caps', () => {
     const service = new CapitalAllocationService();
-    // Snapshot has 12k existing in strat-swing-1; max budget is 40k. Max additional is 28k.
     const prop = buildProposal('prop-huge', {
       sizing: { requestedQuantity: '1.0', requestedCapital: '35000' },
     });
@@ -182,11 +203,6 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
 
   it('enforces instrument concentration caps across strategies', () => {
     const service = new CapitalAllocationService();
-    // Snapshot total capital: 100k. Max BTC-USDT concentration: 50% = 50k.
-    // Existing BTC-USDT position: 12k. Available concentration headroom: 38k.
-    // Available capital is 50k.
-    // Strat-scalp max budget is 30k. If strat-scalp requests 35k on BTC-USDT, it's limited by strategy budget to 30k.
-    // If another proposal on BTC-USDT requests 15k, total requested on BTC = 45k.
     const prop1 = buildProposal('prop-btc-1', {
       confidence: 0.9,
       strategyId: 'strat-scalp-1',
@@ -205,8 +221,6 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     const context = buildContext({ proposals: [prop1, prop2] });
     const result = service.allocate(context);
 
-    // prop1 gets 25k (12k + 25k = 37k BTC gross). Headroom left for BTC is 13k.
-    // prop2 requested 20k, but BTC concentration cap leaves 13k.
     const dec2 = result.decisions.find((d) => d.proposalIds.includes('prop-btc-2'));
     assert.equal(dec2.outcome, 'MODIFIED');
     assert.equal(dec2.approvedCapital, '13000');
@@ -228,7 +242,7 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
   it('rejects expired TradeProposals and fails closed', () => {
     const service = new CapitalAllocationService();
     const expiredProp = buildProposal('prop-expired', {
-      expiresAt: '2026-09-19T11:59:00.000Z', // past context.now 12:00:02
+      expiresAt: '2026-09-19T11:59:00.000Z',
     });
     const context = buildContext({ proposals: [expiredProp] });
     const result = service.allocate(context);
@@ -288,13 +302,13 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     assert.match(result.evaluations[0].rationale, /PromotionEligibility decision is NOT_ELIGIBLE/);
   });
 
-  it('suppresses duplicate proposals from double-consuming capital', () => {
+  it('suppresses duplicate proposals from double-consuming capital in batch', () => {
     const service = new CapitalAllocationService();
     const prop = buildProposal('prop-dupe', {
       sizing: { requestedQuantity: '0.1', requestedCapital: '10000' },
     });
     const context = buildContext({
-      proposals: [prop, prop], // duplicate in same batch
+      proposals: [prop, prop],
     });
 
     const result = service.allocate(context);
@@ -303,12 +317,32 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     assert.equal(result.totalApprovedCapital, '10000');
   });
 
-  it('supports deterministic replay producing identical decision outputs', () => {
+  it('FIX-A-03: rejects duplicate proposal submission across subsequent contexts via durable tombstone', () => {
     const service = new CapitalAllocationService();
-    const propA = buildProposal('prop-1', { confidence: 0.9, sizing: { requestedQuantity: '0.2', requestedCapital: '15000' } });
-    const propB = buildProposal('prop-2', { confidence: 0.8, sizing: { requestedQuantity: '0.3', requestedCapital: '20000' } });
+    const prop = buildProposal('prop-tombstone-1', {
+      sizing: { requestedQuantity: '0.1', requestedCapital: '10000' },
+    });
 
-    const context = buildContext({ proposals: [propA, propB] });
+    const context1 = buildContext({ correlationId: 'batch-1', proposals: [prop] });
+    const res1 = service.allocate(context1);
+    assert.equal(res1.decisions[0].outcome, 'APPROVED');
+    assert.equal(res1.totalApprovedCapital, '10000');
+
+    // Attempt to submit identical proposal in subsequent context
+    const context2 = buildContext({ correlationId: 'batch-2', proposals: [prop] });
+    const res2 = service.allocate(context2);
+    assert.equal(res2.decisions[0].outcome, 'REJECTED');
+    assert.equal(res2.evaluations[0].disposition, 'REJECTED');
+    assert.match(res2.evaluations[0].rationale, /already evaluated.*duplicate proposal submission rejected/);
+    assert.equal(res2.totalApprovedCapital, '0');
+  });
+
+  it('supports deterministic replay of identical context producing identical decision outputs', () => {
+    const service = new CapitalAllocationService();
+    const propA = buildProposal('prop-replay-1', { confidence: 0.9, sizing: { requestedQuantity: '0.2', requestedCapital: '15000' } });
+    const propB = buildProposal('prop-replay-2', { confidence: 0.8, sizing: { requestedQuantity: '0.3', requestedCapital: '20000' } });
+
+    const context = buildContext({ correlationId: 'replay-corr-id', proposals: [propA, propB] });
     const res1 = service.allocate(context);
     const res2 = service.allocate(context);
 
@@ -320,12 +354,13 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
   });
 
   it('is input-permutation invariant for competing proposals', () => {
-    const service = new CapitalAllocationService();
-    const propA = buildProposal('prop-A', { confidence: 0.9, sizing: { requestedQuantity: '0.2', requestedCapital: '15000' } });
-    const propB = buildProposal('prop-B', { confidence: 0.7, sizing: { requestedQuantity: '0.3', requestedCapital: '20000' } });
+    const propA = buildProposal('prop-perm-A', { confidence: 0.9, sizing: { requestedQuantity: '0.2', requestedCapital: '15000' } });
+    const propB = buildProposal('prop-perm-B', { confidence: 0.7, sizing: { requestedQuantity: '0.3', requestedCapital: '20000' } });
 
-    const run1 = service.allocate(buildContext({ proposals: [propA, propB] }));
-    const run2 = service.allocate(buildContext({ proposals: [propB, propA] }));
+    const s1 = new CapitalAllocationService();
+    const s2 = new CapitalAllocationService();
+    const run1 = s1.allocate(buildContext({ correlationId: 'perm-run', proposals: [propA, propB] }));
+    const run2 = s2.allocate(buildContext({ correlationId: 'perm-run', proposals: [propB, propA] }));
 
     assert.equal(run1.totalApprovedCapital, run2.totalApprovedCapital);
     assert.equal(run1.decisions[0].portfolioDecisionId, run2.decisions[0].portfolioDecisionId);
@@ -342,19 +377,37 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     assert.match(decision.correlatedExposure.reason, /no correlation matrix/);
   });
 
-  it('detects and flags opposing directional exposure against existing position', () => {
-    const service = new CapitalAllocationService();
+  it('FIX-A-02: fails closed and rejects opposing directional exposure unless explicit netting policy is enabled', () => {
+    const service1 = new CapitalAllocationService();
     // Snapshot has existing net LONG BTC position
     // Proposal proposes SELL/SHORT BTC
-    const shortProp = buildProposal('prop-short', {
+    const shortProp1 = buildProposal('prop-opp-failclosed', {
       action: 'sell',
       instrument: 'BTC-USDT',
     });
-    const context = buildContext({ proposals: [shortProp] });
-    const result = service.allocate(context);
+    // Default policy (no allowOpposingPositions) -> REJECT fail closed
+    const contextDefault = buildContext({ proposals: [shortProp1] });
+    const resultDefault = service1.allocate(contextDefault);
 
-    const evaluation = result.evaluations[0];
-    assert.ok(evaluation.violations.some((v) => v.includes('Opposing position exists')));
+    const evaluation = resultDefault.evaluations[0];
+    assert.equal(evaluation.disposition, 'REJECTED');
+    assert.equal(evaluation.approvedCapital, '0');
+    assert.match(evaluation.rationale, /without an explicit netting\/hedge policy; rejected fail-closed/);
+
+    // With explicit allowOpposingPositions policy -> approved within gross limits
+    const service2 = new CapitalAllocationService();
+    const shortProp2 = buildProposal('prop-opp-allowed', {
+      action: 'sell',
+      instrument: 'BTC-USDT',
+      sizing: { requestedQuantity: '0.1', requestedCapital: '5000' },
+    });
+    const contextAllowed = buildContext({
+      policy: buildPolicy({ allowOpposingPositions: true }),
+      proposals: [shortProp2],
+    });
+    const resultAllowed = service2.allocate(contextAllowed);
+    assert.equal(resultAllowed.evaluations[0].disposition, 'ALLOCATED');
+    assert.equal(resultAllowed.evaluations[0].approvedCapital, '5000');
   });
 
   it('revalidates PortfolioDecision without mutating it and detects expired / capital shortage', () => {
@@ -375,7 +428,7 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
 
     // Expired revalidation
     const expired = revalidatePortfolioDecision(decision, {
-      now: '2026-09-19T12:06:00.000Z', // past decision.expiresAt 12:05:00
+      now: '2026-09-19T12:06:00.000Z',
       currentSnapshot: context.portfolioSnapshot,
       proposals: [prop],
     });
@@ -383,7 +436,7 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     assert.equal(expired.status, 'EXPIRED');
 
     // Capital shortage in snapshot
-    const depletedSnapshot = buildSnapshot({ availableCapital: '5000' }); // decision requires 10000
+    const depletedSnapshot = buildSnapshot({ availableCapital: '5000' });
     const invalidated = revalidatePortfolioDecision(decision, {
       now: '2026-09-19T12:01:00.000Z',
       currentSnapshot: depletedSnapshot,
@@ -401,12 +454,10 @@ describe('REQ-05 Portfolio & Capital Allocation Foundation', () => {
     const result = service.allocate(context);
     const decision = result.decisions[0];
 
-    // Invariant: PortfolioDecision outcomes are APPROVED | MODIFIED | REJECTED (NOT ALLOW | MODIFY | REJECT | HALT)
     assert.ok(['APPROVED', 'MODIFIED', 'REJECTED'].includes(decision.outcome));
     assert.notEqual(decision.outcome, 'ALLOW');
     assert.notEqual(decision.outcome, 'HALT');
 
-    // Invariant: No RiskDecision, TradingIntent, or Execution fields
     assert.equal('riskDecisionId' in decision, false);
     assert.equal('killSwitch' in decision, false);
     assert.equal('intentId' in decision, false);

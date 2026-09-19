@@ -207,6 +207,23 @@ describe('REQ-01 Canonical Harness Contract Foundations', () => {
     assert.throws(() => validateRiskDecision(badRisk), TradingContractValidationError);
   });
 
+  it("FIX-C-01: validates feature object structures and rejects malformed feature definitions in MarketState", () => {
+    const { marketState } = validEntities();
+    assert.throws(() => validateMarketState({ ...marketState, features: "not-an-array" }), TradingContractValidationError);
+    assert.throws(() => validateMarketState({
+      ...marketState,
+      features: [{ featureVersion: "1.0.0", value: 10, computedAt: "2026-09-19T12:00:00.000Z" }]
+    }), TradingContractValidationError);
+    assert.throws(() => validateMarketState({
+      ...marketState,
+      features: [{ featureId: "close", featureVersion: "1.0.0", value: 10 }]
+    }), TradingContractValidationError);
+    assert.throws(() => validateMarketState({
+      ...marketState,
+      features: [{ featureId: "close", featureVersion: "1.0.0", computedAt: "2026-09-19T12:00:00.000Z" }]
+    }), TradingContractValidationError);
+  });
+
   it('requires RiskDecision HALT when kill-switch is active', () => {
     const { riskDecision } = validEntities();
     const haltedRisk = { ...riskDecision, outcome: 'HALT', killSwitch: { active: true } };
