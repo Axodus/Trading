@@ -1,5 +1,26 @@
 export type MarketStateValidityContext = 'live' | 'historical' | 'simulation' | 'paper' | 'testnet';
 
+export type MarketObservationType = 'ticker' | 'bid-ask' | 'order-book' | 'trade' | 'candle' | 'volume' | 'funding' | 'basis' | 'open-interest' | 'unknown';
+export type MarketObservationQuality = 'valid' | 'stale' | 'incomplete' | 'gap-detected' | 'invalid' | 'unknown';
+export type MarketSequenceStatus = 'not-provided' | 'sequenced' | 'duplicate' | 'gap-detected' | 'out-of-order' | 'unknown';
+
+export interface MarketObservation {
+  observationId: string;
+  instrument: string;
+  venue: string;
+  observationType: MarketObservationType;
+  eventTime: string;
+  observedAt: string;
+  receivedAt: string;
+  value: Readonly<Record<string, unknown>>;
+  sourceRef: string;
+  schemaVersion: string;
+  quality: MarketObservationQuality;
+  sequence?: number;
+  sequenceScope?: string;
+  reconnectBoundary?: boolean;
+}
+
 export interface MarketStateFeature {
   featureId: string;
   featureVersion: string;
@@ -23,6 +44,10 @@ export interface MarketState {
   sourceRefs: readonly string[];
   completeness: 'complete' | 'partial' | 'unknown';
   validationRefs: readonly string[];
+  observationRefs?: readonly string[];
+  constructionVersion?: string;
+  qualityStatus?: MarketObservationQuality;
+  sequenceStatus?: MarketSequenceStatus;
 }
 
 export type OpportunityQualification = 'qualified' | 'unqualified' | 'expired' | 'invalid';

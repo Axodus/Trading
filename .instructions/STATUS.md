@@ -2,6 +2,14 @@
 
 ## AXODUS-TRADING-EPIC-01 / REQ-01
 
+## AXODUS-TRADING-EPIC-01 / REQ-02
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Market Intelligence and MarketState construction foundations are implemented. Market observations are normalized into provider-neutral records, live freshness is evaluated against policy without invalidating historical data, feature-version compatibility is enforced, and deterministic `MarketState` objects are built with complete provenance and sequence quality tracking.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests PASS (25 suites passed / 0 failed); `git diff --check` PASS. Zero external trading mutations.
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Canonical Harness domain contracts and pure contract validators are implemented in
