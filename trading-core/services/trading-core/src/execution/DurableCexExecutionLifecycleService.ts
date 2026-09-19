@@ -177,7 +177,7 @@ export class DurableCexExecutionLifecycleService {
       if (isTerminal(attempt.state)) return attempt;
       this.assertProvider(attempt, provider);
       assertReconciliationCapabilities(provider.capabilities);
-      if (attempt.state === 'execution-unknown') {
+      if (attempt.state === 'provider-acknowledged' || attempt.state === 'execution-unknown') {
         return this.mutateInTransaction(attempt, 'reconciling', 'reconciliation-started', tx, () => ({}));
       }
       if (!['reconciling', 'cancel-requested', 'cancellation-unknown'].includes(attempt.state)) {
@@ -315,7 +315,8 @@ export class DurableCexExecutionLifecycleService {
 }
 
 function isTerminal(state: CexExecutionLifecycleState): boolean {
-  return ['provider-acknowledged', 'failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed', 'reconciled-found', 'reconciled-not-found'].includes(state);
+  // A provider acknowledgement confirms mutation receipt, not independently observed provider truth.
+  return ['failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed', 'reconciled-found', 'reconciled-not-found'].includes(state);
 }
 
 function persistedEventId(attempt: DurableSubmissionAttempt, eventType: string): string {

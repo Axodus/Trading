@@ -124,11 +124,21 @@ export class ContinuousExecutionRuntime {
   private async executeInternal(options: ContinuousExecutionOptions): Promise<ContinuousExecutionResult> {
     const existingAttempt = await this.lifecycleService.get(options.attemptId);
     if (existingAttempt) {
+      if (existingAttempt.state === 'provider-acknowledged') {
+        return {
+          attemptId: existingAttempt.attemptId,
+          executionClientOrderId: existingAttempt.executionClientOrderId,
+          status: 'SUBMITTED',
+          durableAttempt: existingAttempt,
+          providerOrderId: existingAttempt.providerOrderId,
+          reconciliationRequired: true,
+        };
+      }
       if (this.isTerminal(existingAttempt.state)) {
         return {
           attemptId: existingAttempt.attemptId,
           executionClientOrderId: existingAttempt.executionClientOrderId,
-          status: existingAttempt.state === 'provider-acknowledged' || existingAttempt.state === 'reconciled-found' ? 'SUBMITTED' : 'REJECTED',
+          status: existingAttempt.state === 'reconciled-found' ? 'SUBMITTED' : 'REJECTED',
           durableAttempt: existingAttempt,
           providerOrderId: existingAttempt.providerOrderId,
           reconciliationRequired: false,
@@ -327,7 +337,6 @@ export class ContinuousExecutionRuntime {
 
   private isTerminal(state: string): boolean {
     return [
-      'provider-acknowledged',
       'failed',
       'rejected',
       'cancelled',

@@ -220,7 +220,7 @@ describe('IMP-05A: Continuous Execution Runtime & Durable Ownership', () => {
   });
 
   it('supports multiple sequential executions with distinct deterministic identities', async () => {
-    const { runtime, mutationProvider, repository } = createTestRuntime();
+    const { runtime, mutationProvider, repository } = createTestRuntime({}, { outcome: 'found' });
 
     const options1 = validExecutionOptions('att-seq-01');
     const options2 = validExecutionOptions('att-seq-02');
@@ -242,4 +242,3 @@ describe('IMP-05A: Continuous Execution Runtime & Durable Ownership', () => {
     assert.ok(p2);
   });
 });
-
