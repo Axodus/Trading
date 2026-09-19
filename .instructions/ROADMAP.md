@@ -2,7 +2,7 @@
 
 ## Sovereign Architecture Gate — REQ-15
 
-Status: `PROPOSED / DOCUMENTAL AUDIT / CTO REVIEW REQUIRED`
+Status: `COMPLETE / DOCUMENTAL AUDIT & ARCHITECTURE FREEZE / CTO REVIEW REQUIRED`
 
 The next program architecture gate is `AXODUS-TRADING-REQ-15 — Sovereign
 Agentic Trading Architecture & Infrastructure Freeze`. It must audit ACS,
@@ -18,13 +18,16 @@ strategy lifecycle, gap register, and proposed EPIC sequence.
 Entry gate: `VAL-05 COMPLETE / PASS` is satisfied and CTO accepted on commit
 `ded3f85d2acc3f2f6d6d9e1337bf1dcafc123710`. REQ-15 planning is authorized to proceed.
 
-Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
+Deliverable completed: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
 
-Candidate post-acceptance families, subject to REQ-15 sequencing: Sovereign
-Trading Harness; Execution Plane integration; `AXODUS-TRADING-EPIC-QUANT`
-Quantitative Research & Strategy Validation Laboratory; Strategy Research &
-Qualification; Trading Feedback & Performance Intelligence; and Axodus Trading
-Pocket.
+Sequenced post-acceptance EPIC roadmap:
+1. `AXODUS-TRADING-EPIC-01`: Sovereign Trading Contracts & Intelligence Foundations
+2. `AXODUS-TRADING-EPIC-QUANT`: Quantitative Research & Strategy Validation Laboratory
+3. `AXODUS-TRADING-EPIC-02`: Strategy Research, Specialization & Workforce Modeling
+4. `AXODUS-TRADING-EPIC-03`: Portfolio Allocation & Sovereign Risk Authority
+5. `AXODUS-TRADING-EPIC-04`: Execution Plane Integration (Hummingbot & Condor Adapters)
+6. `AXODUS-TRADING-EPIC-05`: Trading Feedback, Attribution & Continuous Adaptation
+7. `AXODUS-TRADING-EPIC-06`: Axodus Trading Pocket (Client Trial & Demo Productization)
 
 Until acceptance: documentation, factual audits, evidence preservation, and
 authorized validation closure only. No strategy, Agent, Quant Lab, Pocket,

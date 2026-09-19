@@ -1,6 +1,6 @@
 # AXODUS-TRADING-REQ-15 — Sovereign Agentic Trading Architecture & Infrastructure Freeze
 
-Status: `PROPOSED / DOCUMENTAL AUDIT / CTO REVIEW REQUIRED`
+Status: `COMPLETE / DOCUMENTAL AUDIT & ARCHITECTURE FREEZE / CTO REVIEW REQUIRED`
 
 Date: `2026-09-19`
 
@@ -28,6 +28,10 @@ Blind Retries 0, Duplicate Submissions 0, Mainnet Calls 0, Secrets Exposed false
 Cleanup PASS.
 
 REQ-15 planning is authorized to proceed without an intermediate gate.
+
+The factual audit and architecture decisions are recorded below. This does not
+authorize implementation, deployment, credentials, capital, or production
+execution.
 
 ## Sovereign architecture target
 
@@ -186,3 +190,271 @@ production, credential, capital, or live-trading restrictions.
 
 This record is ready to guide the audit package. It is not a REQ-15 acceptance,
 architecture freeze, implementation authorization, or production decision.
+
+---
+
+# 11. Factual Audit Decisions
+
+## 11.1 Trading repository
+
+**Decision:** `CANONICAL / EXTEND`.
+
+Trading owns domain contracts, market intelligence, opportunity qualification,
+strategy proposals, portfolio allocation, risk authority, Trading Intent,
+durable execution state, reconciliation, accounting evidence, and feedback.
+The existing TypeScript contracts, PostgreSQL persistence, CEX lifecycle,
+controlled runtime, and VAL-05 provider composition are reusable foundations.
+
+The repository remains nested-command based because the Trading root has no
+root `package.json`. This is a tooling gap, not an architecture reason to
+move ownership into a provider.
+
+## 11.2 ACS
+
+**Decision:** `REUSE / ADAPT` as the canonical generic Agent and Workforce
+platform.
+
+ACS provides agent identity, revisions, lifecycle, workflow execution,
+capability routing, permissions, and run evidence. Trading supplies trading
+specializations and domain contracts through an adapter. Trading must not
+create a second generic Agent platform.
+
+Observed ACS boundaries include bounded local workflows, receipt persistence,
+capability-based routing, and explicit non-production/provider restrictions.
+ACS Agents may recommend, request simulations/backtests, inspect telemetry, and
+submit bounded workflow requests. They do not own canonical positions,
+portfolio accounting, credentials, capital, or venue authority.
+
+## 11.3 Hummingbot
+
+**Decision:** `ADAPT / ISOLATE` as the preferred operational Execution Plane
+substrate.
+
+The materialized API/client baseline provides REST surfaces for market data,
+connectors, orders, cancellation, positions, and balances. Hummingbot owns
+connector and order mechanics after an authorized provider-neutral intent.
+
+Hummingbot does not own Axodus strategy semantics, portfolio allocation,
+sovereign risk policy, ACS identity, credentials, capital authority, or
+Trading Evidence. The client WebSocket query-token path remains
+`KEEP BLOCKED / DO NOT USE` under `AXODUS-TRADING-BLOCKER-01`.
+
+## 11.4 Condor
+
+**Decision:** `ADAPT / ISOLATE` as an external Agent runtime and bounded
+orchestration adapter.
+
+The materialized Condor source contains Agent/session orchestration, MCP/tool
+surfaces, reflection, strategy/risk modules, CEX handlers, and credential
+surfaces. These capabilities make isolation mandatory.
+
+Condor may consume permissioned Trading views and emit recommendations or
+workflow requests. It may not call venues directly, own credentials, approve
+its own risk, create unapproved orders, own canonical financial state, or
+bypass ACS, Governance, Compliance, or Risk Authority.
+
+## 11.5 quants-lab
+
+**Decision:** `ADAPT / REBUILD PARCIAL`; it is not the canonical Quant Lab.
+
+The repository contains reusable backtesting engines, Optuna optimization,
+market-feed collectors, feature engineering, regime features, strategy
+controllers, and task orchestration. It is not accepted as the sovereign
+laboratory because:
+
+- `hummingbot` is unpinned in `pyproject.toml`;
+- MongoDB is the default persistence and task database;
+- the repository does not provide a complete walk-forward, Monte Carlo,
+  out-of-sample, deflated-Sharpe, leakage, survivorship, or stress-testing gate;
+- `core/services/okx_dex_api.py` contains private-key signing and broadcast
+  surfaces that violate the Quant Lab secret-blind research boundary;
+- research, execution, and deployment concerns are mixed in one repository.
+
+Reusable feature and backtest mathematics may be extracted after a separate
+implementation authorization. MongoDB as the canonical evidence store,
+floating dependencies, DEX signing, and direct production deployment are
+rejected.
+
+## 11.6 Standalone Binance runtime
+
+**Decision:** `REFERENCE / CONFORMANCE / POCKET FOUNDATION`.
+
+The validated standalone runtime remains useful as a provider-conformance
+reference and a possible future Pocket execution foundation. Standalone
+feature expansion remains frozen until it is mapped to the provider-neutral
+Execution Contract and Pocket boundary.
+
+## 11.7 Pocket
+
+**Decision:** `SEPARATE DEPLOYMENT PROFILE; PREPARE ONLY AFTER CORE CONTRACTS`.
+
+Pocket must not expose the institutional Harness. It requires a system-enforced
+`TrialPolicy`, tenant isolation, withdrawal-disabled credentials where
+supported, hard capital/position/leverage/loss/duration limits, revocation,
+deletion, and independent product/security/legal/compliance review.
+
+---
+
+# 12. Sovereign Ownership Matrix
+
+| Capability | Canonical owner | Consumer | Explicit non-ownership |
+|---|---|---|---|
+| Agent identity, revision, Workforce, lifecycle, runtime evidence | ACS | Trading Harness, Quant Lab | Trading does not create a generic Agent platform |
+| MarketState and Market Intelligence | Trading Harness | Opportunity and Strategy Agents | Providers do not own normalized state |
+| Opportunity discovery and Strategy Fit | Trading Harness | Specialist Agents, Portfolio | No universal pair score |
+| TradeProposal | Strategy capability through Harness | Portfolio and Risk | Proposal cannot issue venue commands |
+| Portfolio and Capital Allocation | Trading Harness | Risk Authority | Agents cannot allocate capital independently |
+| RiskDecision | Independent Axodus Risk Authority | Trading Intent | Agents cannot authorize their own risk |
+| TradingIntent | Trading Harness | Execution adapter | Provider-specific REST/WS details do not cross boundary |
+| Execution mechanics | Hummingbot/Condor through approved adapter | Venues | Execution Plane does not own strategy, capital, or evidence |
+| Venue truth | Exchange venue | Reconciliation | Axodus cannot rewrite external fills or positions |
+| Durable decision/evidence history | Axodus Trading | ACS attribution, accounting, feedback | Providers do not own institutional evidence |
+| Quantitative research and promotion evidence | Axodus Quant Lab | Strategy lifecycle and Harness | Quant Lab cannot sign or execute trades |
+| Credentials | Axodus Credential Vault boundary | Execution runtime | Agents and research code are secret-blind |
+| Customer trials | Axodus Trading Pocket | Restricted tenants | Pocket cannot expose institutional authority |
+
+---
+
+# 13. Provider-Neutral Domain Contracts
+
+REQ-15 freezes the following conceptual interfaces for downstream EPIC design:
+
+- `MarketState`: instrument, venue, timestamp, regime, normalized features,
+  freshness, sequence/provenance, and source reference.
+- `Opportunity`: instrument, venue, strategy family, timeframe, state
+  reference, qualification score/reason, expiry, and discovery evidence.
+- `TradeProposal`: strategy/revision, opportunity, direction, horizon,
+  entry/exit/stop conditions, requested capital/leverage, expected return/risk,
+  evidence package, and proposing Agent.
+- `RiskDecision`: proposal reference, `ALLOW | MODIFY | REJECT | HALT`,
+  authorized capital/leverage, modified conditions, violations, check trace,
+  and decision evidence.
+- `TradingIntent`: strategy/revision, venue/instrument, side/order type,
+  quantity/price, time constraints, slippage policy, risk authorization, and
+  deterministic execution client identity.
+- `ExecutionResult`: intent reference, provider evidence, accepted/rejected
+  state, fills, timestamps, and reconciliation status.
+- `StrategyEvidence`: immutable strategy revision, dataset references,
+  assumptions, fees/slippage/latency model, experiment manifest, metrics,
+  robustness results, and promotion decision.
+- `StrategyHealth`: realized-vs-expected performance, drawdown, drift,
+  regime fit, execution quality, unresolved reconciliation, and demotion state.
+
+No downstream adapter may make these contracts intrinsically dependent on
+Binance, Hummingbot, Condor, one CEX, or one database.
+
+---
+
+# 14. Quant Lab and Strategy Lifecycle Freeze
+
+The canonical Quant Lab is a separate research authority with immutable,
+versioned datasets and reproducible experiment manifests:
+
+```text
+IDEA
+  -> RESEARCH
+  -> BACKTEST
+  -> MASS TRIALS
+  -> WALK-FORWARD / OUT-OF-SAMPLE
+  -> MONTE CARLO / REGIME / STRESS TEST
+  -> STRATEGY EVIDENCE PACKAGE
+  -> PAPER
+  -> TESTNET
+  -> LIMITED LIVE REVIEW
+  -> CORE OR POCKET PROMOTION
+  -> MONITOR / ATTRIBUTE
+  -> REVALIDATE / DEMOTE / RETIRE
+```
+
+Promotion evidence must model fees, slippage, funding, latency, liquidity,
+leverage, fill assumptions, data leakage, look-ahead bias, survivorship bias,
+parameter sensitivity, and regime dependence. A single profitable backtest
+cannot promote a strategy.
+
+The real-time operational data tier, historical research tier, and append-only
+evidence tier remain separate. Event replay is not microstructure replay.
+
+---
+
+# 15. Security and Execution Boundaries
+
+The authoritative execution path is:
+
+```text
+ACS Agent / Strategy Agent
+  -> TradeProposal
+  -> Portfolio Allocation
+  -> Risk Authority
+  -> TradingIntent
+  -> Credential Boundary
+  -> Execution Adapter
+  -> Hummingbot / Condor operational mechanics
+  -> Venue
+  -> Exact Reconciliation and Evidence
+```
+
+Agents, Quant Lab code, Condor reasoning, and Hummingbot operational
+components do not receive sovereign capital authority. Credential material is
+bound only at the runtime boundary. Gateway/DEX, wallet signing, withdrawals,
+mainnet, production credentials, and treasury movement remain outside the
+REQ-15 implementation scope.
+
+---
+
+# 16. Gap Register
+
+| Priority | Gap | Decision / required path | Owner |
+|---|---|---|---|
+| P0 | Formal `MarketState`, `Opportunity`, `TradeProposal`, `StrategyEvidence`, and `StrategyHealth` contracts are incomplete | Open EPIC-01 contract work against this freeze | Trading Contracts |
+| P0 | Canonical Quant Lab storage and reproducibility boundary is absent | Open EPIC-QUANT; replace floating/MongoDB authority and reject signing surfaces | Quant Lab / Trading |
+| P0 | Independent portfolio/capital allocator and deterministic Risk Authority are not yet the sovereign Harness path | Open EPIC-03 after contract and research boundaries | Trading Harness / Risk |
+| P1 | Hummingbot WebSocket authentication remains incompatible | Keep blocked; evaluate a dedicated transport decision only if streaming is required | Execution Plane |
+| P1 | Condor direct trading and credential surfaces require isolation | Build bounded ACS/Trading adapter before any Condor execution integration | ACS / Trading |
+| P1 | Market-data history lacks proven lossless L2/L3 replay | Separate acquisition, rights, storage, and replay decision from operational feeds | Quant Lab / Trading |
+| P2 | Standalone executor expansion and Pocket boundary are not yet productized | Preserve reference/conformance role; open Pocket only after Core contracts | Pocket / Trading |
+| P2 | Trading root has no orchestration `package.json` | Maintain documented nested commands or open tooling-only request | Trading repository |
+
+---
+
+# 17. Frozen EPIC Sequence
+
+The next EPICs derive from the sovereign Harness and may not reopen ownership
+decisions unless an explicit architecture change review is approved:
+
+1. **`AXODUS-TRADING-EPIC-01` — Sovereign Trading Contracts & Intelligence Foundations**
+   Formalize the provider-neutral contracts, Market Intelligence normalization,
+   contextual Opportunity Discovery, and Harness evidence references.
+2. **`AXODUS-TRADING-EPIC-QUANT` — Quantitative Research & Strategy Validation Laboratory**
+   Audit/extract `quants-lab`, establish reproducible datasets, mass trials,
+   walk-forward, robustness gates, and Strategy Evidence Packages.
+3. **`AXODUS-TRADING-EPIC-02` — Strategy Research, Specialization & Workforce Modeling**
+   Connect ACS Workforces to specialist strategy proposals without direct execution.
+4. **`AXODUS-TRADING-EPIC-03` — Portfolio Allocation & Sovereign Risk Authority**
+   Establish cross-strategy utility, capital allocation, deterministic limits,
+   kill switches, and ALLOW/MODIFY/REJECT/HALT decisions.
+5. **`AXODUS-TRADING-EPIC-04` — Execution Plane Integration**
+   Bind the frozen TradingIntent/Execution Contract to isolated Hummingbot and
+   Condor adapters; preserve provider-neutrality and secret blindness.
+6. **`AXODUS-TRADING-EPIC-05` — Feedback, Attribution & Strategy Health**
+   Compare expected-vs-realized outcomes and feed evidence into allocation,
+   promotion, demotion, and retirement.
+7. **`AXODUS-TRADING-EPIC-06` — Axodus Trading Pocket**
+   Implement only after Core contracts, security review, TrialPolicy, and
+   independent product/legal/compliance gates are accepted.
+
+No new IMP or AEES is authorized by this sequence. Each EPIC requires its own
+REQ, AEES/IMP, validation evidence, and explicit ownership mapping.
+
+---
+
+# 18. Architecture Decision State
+
+`COMPLETE / DOCUMENTAL AUDIT & ARCHITECTURE FREEZE / CTO REVIEW REQUIRED`
+
+REQ-15 now freezes sufficient ownership, classification, contract, security,
+Quant Lab, lifecycle, gap, and EPIC decisions for downstream EPIC opening
+without reinterpreting the architecture from available execution tools.
+
+CTO review remains required for acceptance of this freeze. Until acceptance,
+implementation remains `HOLD`, standalone expansion remains `FROZEN`, and
+mainnet/real capital remain `PROHIBITED`.
