@@ -61,3 +61,51 @@ pg_isready /var/run/postgresql:5433 -> no response
 This result requires the approved PostgreSQL runtime to be started and
 health-checked before G3 can be retried. No new order authorization is implied
 by this record.
+
+## VAL-05-FIX-01 — Exact reconciliation correction and A/B revalidation
+
+**Status:** `COMPLETE / CTO REVIEW REQUIRED`
+
+The reconciliation gap was isolated to `provider-acknowledged` being treated
+as terminal by both the durable lifecycle service and the continuous runtime.
+The correction removes that state from terminal classification and allows an
+acknowledged execution to enter `reconciling` using its persisted
+`executionClientOrderId`.
+
+Targeted regression coverage now passes for acknowledged `NEW`,
+`PARTIALLY_FILLED`, `FILLED`, `CANCELED`, `REJECTED`, and `EXPIRED` provider
+states, lookup failure, repeated reconciliation, persisted identity, and zero
+blind resubmission.
+
+### Live read-only evidence
+
+Session: `val-05-live-session-1789779945562`
+Environment: `binance_perpetual_testnet`
+Symbol: `BTCUSDT`
+
+| Execution | Client identity | Provider order | Pre-state | Exact lookup | Provider state | Post-state |
+| --- | --- | --- | --- | --- | --- | --- |
+| A | `ax-intent-val05-a-1789779946479` | `28591022090` | `cancelled` | `found` | `CANCELED` | `cancelled` |
+| B | `ax-intent-val05-b-1789779950732` | `28591022133` | `cancelled` | `found` | `CANCELED` | `cancelled` |
+
+Both historical attempts were already terminal in durable state. Runtime
+reconciliation therefore correctly reported `terminal-no-op`; the runner then
+performed an explicit read-only exact provider lookup using each persisted
+client identity. No new execution identity was generated.
+
+Position reconciliation: `MATCH`, venue quantity `0`.
+Durable session budget: `submissions=2`, `activeOrders=0`, `durable=true`.
+
+```yaml
+postOrderCalls: 0
+deleteOrderCalls: 0
+blindRetries: 0
+duplicateSubmissions: 0
+mainnetCalls: 0
+websocketUsed: false
+secretsExposed: false
+cleanupPassed: true
+```
+
+The fixed acknowledged-state transition is proven by the offline regression;
+the live A/B evidence independently confirms venue state without mutation.

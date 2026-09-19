@@ -480,3 +480,20 @@ initial-state checks passed. G3 stopped before mutation because PostgreSQL at
 session accounting was unavailable.
 
 Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
+
+## AXODUS-TRADING-VAL-05-FIX-01 — Provider-Acknowledged Exact Reconciliation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Corrected the lifecycle so `provider-acknowledged` requires exact provider
+reconciliation instead of being treated as terminal. Added deterministic
+coverage for provider states, lookup failures, repeated reconciliation,
+persisted identity, and no-blind-retry behavior. Historical VAL-05 Executions
+A/B were read-only reconciled on Binance Futures Testnet by their persisted
+client identities; both returned `CANCELED`, with zero orders, zero
+cancellations, zero residual position, and durable session budget preserved at
+`2 / 0`.
+
+Validation: typecheck PASS, build PASS, 22/22 test files PASS, built-runner
+verification PASS, `git diff --check` PASS.
+Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.

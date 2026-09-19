@@ -24,6 +24,9 @@ interface LiveReconciliationOutput {
     postReconciliationState: string;
     postReconciliationProviderStatus?: string;
     exactLookupAttempted: true;
+    exactLookupPath: 'runtime.reconcile' | 'provider.reconcileByClientOrderId';
+    runtimeReconciliation: 'performed' | 'terminal-no-op';
+    exactLookupOutcome: 'found' | 'not-found' | 'indeterminate';
     reconciledState: string;
   }>;
   positionReconciliation: {
@@ -79,6 +82,22 @@ async function main(): Promise<void> {
 
     const reconciledA = await val05.runtime.reconcile(intentA);
     const reconciledB = await val05.runtime.reconcile(intentB);
+    const exactLookupA = await val05.provider.reconcileByClientOrderId({
+      attemptId: intentA,
+      providerId: preA.providerId,
+      connector: preA.connector,
+      market: preA.market,
+      executionClientOrderId: preA.executionClientOrderId,
+      requestedAt: new Date().toISOString(),
+    });
+    const exactLookupB = await val05.provider.reconcileByClientOrderId({
+      attemptId: intentB,
+      providerId: preB.providerId,
+      connector: preB.connector,
+      market: preB.market,
+      executionClientOrderId: preB.executionClientOrderId,
+      requestedAt: new Date().toISOString(),
+    });
 
     const preflight = await val05.runner.runAuthenticatedReadOnlyPreflight([
       { market: 'BTCUSDT', symbol: 'BTCUSDT', side: 'both', quantity: '0', updatedAt: new Date().toISOString() },
@@ -98,8 +117,11 @@ async function main(): Promise<void> {
           providerOrderId: reconciledA.providerOrderId,
           preReconciliationState: preA.state,
           postReconciliationState: reconciledA.state,
-          postReconciliationProviderStatus: reconciledA.evidence?.providerStatus,
+          postReconciliationProviderStatus: exactLookupA.evidence?.providerStatus,
           exactLookupAttempted: true,
+          exactLookupPath: 'provider.reconcileByClientOrderId',
+          runtimeReconciliation: 'terminal-no-op',
+          exactLookupOutcome: exactLookupA.outcome,
           reconciledState: reconciledA.state,
         },
         {
@@ -109,8 +131,11 @@ async function main(): Promise<void> {
           providerOrderId: reconciledB.providerOrderId,
           preReconciliationState: preB.state,
           postReconciliationState: reconciledB.state,
-          postReconciliationProviderStatus: reconciledB.evidence?.providerStatus,
+          postReconciliationProviderStatus: exactLookupB.evidence?.providerStatus,
           exactLookupAttempted: true,
+          exactLookupPath: 'provider.reconcileByClientOrderId',
+          runtimeReconciliation: 'terminal-no-op',
+          exactLookupOutcome: exactLookupB.outcome,
           reconciledState: reconciledB.state,
         },
       ],

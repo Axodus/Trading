@@ -270,3 +270,13 @@ reach `/var/run/postgresql:5433`; `pg_isready` returned no response.
 Required resolution: start or provide the approved PostgreSQL runtime, pass the
 database health check, and repeat G0–G3. No external order is authorized while
 the durable runtime is unavailable.
+
+### Resolution update — 2026-09-19
+
+Status: `RESOLVED / CTO REVIEW REQUIRED`
+
+The approved PostgreSQL runtime is available on the native host and the
+durable VAL-05 session budget was confirmed with `submissions=2` and
+`activeOrders=0`. The remaining VAL-05 reconciliation correction was localized
+to the provider acknowledgement terminal-state classification and is recorded
+under `VAL-05-FIX-01`.

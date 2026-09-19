@@ -1683,3 +1683,19 @@ Validation:
 Git persistence blocker: authorized commit failed with `fatal: Unable to create '/opt/Axodus/Trading/.git/index.lock': Read-only file system`; do not resume VAL-05 mutation until a deterministic Git baseline is materialized.
 
 Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
+
+## AXODUS-TRADING-VAL-05-FIX-01 — Provider-Acknowledged Exact Reconciliation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Tasks completed:
+- removed `provider-acknowledged` from terminal classification;
+- allowed acknowledged executions to enter durable reconciliation;
+- added exact lookup regression coverage across provider states and failure modes;
+- added the built read-only A/B reconciliation runner;
+- performed exact Binance Testnet reads for historical Executions A and B with
+  zero POST, zero DELETE, zero blind retry, zero residual position, and no
+  secret exposure.
+
+Validation: typecheck PASS, build PASS, 22/22 test files PASS, built-runner
+verification PASS, `git diff --check` PASS.
