@@ -461,23 +461,22 @@ Validation: 20 test files pass (100% pass), typecheck passes, build passes.
 
 ## AXODUS-TRADING-AEES-05 / IMP-05F — Continuous Live Provider Composition
 
-Status: `PARTIAL / VALIDATED IN WORKTREE / GIT PERSISTENCE BLOCKED / ALL 21 TEST SUITES PASS`
+Status: `COMPLETE / CTO ACCEPTED / PERSISTED / ALL 21 TEST SUITES PASS`
 
 Implemented canonical `ContinuousBinanceTestnetProvider` providing live mutation (`POST /order`), exact lookup (`GET /order` by `origClientOrderId`), cancellation (`DELETE /order`), open orders (`GET /openOrders`), and position risk (`GET /positionRisk`). Implemented `Val05ContinuousRunner` with explicit session envelope, durable session budgeting (`PostgresVal05SessionBudgetStore`), and guarded runner modes. Deterministic integration tests cover all 20 required scenarios.
 
-Validation: 21 test files pass (100% pass), typecheck passes, build passes, live public Testnet read verified, `BLOCKER-05` remediated in worktree. Authorized commit blocked by read-only `.git`.
+Validation: 21 test files pass (100% pass), typecheck passes, build passes, live public Testnet read verified, `BLOCKER-05` resolved by commit `7e5d8cb`.
 
 Evidence: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
 
 ## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
-Status: `BLOCKED / G3 LIVE RUNTIME INTEGRATION GAP`
+Status: `BLOCKED / G3 DURABLE RUNTIME UNAVAILABLE`
 
-G0 local regression, G1 public Testnet preflight and G2 authenticated/read-only
-initial-state checks passed. The current continuous services expose abstract
-mutation, reconciliation and cancellation provider interfaces, but the
-repository does not contain a live Binance Testnet adapter composition for the
-continuous runtime. The existing VAL-04B2 single-order harness remains a
-separate controlled lifecycle and cannot substitute for this gate.
+IMP-05F provides the live Binance Testnet provider composition. G0 local
+regression, G1 public Testnet preflight and G2 authenticated/read-only
+initial-state checks passed. G3 stopped before mutation because PostgreSQL at
+`/var/run/postgresql:5433` returned no response to `pg_isready`; durable
+session accounting was unavailable.
 
 Evidence: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.

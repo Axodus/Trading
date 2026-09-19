@@ -249,10 +249,24 @@ The controlled FastAPI HTTP and full-lifespan harnesses pass submission identity
 
 Severity: `HIGH / P0`
 
-Status: `REMEDIATED IN WORKTREE / GIT PERSISTENCE BLOCKED`
+Status: `RESOLVED / CTO CLOSED`
 
 Resolved in `IMP-05F`: Implemented `ContinuousBinanceTestnetProvider` binding `ContinuousExecutionRuntime` to Binance Testnet mutations, exact order lookup (`origClientOrderId`), cancellation, open orders, and positions risk reads. Implemented `Val05ContinuousRunner` with explicit session envelope, durable PostgreSQL session budget store (`PostgresVal05SessionBudgetStore`), and guarded runner modes (public, authenticated-read-only, controlled-execute).
 
-Deterministic integration suite `imp-05f-live-provider-composition.test.mjs` verifies all 20 composition scenarios. Built public runner validated against real Testnet public endpoint. Formal resolution remains pending Git persistence because the authorized commit could not create `.git/index.lock` on the read-only filesystem.
+Deterministic integration suite `imp-05f-live-provider-composition.test.mjs` verifies all 20 composition scenarios. Built public runner validated against real Testnet public endpoint. Formal resolution is persisted in commit `7e5d8cb`.
 
 Record: `.instructions/validation/AXODUS-TRADING-IMP-05F_CONTINUOUS_LIVE_PROVIDER_COMPOSITION.md`.
+
+## AXODUS-TRADING-BLOCKER-06 — VAL-05 Durable Runtime Database Unavailable
+
+Severity: `HIGH / P0`
+
+Status: `OPEN / VAL-05 G3 BLOCKING / ENVIRONMENT`
+
+The IMP-05F runtime requires durable PostgreSQL session accounting and
+execution state before any external mutation. The current executor could not
+reach `/var/run/postgresql:5433`; `pg_isready` returned no response.
+
+Required resolution: start or provide the approved PostgreSQL runtime, pass the
+database health check, and repeat G0–G3. No external order is authorized while
+the durable runtime is unavailable.

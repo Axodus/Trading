@@ -1648,14 +1648,14 @@ Next task: execute IMP-05C (Position Reconciliation, Risk Envelope & Kill Switch
 
 ## AXODUS-TRADING-VAL-05 — Continuous Testnet Trading Acceptance
 
-Status: `BLOCKED / G3 LIVE RUNTIME INTEGRATION GAP`
+Status: `BLOCKED / G3 DURABLE RUNTIME UNAVAILABLE`
 
-Completed G0–G2 without mutation: local regression 20/20, public Testnet
+Completed G0–G2 without mutation: local regression 21/21, public Testnet
 preflight PASS, authenticated account/open-orders/position reads PASS, with
-zero orders and zero cancellations. G3 stopped because no live adapter binds
-`ContinuousExecutionRuntime` to Binance Testnet mutation, exact lookup,
-cancellation and position reconciliation. Do not use the VAL-04B2 harness as a
-substitute and do not authorize G4 until the integration boundary is provided.
+zero orders and zero cancellations. IMP-05F provides the live adapter, but G3
+stopped because PostgreSQL at `/var/run/postgresql:5433` was unavailable. Do
+not authorize G4 until durable session accounting and execution persistence are
+healthy.
 
 Record: `.instructions/validation/AXODUS-TRADING-VAL-05_CONTINUOUS_TESTNET_TRADING_ACCEPTANCE.md`.
 
