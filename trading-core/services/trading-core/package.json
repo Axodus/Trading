@@ -11,7 +11,7 @@
     "val:04b2:r4:public": "npm run build && node ../../../dist/services/trading-core/trading-core/services/trading-core/src/external/val-04b2-live-runner.js --public",
     "val:04b2:r4:execute": "npm run build && node ../../../dist/services/trading-core/trading-core/services/trading-core/src/external/val-04b2-live-runner.js --execute",
     "val:04b2:r4:verify-built": "npm run build && node scripts/verify-val-04b2-built-runner.mjs",
-    "val:05:fix01:reconcile": "npm run build && node --experimental-strip-types scripts/val-05-fix01-readonly-reconciliation.ts",
+    "val:05:fix01:reconcile": "npm run build && node ../../../dist/services/trading-core/trading-core/services/trading-core/src/external/val-05-fix01-readonly-reconciliation.js",
     "trading-db": "npm run build && node --experimental-strip-types scripts/trading-db.ts",
     "db:bootstrap-local": "npm run build && node --experimental-strip-types scripts/bootstrap-local-db.ts",
     "db:healthcheck": "npm run build && node --experimental-strip-types scripts/healthcheck-db.ts",

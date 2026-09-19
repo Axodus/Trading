@@ -1,8 +1,15 @@
-import { createVal05ContinuousRuntime, PostgresVal05SessionBudgetStore } from '../src/external/Val05ContinuousRunner.js';
-import { Val04B2CredentialSource } from '../src/external/Val04B2CredentialSource.js';
-import { Val04B2LiveTransport } from '../src/external/Val04B2LiveTransport.js';
-import { NodePostgresClient } from '../src/repositories/postgres/NodePostgresClient.js';
-import { createNodePostgresEnvConfig } from '../src/config/PostgresEnvConfig.js';
+import { createVal05ContinuousRuntime, PostgresVal05SessionBudgetStore } from './Val05ContinuousRunner.js';
+import { Val04B2CredentialSource } from './Val04B2CredentialSource.js';
+import { Val04B2LiveTransport } from './Val04B2LiveTransport.js';
+import { NodePostgresClient } from '../repositories/postgres/NodePostgresClient.js';
+import { createNodePostgresEnvConfig } from '../config/PostgresEnvConfig.js';
+
+type RuntimeProcess = {
+  env: Readonly<Record<string, string | undefined>>;
+  exit(code: number): never;
+};
+
+const runtimeProcess = (globalThis as unknown as { process: RuntimeProcess }).process;
 
 interface LiveReconciliationOutput {
   sessionId: string;
@@ -38,18 +45,17 @@ interface LiveReconciliationOutput {
     duplicateSubmissions: 0;
     mainnetCalls: 0;
     secretsExposed: false;
-    cleanupPassed: true;
+    cleanupPassed: boolean;
   };
 }
 
 async function main(): Promise<void> {
-  const sessionId = process.env.AXODUS_VAL_05_SESSION_ID ?? 'val-05-live-session-1789779945562';
+  const sessionId = runtimeProcess.env.AXODUS_VAL_05_SESSION_ID ?? 'val-05-live-session-1789779945562';
   const intentA = 'intent-val05-a-1789779946479';
   const intentB = 'intent-val05-b-1789779950732';
 
-  const dbConfig = createNodePostgresEnvConfig(process.env);
-  const dbClient = new NodePostgresClient(dbConfig);
-  await dbClient.connect();
+  const dbConfig = createNodePostgresEnvConfig(runtimeProcess.env);
+  const dbClient = await NodePostgresClient.create(dbConfig);
 
   try {
     const sessionBudgetStore = new PostgresVal05SessionBudgetStore(dbClient);
@@ -75,7 +81,7 @@ async function main(): Promise<void> {
     const reconciledB = await val05.runtime.reconcile(intentB);
 
     const preflight = await val05.runner.runAuthenticatedReadOnlyPreflight([
-      { providerId: val05.provider.providerId, symbol: 'BTCUSDT', quantity: 0, observedAt: new Date().toISOString() },
+      { market: 'BTCUSDT', symbol: 'BTCUSDT', side: 'both', quantity: '0', updatedAt: new Date().toISOString() },
     ]);
 
     const budgetState = await sessionBudgetStore.load(sessionId);
@@ -141,5 +147,5 @@ main().catch((err) => {
   console.error(JSON.stringify({
     error: err instanceof Error ? err.message : String(err),
   }));
-  process.exit(1);
+  runtimeProcess.exit(1);
 });
