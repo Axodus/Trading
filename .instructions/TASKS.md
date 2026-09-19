@@ -1,3 +1,40 @@
+## AXODUS-TRADING-EPIC-QUANT — Quantitative Research & Strategy Validation Laboratory Planning
+
+Status: COMPLETE / DOCUMENTAL AUDIT & ARCHITECTURE PLAN / CTO REVIEW REQUIRED
+
+Completed:
+- Executed comprehensive factual audit of legacy quants-lab repository (126 Python files, 32 notebooks).
+- Classified all subsystems (REUSE, ADAPT, EXTEND, REBUILD, REFERENCE, DEPRECATE, REJECT).
+- Rejected legacy MongoDB persistence, unpinned/floating dependencies, and okx_dex_api.py DEX signing surfaces.
+- Designed canonical Quant Lab architecture spanning Dataset Registry, Experiment Engine, Mass Trial Engine, Statistical Robustness Suite, StrategyEvidence Package, and Promotion Gate.
+- Formulated overfitting defenses including Deflated Sharpe Ratio (DSR), Probability of Backtest Overfitting (PBO), Combinatorial Purged Cross-Validation (CPCV), and Walk-Forward analysis.
+- Defined cross-EPIC Shared Contract Requirements for reconciliation with EPIC-01 (StrategyIdentity, StrategyRevision, MarketState, FeatureDefinition, DatasetReference, StrategyEvidence, StrategyHealth, PromotionEligibility).
+- Defined storage architecture (PostgreSQL for metadata + Parquet/Arrow for time-series + DuckDB for analytics) and compute scaling strategy.
+- Verified presence and authority of /opt/Axodus/.instructions/AGENT_COORDINATION_PROTOCOL.md.
+- Created comprehensive EPIC planning deliverable at .instructions/AXODUS_TRADING_EPIC_QUANT_PLAN.md.
+
+Next Gate:
+- CTO review and approval of AXODUS-TRADING-EPIC-QUANT plan.
+- Joint reconciliation of EPIC-01 and EPIC-QUANT shared contracts in SHARED_CONTRACT_FREEZE.
+- Implementation remains on HOLD; mainnet and real capital remain PROHIBITED.
+## AXODUS-TRADING-CROSS-EPIC-SCF-01 — Trading Harness & Quant Lab Shared Contract Freeze
+
+Status: COMPLETE / CTO REVIEW REQUIRED / IMPLEMENTATION HOLD
+
+Completed:
+- Reconciled the accepted REQ-15 architecture with the available EPIC-QUANT planning artifact and existing ACS evidence contracts.
+- Frozen shared semantics for StrategyIdentity, StrategyRevision, StrategyLifecycleState, MarketState, FeatureDefinition, DatasetReference, ExperimentReference, StrategyEvidence, PromotionEligibility and StrategyHealth.
+- Defined versioning, immutability, historical/live MarketState compatibility, ACS Evidence mapping, dependency direction, shared-file change control and cross-EPIC RFC rules.
+- Recorded that no formal EPIC-01 planning artifact was found in the local audit surface; this remains a P0 reconciliation gap rather than an inferred acceptance.
+- Created `.instructions/AXODUS_TRADING_CROSS_EPIC_SCF_01_SHARED_CONTRACT_FREEZE.md`.
+
+Readiness:
+- Parallel implementation: NO pending CTO review, EPIC-01 plan reconciliation and ACS envelope conformance validation.
+- Runtime implementation, migrations, dependencies, provider integration, credentials, trading and mainnet remain unauthorized.
+
+Next Gate:
+- CTO review of SCF-01 and resolution of the listed P0 gaps before authorizing implementation slices.
+
 # Trading Tasks
 
 ## REQ-04 — Materialized Repository Verification & Baseline Reconciliation

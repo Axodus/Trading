@@ -512,3 +512,16 @@ classification matrices, domain contracts, data architecture, security boundarie
 strategy lifecycle, gap register, and candidate EPIC sequencing.
 
 Record: `.instructions/TRADING_REQ_15_SOVEREIGN_AGENTIC_TRADING_ARCHITECTURE_FREEZE.md`.
+## AXODUS-TRADING-CROSS-EPIC-SCF-01 — Shared Contract Freeze
+
+Status: `COMPLETE / CTO REVIEW REQUIRED / IMPLEMENTATION HOLD`
+
+SCF-01 freezes the shared semantic boundary between EPIC-01 and EPIC-QUANT for
+strategy identity/revision, lifecycle, MarketState, feature definitions,
+dataset and experiment references, StrategyEvidence, PromotionEligibility and
+StrategyHealth. It also records ACS Evidence mapping, provider-neutrality,
+versioning, immutability and shared-file change control.
+
+Readiness remains `PARALLEL IMPLEMENTATION READY: NO`: the formal EPIC-01 plan
+was not found in the local audit surface and ACS adapter conformance is not yet
+validated. No runtime implementation or trading authority is granted.

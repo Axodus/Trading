@@ -1,3 +1,16 @@
+# Cross-EPIC Shared Contract Freeze — SCF-01
+
+Status: COMPLETE / CTO REVIEW REQUIRED / IMPLEMENTATION HOLD
+
+SCF-01 reconciles the shared semantic contracts required by EPIC-01 and
+EPIC-QUANT under REQ-15. The documentary freeze covers strategy identity and
+revision, lifecycle, MarketState, features, datasets, experiments, evidence,
+promotion eligibility and StrategyHealth. It does not authorize implementation.
+
+Readiness: `PARALLEL IMPLEMENTATION READY: NO` pending the missing formal EPIC-01
+planning artifact and ACS Evidence adapter conformance validation. See
+`.instructions/AXODUS_TRADING_CROSS_EPIC_SCF_01_SHARED_CONTRACT_FREEZE.md`.
+
 # Trading Roadmap
 
 ## Sovereign Architecture Gate — REQ-15
