@@ -2040,3 +2040,25 @@ Validation:
 - Test suite: 29/29 suites pass (including 18/18 REQ-06 risk tests)
 - Quant regression: 45/45 tests pass
 - Zero external mutations, zero mainnet, zero real capital.
+
+
+## AXODUS-TRADING-CROSS-EPIC / REQ-07A — Strategy Promotion, Health & Risk Integration Boundary Freeze
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Completed comprehensive architectural specification `.instructions/TRADING_REQ_07A_STRATEGY_PROMOTION_HEALTH_RISK_BOUNDARY_FREEZE.md`.
+- Reconciled and frozen all 10 canonical architectural decisions (`DEC-07A-01` through `DEC-07A-10`).
+- Defined explicit cross-epic boundaries connecting Quant Evidence Qualification (`REQ-QUANT-06`), Strategy Lifecycle (`REQ-07B`), Strategy Health (`REQ-07C`), Risk Authority (`REQ-06`), and TradingIntent (`REQ-07D`).
+- Established the canonical 6x12 StrategyHealth x StrategyLifecycleState compatibility matrix, TOCTOU prevention via `StrategyOperationalSnapshot`, emergency suspension escalation protocols, atomic PostgreSQL transactional outbox patterns, and rigorous TradingIntent emission prerequisites.
+- Zero runtime mutations, zero execution plane emission, zero credential exposure, zero mainnet calls.
+
+Validation:
+- TypeScript typecheck & build: PASS (0 errors)
+- TypeScript test suites: 29/29 PASS
+- Python quants-lab test suites: 45/45 PASS
+- `git diff --check`: PASS (0 errors)
+
+Next Gate:
+- CTO review and acceptance of `REQ-07A`.
+- Unblocking of `REQ-07B` (Strategy Lifecycle Authority Implementation), `REQ-07C` (Strategy Health Authority Implementation), and `REQ-07D` (Canonical TradingIntent & Execution Boundary Integration).
