@@ -68,6 +68,28 @@ Validation:
 - `git diff --check`: PASS
 - External mutations: 0
 
+## AXODUS-TRADING-EPIC-01 / REQ-05 — Portfolio & Capital Allocation Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited existing portfolio state, balance, and position management surfaces; preserved them as internal/persistence state while establishing canonical `CanonicalPortfolioSnapshot`, `PortfolioContext`, and `CapitalPolicyLimits`.
+- Enforced the strict boundary: Capital Allocation ≠ Risk Authorization ≠ Execution Authority.
+- Implemented `CapitalAllocationService` resolving proposal competition with strict capital conservation (`allocatedCapital ≤ availableCapital`).
+- Implemented strategy-level budget caps and instrument concentration limits.
+- Implemented deterministic proposal deduplication and input-permutation invariance.
+- Implemented conflict detection for opposing directional positions and explicit unknown-correlation handling.
+- Implemented pure immutable `revalidatePortfolioDecision` detecting expired decisions, depleted capital, and strategy health/eligibility changes.
+- Added comprehensive REQ-05 test suite covering proposal competition, budget caps, instrument concentration, capital exhaustion, expired proposals, suspended/retired strategies, ineligible strategies, duplicate suppression, deterministic replay, permutation invariance, unknown correlation, and decision revalidation.
+
+Validation:
+- Contracts typecheck: PASS
+- Trading Core typecheck: PASS
+- Trading Core build: PASS
+- Tests: PASS, 28 test suites / 0 failures / 0 skipped
+- `git diff --check`: PASS
+- External mutations: 0
+
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 Delivered:
@@ -1908,3 +1930,27 @@ Validation:
 
 Next Gate:
 - CTO review of REQ-QUANT-04, then REQ-QUANT-05 (Out-of-Sample, Walk-Forward & Statistical Validation).
+## AXODUS-TRADING-EPIC-QUANT / REQ-QUANT-05 — Out-of-Sample, Walk-Forward & Statistical Validation Foundation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Audited legacy `quants-lab` train/test, cross-validation, and metrics assets; classified legacy metrics (`REFERENCE`), notebook CV (`ADAPT`), and unvalidated optimization metrics (`REJECT`).
+- Reused accepted Quant foundations: `DatasetManifest`/`DatasetReference`, `reconstruct_historical_market_state`, `REQ-QUANT-03` `SimulationEngine`, and `REQ-QUANT-04` parameter spaces and strategy models.
+- Implemented typed `ValidationPlan` and `DatasetSegment` defining explicit temporal boundaries and roles (`IN_SAMPLE`, `OUT_OF_SAMPLE`).
+- Operationalized `SelectionSnapshot` freezing chosen strategy parameters, source trial lineage, candidate population size, and metrics before OOS exposure.
+- Implemented deterministic Holdout OOS executor rejecting look-ahead contamination, computing degradation metrics, and flagging selection bias when population size is large.
+- Implemented deterministic Walk-Forward validation (`WalkForwardPlan`) supporting rolling and expanding window modes with temporal fold isolation, parameter reselection strictly within training folds, and preservation of failed folds.
+- Implemented `StatisticalAnalyzer` computing moment diagnostics (mean, sample std dev, median, positive fold ratio, annualized Sharpe estimate, and 95% confidence intervals).
+- Mapped `ValidationResult` directly into canonical ACS `EvidenceRecordV2` envelope preserving payload digest and provenance.
+- Added unit and integration tests covering moment diagnostics, holdout degradation, temporal leakage rejection, rolling/expanding walk-forward, failed-fold preservation, and deterministic replay.
+- Did not implement strategy promotion, real-capital validation, Monte Carlo market simulation, or live execution.
+
+Validation:
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (35/35 tests)
+- `npm --prefix trading-core/services/trading-core test` — PASS (28/28 test suites)
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Next Gate:
+- CTO review of REQ-QUANT-05, then REQ-QUANT-06 (Strategy Evidence Qualification & Promotion Gate).

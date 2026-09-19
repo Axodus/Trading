@@ -1,5 +1,13 @@
 # Trading Status
 
+## AXODUS-TRADING-EPIC-01 / REQ-05
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Portfolio & Capital Allocation foundations are implemented. The milestone establishes the canonical Portfolio & Capital Allocator boundary consuming CanonicalPortfolioSnapshot, competing TradeProposals, StrategyHealth, and PromotionEligibility under versioned CapitalPolicyLimits to produce provider-neutral PortfolioDecisions. Enforces capital conservation (allocated ≤ available), strategy-level budget caps, instrument concentration limits, directional exposure tracking, conflict detection for opposing positions, explicit unknown-correlation handling, deterministic replay, input-permutation invariance, and immutable decision revalidation. RiskDecision authority, kill-switch ownership, TradingIntent generation, and Execution Plane integration remain out of scope.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests PASS (28 test suites passed / 0 failed / 0 skipped); `git diff --check` PASS. Zero external trading mutations.
+
 ## AXODUS-TRADING-EPIC-01 / REQ-04
 
 Status: `COMPLETE / CTO REVIEW REQUIRED`
