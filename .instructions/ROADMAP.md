@@ -38,7 +38,7 @@ Sequenced post-acceptance EPIC roadmap:
    - `REQ-01`: Canonical Harness Contract Foundations (`COMPLETE / CTO REVIEW REQUIRED`)
    - `REQ-02`: Market Intelligence & MarketState Foundations (`COMPLETE / CTO REVIEW REQUIRED`)
    - `REQ-03`: Opportunity Discovery Foundation (`COMPLETE / CTO REVIEW REQUIRED`)
-   - `REQ-04`: Strategy Intelligence & TradeProposal Foundation (`PLANNED`)
+   - `REQ-04`: Strategy Intelligence & TradeProposal Foundation (`COMPLETE / CTO REVIEW REQUIRED`)
 2. `AXODUS-TRADING-EPIC-QUANT`: Quantitative Research & Strategy Validation Laboratory
 3. `AXODUS-TRADING-EPIC-02`: Strategy Research, Specialization & Workforce Modeling
 4. `AXODUS-TRADING-EPIC-03`: Portfolio Allocation & Sovereign Risk Authority

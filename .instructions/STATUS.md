@@ -1,5 +1,13 @@
 # Trading Status
 
+## AXODUS-TRADING-EPIC-01 / REQ-04
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Strategy Intelligence and TradeProposal foundations are implemented. The milestone establishes the canonical Strategy Specialist boundary consuming qualified Opportunities, exact StrategyRevisions, MarketStates, PromotionEligibility, StrategyEvidence and StrategyHealth context to produce provider-neutral TradeProposals or NO_PROPOSAL. Supports deterministic specialists (Directional Swing, Futures Scalping), model/Agent-assisted specialists with fail-closed candidate validation, exact StrategyIdentity vs AgentIdentity separation, proposal deduplication, temporal expiry, immutable revalidation, and evidence lineage. Portfolio allocation, RiskDecision authority, TradingIntent runtime and Execution Plane integration remain out of scope.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests PASS (27 test suites passed / 0 failed / 0 skipped); `git diff --check` PASS. Zero external trading mutations.
+
 ## AXODUS-TRADING-EPIC-01 / REQ-01
 
 ## AXODUS-TRADING-EPIC-01 / REQ-02
