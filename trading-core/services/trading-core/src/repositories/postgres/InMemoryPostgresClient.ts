@@ -38,6 +38,12 @@ export interface InMemoryPostgresStorage {
   canonical_fills: Row[];
   provider_observations: Row[];
   reconciliation_records: Row[];
+  execution_diagnostics: Row[];
+  pnl_attributions: Row[];
+  pnl_attribution_components: Row[];
+  position_ledger_entries: Row[];
+  trading_feedback_snapshots: Row[];
+  attribution_corrections: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -72,6 +78,12 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     canonical_fills: [],
     provider_observations: [],
     reconciliation_records: [],
+    execution_diagnostics: [],
+    pnl_attributions: [],
+    pnl_attribution_components: [],
+    position_ledger_entries: [],
+    trading_feedback_snapshots: [],
+    attribution_corrections: [],
   };
 }
 
@@ -921,6 +933,173 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         return { rows: this.storage.reconciliation_records.filter((row) => row.reconciliation_id === params[0]) as unknown as T[] };
       }
       return { rows: this.storage.reconciliation_records as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into execution_diagnostics')) {
+      if (this.storage.execution_diagnostics.some((row) => row.diagnostics_id === params[0] || row.canonical_order_id === params[3])) {
+        throw new Error('Duplicate key violation: unique canonical_order_id in execution_diagnostics');
+      }
+      this.storage.execution_diagnostics.push({
+        diagnostics_id: params[0],
+        execution_result_id: params[1],
+        execution_intent_id: params[2],
+        canonical_order_id: params[3],
+        strategy_id: params[4],
+        strategy_revision_id: params[5],
+        venue: params[6],
+        instrument: params[7],
+        environment: params[8],
+        side: params[9],
+        authorized_quantity: params[10],
+        execution_quantity: params[11],
+        filled_quantity: params[12],
+        remaining_quantity: params[13],
+        fill_ratio: params[14],
+        realized_execution_price: params[15],
+        reference_price: params[16],
+        slippage_bps: params[17],
+        slippage_amount: params[18],
+        fee_breakdown: params[19],
+        normalized_total_fee: params[20],
+        accounting_currency: params[21],
+        latencies: params[22],
+        anomalies: params[23],
+        rejection_category: params[24],
+        rejection_reason: params[25],
+        cancellation_details: params[26],
+        reconciliation_summary: params[27],
+        quality: params[28],
+        policy_id: params[29],
+        policy_revision: params[30],
+        input_digest: params[31],
+        created_at: params[32],
+        as_of: params[33],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from execution_diagnostics')) {
+      if (normalized.includes('where canonical_order_id =')) {
+        return { rows: this.storage.execution_diagnostics.filter((row) => row.canonical_order_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where strategy_id =') && normalized.includes('strategy_revision_id =')) {
+        return { rows: this.storage.execution_diagnostics.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]) as unknown as T[] };
+      }
+      return { rows: this.storage.execution_diagnostics as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into pnl_attributions')) {
+      if (this.storage.pnl_attributions.some((row) => row.pnl_attribution_id === params[0] || row.canonical_order_id === params[5])) {
+        throw new Error('Duplicate key violation: unique canonical_order_id in pnl_attributions');
+      }
+      this.storage.pnl_attributions.push({
+        pnl_attribution_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        execution_intent_id: params[3],
+        execution_result_id: params[4],
+        canonical_order_id: params[5],
+        venue: params[6],
+        instrument: params[7],
+        environment: params[8],
+        accounting_currency: params[9],
+        position_side: params[10],
+        realized_gross_pnl: params[11],
+        canonical_fees: params[12],
+        canonical_financing_costs: params[13],
+        canonical_other_costs: params[14],
+        realized_net_pnl: params[15],
+        realized_quantity: params[16],
+        entry_average_price: params[17],
+        exit_average_price: params[18],
+        is_position_closed: params[19],
+        remaining_open_quantity: params[20],
+        cost_basis_remaining: params[21],
+        funding_pnl: params[22],
+        borrow_interest_cost: params[23],
+        quality: params[24],
+        policy_id: params[25],
+        policy_revision: params[26],
+        input_digest: params[27],
+        supersedes_id: params[28],
+        correction_reason: params[29],
+        created_at: params[30],
+        as_of: params[31],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from pnl_attributions')) {
+      if (normalized.includes('where canonical_order_id =')) {
+        return { rows: this.storage.pnl_attributions.filter((row) => row.canonical_order_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where strategy_id =') && normalized.includes('strategy_revision_id =')) {
+        return { rows: this.storage.pnl_attributions.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]) as unknown as T[] };
+      }
+      return { rows: this.storage.pnl_attributions as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into pnl_attribution_components')) {
+      this.storage.pnl_attribution_components.push({
+        component_id: params[0],
+        pnl_attribution_id: params[1],
+        component_type: params[2],
+        asset: params[3],
+        raw_amount: params[4],
+        normalized_amount: params[5],
+        description: params[6],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from pnl_attribution_components')) {
+      if (normalized.includes('where pnl_attribution_id =')) {
+        return { rows: this.storage.pnl_attribution_components.filter((row) => row.pnl_attribution_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.pnl_attribution_components as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into position_ledger_entries')) {
+      this.storage.position_ledger_entries.push({
+        position_entry_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        venue: params[3],
+        instrument: params[4],
+        environment: params[5],
+        side: params[6],
+        quantity: params[7],
+        entry_price: params[8],
+        entry_fill_id: params[9],
+        opened_at: params[10],
+        closed_quantity: params[11],
+        remaining_quantity: params[12],
+        is_fully_closed: params[13],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from position_ledger_entries')) {
+      return { rows: this.storage.position_ledger_entries as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into trading_feedback_snapshots')) {
+      this.storage.trading_feedback_snapshots.push({
+        feedback_snapshot_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        venue: params[3],
+        instrument: params[4],
+        environment: params[5],
+        window_start: params[6],
+        window_end: params[7],
+        diagnostics_refs: params[8],
+        pnl_attribution_refs: params[9],
+        aggregate: params[10],
+        divergence: params[11],
+        quality: params[12],
+        input_digest: params[13],
+        created_at: params[14],
+        evidence_ref: params[15],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from trading_feedback_snapshots')) {
+      if (normalized.includes('where feedback_snapshot_id =')) {
+        return { rows: this.storage.trading_feedback_snapshots.filter((row) => row.feedback_snapshot_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.trading_feedback_snapshots as unknown as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }

@@ -283,3 +283,11 @@ export * from './execution/lifecycle/ControlledExecutionService.js';
 export * from './execution/lifecycle/adapters/ControlledLifecycleAdapter.js';
 export * from './execution/lifecycle/adapters/SimulatedControlledLifecycleAdapter.js';
 export * from './execution/lifecycle/adapters/BinanceTestnetControlledLifecycleAdapter.js';
+
+export * from './execution/feedback/EconomicFeedbackErrors.js';
+export * from './execution/feedback/ExecutionDiagnosticsAuthority.js';
+export * from './execution/feedback/PositionAccountingService.js';
+export * from './execution/feedback/PnLAttributionAuthority.js';
+export * from './execution/feedback/TradingPerformanceAggregator.js';
+export * from './execution/feedback/TradingFeedbackService.js';
+export * from './execution/feedback/PostgresEconomicAttributionRepository.js';

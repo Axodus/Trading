@@ -33,3 +33,4 @@ export * from './strategy/lifecycle.js';
 export * from './governance/preExecution.js';
 export * from './execution/executionBoundary.js';
 export * from './execution/executionLifecycle.js';
+export * from './execution/economicFeedback.js';
