@@ -21,4 +21,8 @@
 - [x] **VAL-12-PG**: Real PostgreSQL Durable Operational Governance Acceptance
 - [x] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
 - [x] **VAL-13-PG**: Real PostgreSQL Durable System Safety & Recovery Acceptance
-- [ ] **REQ-14**: Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate
+- [x] **REQ-14**: Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate
+  - [x] **VAL-14-PG**: Real PostgreSQL Durable Trading Harness Acceptance (16/16 Gates)
+  - [x] **VAL-14-PAPER**: End-to-End Paper Trading Acceptance (8/8 Scenarios)
+  - [x] **VAL-14-FAULT**: Fault Injection & Resilience Acceptance (8/8 Scenarios)
+  - [x] **VAL-14-TESTNET**: Bounded Testnet Harness Acceptance (6/6 Gates)
