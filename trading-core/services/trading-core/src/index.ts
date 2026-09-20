@@ -282,3 +282,4 @@ export * from './execution/lifecycle/ReconciliationAuthority.js';
 export * from './execution/lifecycle/ControlledExecutionService.js';
 export * from './execution/lifecycle/adapters/ControlledLifecycleAdapter.js';
 export * from './execution/lifecycle/adapters/SimulatedControlledLifecycleAdapter.js';
+export * from './execution/lifecycle/adapters/BinanceTestnetControlledLifecycleAdapter.js';
