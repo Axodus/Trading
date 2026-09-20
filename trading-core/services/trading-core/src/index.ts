@@ -273,3 +273,12 @@ export * from './execution/boundary/adapters/DryRunExecutionAdapter.js';
 export * from './execution/boundary/adapters/HummingbotDryRunAdapter.js';
 export * from './execution/boundary/adapters/CondorDryRunAdapter.js';
 export * from './execution/boundary/adapters/ExecutionAdapterConformance.js';
+
+export * from './execution/lifecycle/ExecutionLifecycleTypes.js';
+export * from './execution/lifecycle/ExecutionLifecycleErrors.js';
+export * from './execution/lifecycle/PostgresExecutionLifecycleRepository.js';
+export * from './execution/lifecycle/ExecutionControlAuthority.js';
+export * from './execution/lifecycle/ReconciliationAuthority.js';
+export * from './execution/lifecycle/ControlledExecutionService.js';
+export * from './execution/lifecycle/adapters/ControlledLifecycleAdapter.js';
+export * from './execution/lifecycle/adapters/SimulatedControlledLifecycleAdapter.js';

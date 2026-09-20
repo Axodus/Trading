@@ -267,31 +267,28 @@ describe('AXODUS-TRADING-EPIC-01 / VAL-07D-PG — Real PostgreSQL Durable Pre-Ex
     assert.equal(intentCount.rows[0].count, '1');
   });
 
-  it('Gate 7: Transaction rollback / failure injection leaves zero partial state in PostgreSQL', async () => {
-    const cmd = makeValidCommand();
-    const authCountBefore = await client.query('SELECT count(*) FROM pre_execution_authorizations');
-    const intentCountBefore = await client.query('SELECT count(*) FROM trading_intents');
-    const outboxCountBefore = await client.query('SELECT count(*) FROM trading_execution_outbox');
+ it('Gate 7: Transaction rollback / failure injection leaves zero partial state in PostgreSQL', async () => {
+   const cmd = makeValidCommand();
 
-    const failingRepo = new PostgresPreExecutionAuthorizationRepository(client);
-    failingRepo.saveTradingIntent = async () => {
-      throw new Error('SIMULATED_DB_FAILURE_DURING_INTENT_INSERT');
-    };
-    const failingService = new PreExecutionAuthorizationService(failingRepo, client, { publishEvents: true });
+   const failingRepo = new PostgresPreExecutionAuthorizationRepository(client);
+   failingRepo.saveTradingIntent = async () => {
+     throw new Error('SIMULATED_DB_FAILURE_DURING_INTENT_INSERT');
+   };
+   const failingService = new PreExecutionAuthorizationService(failingRepo, client, { publishEvents: true });
 
-    await assert.rejects(
-      async () => failingService.authorize(cmd),
-      /SIMULATED_DB_FAILURE_DURING_INTENT_INSERT/
-    );
+   await assert.rejects(
+     async () => failingService.authorize(cmd),
+     /SIMULATED_DB_FAILURE_DURING_INTENT_INSERT/
+   );
 
-    const authCountAfter = await client.query('SELECT count(*) FROM pre_execution_authorizations');
-    const intentCountAfter = await client.query('SELECT count(*) FROM trading_intents');
-    const outboxCountAfter = await client.query('SELECT count(*) FROM trading_execution_outbox');
+   const authRows = await client.query('SELECT * FROM pre_execution_authorizations WHERE idempotency_key = $1', [cmd.idempotencyKey]);
+    const intentRows = await client.query('SELECT * FROM trading_intents WHERE risk_decision_id = $1', [cmd.riskDecision.riskDecisionId]);
+    const outboxRows = await client.query('SELECT * FROM trading_execution_outbox WHERE correlation_id = $1', [cmd.correlationId]);
 
-    assert.equal(authCountAfter.rows[0].count, authCountBefore.rows[0].count);
-    assert.equal(intentCountAfter.rows[0].count, intentCountBefore.rows[0].count);
-    assert.equal(outboxCountAfter.rows[0].count, outboxCountBefore.rows[0].count);
-  });
+   assert.equal(authRows.rows.length, 0);
+    assert.equal(intentRows.rows.length, 0);
+    assert.equal(outboxRows.rows.length, 0);
+ });
 
   it('Gate 8: Outbox atomicity — TradingIntentCreated is committed atomically in outbox', async () => {
     const cmd = makeValidCommand();

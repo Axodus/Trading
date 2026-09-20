@@ -32,6 +32,12 @@ export interface InMemoryPostgresStorage {
   execution_intents: Row[];
   execution_translations: Row[];
   execution_results: Row[];
+  execution_attempts: Row[];
+  canonical_orders: Row[];
+  canonical_order_events: Row[];
+  canonical_fills: Row[];
+  provider_observations: Row[];
+  reconciliation_records: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -60,6 +66,12 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     execution_intents: [],
     execution_translations: [],
     execution_results: [],
+    execution_attempts: [],
+    canonical_orders: [],
+    canonical_order_events: [],
+    canonical_fills: [],
+    provider_observations: [],
+    reconciliation_records: [],
   };
 }
 
@@ -674,6 +686,241 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         return { rows: this.storage.execution_results.filter((row) => row.execution_intent_id === params[0]) as unknown as T[] };
       }
       return { rows: this.storage.execution_results as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into execution_attempts')) {
+      if (this.storage.execution_attempts.some((row) => row.attempt_id === params[0])) {
+        throw new Error('Duplicate key violation: unique attempt_id in execution_attempts');
+      }
+      if (this.storage.execution_attempts.some((row) => row.client_order_id === params[10])) {
+        throw new Error('Duplicate key violation: unique client_order_id in execution_attempts');
+      }
+      if (this.storage.execution_attempts.some((row) => row.execution_intent_id === params[1] && row.idempotency_key === params[9])) {
+        throw new Error('Duplicate key violation: unique (execution_intent_id, idempotency_key) in execution_attempts');
+      }
+      this.storage.execution_attempts.push({
+        attempt_id: params[0],
+        execution_intent_id: params[1],
+        trading_intent_id: params[2],
+        strategy_id: params[3],
+        strategy_revision_id: params[4],
+        adapter_type: params[5],
+        venue: params[6],
+        environment: params[7],
+        attempt_number: params[8],
+        idempotency_key: params[9],
+        client_order_id: params[10],
+        provider_order_id: params[11],
+        status: params[12],
+        created_at: params[13],
+        expires_at: params[14],
+        error: params[15],
+      });
+      return { rows: [] };
+    }
+    if (normalized.startsWith('update execution_attempts')) {
+      const attemptId = params[0];
+      const row = this.storage.execution_attempts.find((r) => r.attempt_id === attemptId);
+      if (row) {
+        row.status = params[1];
+        if (params[2] !== null && params[2] !== undefined) row.provider_order_id = params[2];
+        if (params[3] !== null && params[3] !== undefined) row.error = params[3];
+      }
+      return { rows: [] };
+    }
+    if (normalized.includes('from execution_attempts')) {
+      if (normalized.includes('where attempt_id = ')) {
+        return { rows: this.storage.execution_attempts.filter((row) => row.attempt_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where client_order_id = ')) {
+        return { rows: this.storage.execution_attempts.filter((row) => row.client_order_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where execution_intent_id =  and idempotency_key = ')) {
+        return { rows: this.storage.execution_attempts.filter((row) => row.execution_intent_id === params[0] && row.idempotency_key === params[1]) as unknown as T[] };
+      }
+      return { rows: this.storage.execution_attempts as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into canonical_orders')) {
+      if (this.storage.canonical_orders.some((row) => row.canonical_order_id === params[0])) {
+        throw new Error('Duplicate key violation: unique canonical_order_id in canonical_orders');
+      }
+      if (this.storage.canonical_orders.some((row) => row.execution_intent_id === params[1])) {
+        throw new Error('Duplicate key violation: unique execution_intent_id in canonical_orders');
+      }
+      if (this.storage.canonical_orders.some((row) => row.client_order_id === params[18])) {
+        throw new Error('Duplicate key violation: unique client_order_id in canonical_orders');
+      }
+      this.storage.canonical_orders.push({
+        canonical_order_id: params[0],
+        execution_intent_id: params[1],
+        execution_attempt_id: params[2],
+        trading_intent_id: params[3],
+        strategy_id: params[4],
+        strategy_revision_id: params[5],
+        provider: params[6],
+        venue: params[7],
+        instrument: params[8],
+        side: params[9],
+        order_type: params[10],
+        authorized_quantity: params[11],
+        execution_quantity: params[12],
+        cumulative_filled_quantity: params[13],
+        remaining_quantity: params[14],
+        weighted_average_price: params[15],
+        state: params[16],
+        order_version: params[17],
+        client_order_id: params[18],
+        provider_order_id: params[19],
+        last_observation_id: params[20],
+        created_at: params[21],
+        updated_at: params[22],
+      });
+      return { rows: [] };
+    }
+    if (normalized.startsWith('update canonical_orders')) {
+      const orderId = params[0];
+      const expectedVersion = params[9];
+      const row = this.storage.canonical_orders.find((r) => r.canonical_order_id === orderId);
+      if (row) {
+        if (row.order_version !== expectedVersion) {
+          throw new Error('Optimistic lock failure: canonical order version mismatch');
+        }
+        row.cumulative_filled_quantity = params[1];
+        row.remaining_quantity = params[2];
+        row.weighted_average_price = params[3];
+        row.state = params[4];
+        row.order_version = params[5];
+        if (params[6] !== null && params[6] !== undefined) row.provider_order_id = params[6];
+        if (params[7] !== null && params[7] !== undefined) row.last_observation_id = params[7];
+        row.updated_at = params[8];
+      }
+      return { rows: [] };
+    }
+    if (normalized.includes('from canonical_orders')) {
+      if (normalized.includes('where canonical_order_id = ')) {
+        return { rows: this.storage.canonical_orders.filter((row) => row.canonical_order_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where execution_intent_id = ')) {
+        return { rows: this.storage.canonical_orders.filter((row) => row.execution_intent_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where client_order_id = ')) {
+        return { rows: this.storage.canonical_orders.filter((row) => row.client_order_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes('where state not in')) {
+        const terminalStates = params as string[];
+        return { rows: this.storage.canonical_orders.filter((row) => !terminalStates.includes(row.state as string)) as unknown as T[] };
+      }
+      return { rows: this.storage.canonical_orders as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into canonical_order_events')) {
+      if (this.storage.canonical_order_events.some((row) => row.event_id === params[0])) {
+        throw new Error('Duplicate key violation: unique event_id in canonical_order_events');
+      }
+      this.storage.canonical_order_events.push({
+        event_id: params[0],
+        canonical_order_id: params[1],
+        order_version: params[2],
+        previous_state: params[3],
+        new_state: params[4],
+        observation_id: params[5],
+        rationale: params[6],
+        timestamp: params[7],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from canonical_order_events')) {
+      if (normalized.includes('where canonical_order_id = ')) {
+        return { rows: this.storage.canonical_order_events.filter((row) => row.canonical_order_id === params[0]).sort((a, b) => Number(a.order_version) - Number(b.order_version)) as unknown as T[] };
+      }
+      return { rows: this.storage.canonical_order_events as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into canonical_fills')) {
+      if (this.storage.canonical_fills.some((row) => row.canonical_fill_id === params[0])) {
+        throw new Error('Duplicate key violation: unique canonical_fill_id in canonical_fills');
+      }
+      if (this.storage.canonical_fills.some((row) => row.provider === params[3] && row.provider_trade_id === params[4])) {
+        throw new Error('Duplicate key violation: unique (provider, provider_trade_id) in canonical_fills');
+      }
+      this.storage.canonical_fills.push({
+        canonical_fill_id: params[0],
+        canonical_order_id: params[1],
+        execution_intent_id: params[2],
+        provider: params[3],
+        provider_trade_id: params[4],
+        instrument: params[5],
+        side: params[6],
+        fill_quantity: params[7],
+        fill_price: params[8],
+        fee: params[9],
+        fee_asset: params[10],
+        provider_timestamp: params[11],
+        observed_at: params[12],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from canonical_fills')) {
+      if (normalized.includes('where canonical_order_id = ')) {
+        return { rows: this.storage.canonical_fills.filter((row) => row.canonical_order_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.canonical_fills as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into provider_observations')) {
+      if (this.storage.provider_observations.some((row) => row.observation_id === params[0])) {
+        throw new Error('Duplicate key violation: unique observation_id in provider_observations');
+      }
+      if (this.storage.provider_observations.some((row) => row.provider === params[2] && row.raw_payload_digest === params[16])) {
+        throw new Error('Duplicate key violation: unique (provider, raw_payload_digest) in provider_observations');
+      }
+      this.storage.provider_observations.push({
+        observation_id: params[0],
+        observation_type: params[1],
+        provider: params[2],
+        venue: params[3],
+        client_order_id: params[4],
+        provider_order_id: params[5],
+        provider_trade_id: params[6],
+        provider_status: params[7],
+        observed_quantity: params[8],
+        observed_price: params[9],
+        observed_fee: params[10],
+        observed_fee_asset: params[11],
+        source: params[12],
+        sequence_number: params[13],
+        observed_at: params[14],
+        provider_timestamp: params[15],
+        raw_payload_digest: params[16],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from provider_observations')) {
+      if (normalized.includes('where provider =  and raw_payload_digest = ')) {
+        return { rows: this.storage.provider_observations.filter((row) => row.provider === params[0] && row.raw_payload_digest === params[1]) as unknown as T[] };
+      }
+      return { rows: this.storage.provider_observations as unknown as T[] };
+    }
+    if (normalized.startsWith('insert into reconciliation_records')) {
+      if (this.storage.reconciliation_records.some((row) => row.reconciliation_id === params[0])) {
+        throw new Error('Duplicate key violation: unique reconciliation_id in reconciliation_records');
+      }
+      this.storage.reconciliation_records.push({
+        reconciliation_id: params[0],
+        canonical_order_id: params[1],
+        client_order_id: params[2],
+        provider_order_id: params[3],
+        decision: params[4],
+        previous_state: params[5],
+        new_state: params[6],
+        reconciliation_version: params[7],
+        reason_codes: params[8],
+        discrepancy_details: params[9],
+        evaluated_at: params[10],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from reconciliation_records')) {
+      if (normalized.includes("where reconciliation_id = $1")) {
+        return { rows: this.storage.reconciliation_records.filter((row) => row.reconciliation_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.reconciliation_records as unknown as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }
