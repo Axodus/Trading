@@ -257,3 +257,8 @@ export * from './lifecycle/StrategyLifecycleErrors.js';
 export * from './lifecycle/StrategyLifecycleValidator.js';
 export * from './lifecycle/PostgresStrategyLifecycleRepository.js';
 export * from './lifecycle/StrategyLifecycleAuthority.js';
+export * from './pre-execution/PreExecutionTypes.js';
+export * from './pre-execution/PreExecutionErrors.js';
+export * from './pre-execution/PreExecutionAuthorizationValidator.js';
+export * from './pre-execution/PostgresPreExecutionAuthorizationRepository.js';
+export * from './pre-execution/PreExecutionAuthorizationService.js';

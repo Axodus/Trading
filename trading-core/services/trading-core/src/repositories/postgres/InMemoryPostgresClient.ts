@@ -27,6 +27,8 @@ export interface InMemoryPostgresStorage {
   strategy_health_transitions: Row[];
   strategy_health_policies: Row[];
   strategy_operational_snapshots: Row[];
+  trading_intents: Row[];
+  pre_execution_authorizations: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -50,6 +52,8 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     strategy_health_transitions: [],
     strategy_health_policies: [],
     strategy_operational_snapshots: [],
+    trading_intents: [],
+    pre_execution_authorizations: [],
   };
 }
 
@@ -467,6 +471,89 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     }
     if (normalized.includes("from strategy_lifecycle_policies")) {
       return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+    }
+    if (normalized.startsWith('insert into trading_intents')) {
+      if (this.storage.trading_intents.some((row) => row.risk_decision_id === params[7])) {
+        throw new Error('Duplicate key violation: unique risk_decision_id in trading_intents');
+      }
+      if (this.storage.trading_intents.some((row) => row.intent_id === params[0])) {
+        throw new Error('Duplicate key violation: unique intent_id in trading_intents');
+      }
+      this.storage.trading_intents.push({
+        intent_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        market_state_id: params[3],
+        opportunity_id: params[4],
+        proposal_id: params[5],
+        portfolio_decision_id: params[6],
+        risk_decision_id: params[7],
+        eligibility_id: params[8],
+        instrument: params[9],
+        venue: params[10],
+        action: params[11],
+        approved_quantity: params[12],
+        approved_capital: params[13],
+        approved_leverage: params[14],
+        price_constraints: params[15],
+        time_constraints: params[16],
+        execution_policy_ref: params[17],
+        correlation_id: params[18],
+        idempotency_key: params[19],
+        created_at: params[20],
+        expires_at: params[21],
+        evidence_refs: params[22],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from trading_intents')) {
+      if (normalized.includes('where intent_id = $1')) {
+        return { rows: this.storage.trading_intents.filter((row) => row.intent_id === params[0]) as T[] };
+      }
+      if (normalized.includes('where risk_decision_id = $1')) {
+        return { rows: this.storage.trading_intents.filter((row) => row.risk_decision_id === params[0]) as T[] };
+      }
+      return { rows: this.storage.trading_intents as T[] };
+    }
+    if (normalized.startsWith('insert into pre_execution_authorizations')) {
+      if (this.storage.pre_execution_authorizations.some((row) => row.strategy_id === params[1] && row.idempotency_key === params[12])) {
+        throw new Error('Duplicate key violation: unique idempotency_key in pre_execution_authorizations');
+      }
+      if (this.storage.pre_execution_authorizations.some((row) => row.authorization_id === params[0])) {
+        throw new Error('Duplicate key violation: unique authorization_id in pre_execution_authorizations');
+      }
+      this.storage.pre_execution_authorizations.push({
+        authorization_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        proposal_id: params[3],
+        portfolio_decision_id: params[4],
+        risk_decision_id: params[5],
+        snapshot_id: params[6],
+        decision: params[7],
+        reason_codes: params[8],
+        intent_id: params[9],
+        effective_capital: params[10],
+        effective_leverage: params[11],
+        idempotency_key: params[12],
+        command_hash: params[13],
+        rationale: params[14],
+        decided_at: params[15],
+        created_at: params[16],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from pre_execution_authorizations')) {
+      if (normalized.includes('where strategy_id = $1 and idempotency_key = $2')) {
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as T[] };
+      }
+      if (normalized.includes('where risk_decision_id = $1')) {
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.risk_decision_id === params[0]) as T[] };
+      }
+      if (normalized.includes('where authorization_id = $1')) {
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.authorization_id === params[0]) as T[] };
+      }
+      return { rows: this.storage.pre_execution_authorizations as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }

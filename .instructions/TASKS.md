@@ -2106,3 +2106,27 @@ Validation:
 Next Gate:
 - CTO review of REQ-07B and REQ-07C.
 - REQ-07D remains blocked pending both accepted gates.
+
+
+## AXODUS-TRADING-EPIC-01 / REQ-07D — Canonical TradingIntent & Pre-Execution Authorization Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Defined canonical pre-execution domain contracts in `trading-contracts/src/governance/preExecution.ts`: `PreExecutionAuthorizationDecision`, `PreExecutionReasonCode` (26 prioritized typed reason codes), `PreExecutionOperationalSnapshotRef`, `PreExecutionAuthorizationCommand`, `PreExecutionAuthorizationResult`, and `PreExecutionAuthorizationRecord`.
+- Created PostgreSQL migration `migrations/0006_pre_execution_authorization.sql` defining `trading_intents` (with unique `risk_decision_id`) and `pre_execution_authorizations` (with unique `(strategy_id, idempotency_key)`).
+- Implemented pure deterministic `PreExecutionAuthorizationValidator` enforcing exact `StrategyRevision` binding, operational snapshot freshness & compatibility, single-use RiskDecision consumption, Risk monotonicity, and exact 12-decimal arithmetic.
+- Implemented durable `PostgresPreExecutionAuthorizationRepository` and extended `InMemoryPostgresClient` for transactional persistence of intents, authorization records, and outbox events.
+- Implemented `PreExecutionAuthorizationService` executing idempotent authorization commands, atomic database transactions (authorization record + trading intent + `TradingIntentCreated` outbox event), and conflict rejection.
+- Added comprehensive unit and integration test suite `test/epic01-req07d-pre-execution-authorization.test.mjs` covering Fixtures A through J, failure precedence, monotonicity, exact decimal boundaries, expirations, compatibility, single-use consumption, idempotency conflict, and restart persistence.
+
+Validation:
+- TypeScript typecheck & build: PASS (0 errors)
+- TypeScript test suites: 32/32 PASS (100% green across all 32 test files)
+- Python quants-lab test suites: 45/45 PASS (100% green)
+- `git diff --check`: PASS (0 errors)
+- External mutations: 0, Mainnet calls: 0, Real capital: 0, Credentials exposed: false.
+
+Next Gate:
+- CTO review and acceptance of `REQ-07D`.
+- Advancement to Execution Boundary / ExecutionIntent integration gates.

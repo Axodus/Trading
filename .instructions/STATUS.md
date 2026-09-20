@@ -1,3 +1,25 @@
+## AXODUS-TRADING-EPIC-01 / REQ-07D — Canonical TradingIntent & Pre-Execution Authorization Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Implemented the canonical, deterministic, durable pre-execution authorization authority in Trading Core (`PreExecutionAuthorizationService`, `PreExecutionAuthorizationValidator`, `PostgresPreExecutionAuthorizationRepository`). The authority converts an already evaluated trading action (`TradeProposal` + `PortfolioDecision` + `RiskDecision` + `StrategyOperationalSnapshot`) into an immutable, provider-neutral `TradingIntent` after strict final authorization consistency validation.
+
+Enforces strict invariants:
+- `NO CURRENT VALID RISK AUTHORIZATION = NO TRADINGINTENT`: `ALLOW` or `MODIFY` is required; `REJECT` and `HALT` are strictly blocked (with `HALT` having top safety precedence).
+- `VALID HISTORICAL RISK AUTHORIZATION ≠ CURRENT VALID RISK AUTHORIZATION`: Closes TOCTOU vulnerabilities by verifying that the current `StrategyOperationalSnapshot` exactly matches the Risk-evaluated lifecycle version, health version, and snapshot identity, and is unexpired.
+- `TradingIntent ≠ ExecutionIntent`: `TradingIntent` is strictly provider-neutral and contains zero exchange endpoints, order candidates, or live connector commands.
+- `Risk Monotonicity`: `TradingIntent.approvedCapital <= RiskDecision.effectiveCapital <= PortfolioDecision.approvedCapital` and `TradingIntent.approvedLeverage <= RiskDecision.effectiveLeverage` using exact `FixedDecimal` 12-decimal arithmetic.
+- `Single-Use Risk Decision Consumption`: Single-use authorization tracking prevents duplicate intent creation from the same `RiskDecision` (`AUTHORIZATION_ALREADY_CONSUMED`).
+- `Transactional Atomicity & Outbox`: Atomically persists authorization record, trading intent, and enqueues `TradingIntentCreated` event to `trading_execution_outbox`.
+- `Durable Idempotency & Conflict Prevention`: Exact replay returns existing intent; conflicting payload fails closed with `IDEMPOTENCY_CONFLICT`.
+- `DEBT-AUD-A-03 Tracking`: Acknowledged as OPEN / PARTIALLY REMEDIATED.
+
+Validation:
+- TypeScript typecheck & build: PASS (0 errors)
+- TypeScript test suites: 32/32 test files PASS (100% green; REQ-07D has 22 focused tests)
+- Python quants-lab test suites: 45/45 PASS (100% green)
+- `git diff --check`: PASS (0 errors). Zero external mutations, zero real capital, zero mainnet calls, zero credentials exposed.
+
 ## AXODUS-TRADING-EPIC-01 / REQ-07B — Strategy Lifecycle Authority Implementation
 
 Status: `COMPLETE / CTO REVIEW REQUIRED`

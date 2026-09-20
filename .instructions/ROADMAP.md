@@ -1121,3 +1121,10 @@ Implemented the canonical, deterministic, durable StrategyLifecycleAuthority in 
 Status: `COMPLETE / CTO REVIEW REQUIRED`
 
 The Health Authority now owns the durable operational health projection for exact StrategyRevisions. It uses a versioned policy, explicit transition graph, CAS, durable idempotency, append-only history, and transactional outbox. The separate StrategyOperationalSnapshot atomically binds lifecycle and health versions for Risk consumption. REQ-07D remains blocked until CTO accepts both REQ-07B and REQ-07C.
+
+
+## AXODUS-TRADING-EPIC-01 / REQ-07D — Canonical TradingIntent & Pre-Execution Authorization Boundary
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Implemented the canonical, deterministic pre-execution authorization boundary and provider-neutral `TradingIntent` authority in Trading Core. Consumes `TradeProposal`, `PortfolioDecision`, `RiskDecision`, and `StrategyOperationalSnapshot` to perform final authorization consistency validation before persisting an immutable `TradingIntent`. Strictly enforces `NO CURRENT VALID RISK AUTHORIZATION = NO TRADINGINTENT`, TOCTOU elimination via operational snapshot verification, risk monotonicity, single-use authorization consumption, durable idempotency, and transactional outbox event emission.
