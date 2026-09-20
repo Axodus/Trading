@@ -19,5 +19,6 @@
 - [x] **VAL-11-PG**: Real PostgreSQL Durable Performance Drift Acceptance
 - [x] **REQ-12**: Strategy Operational Governance, Revalidation Resolution & Controlled Intervention
 - [x] **VAL-12-PG**: Real PostgreSQL Durable Operational Governance Acceptance
-- [ ] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
-
+- [x] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
+- [x] **VAL-13-PG**: Real PostgreSQL Durable System Safety & Recovery Acceptance
+- [ ] **REQ-14**: Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate

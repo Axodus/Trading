@@ -1,9 +1,8 @@
 # AXODUS TRADING — ACTIVE TASKS
 
 ## Current Task
-- **ID:** `AXODUS-TRADING-EPIC-01 / REQ-12`
-- **Description:** Implement Strategy Operational Governance, Multi-Domain Snapshot Coordination, Revalidation Resolution, and Controlled Intervention Authority
+- **ID:** `AXODUS-TRADING-EPIC-01 / REQ-13`
+- **Description:** Autonomous Operational Safety, Recovery & Kill-Switch Coordination
 - **Status:** `COMPLETE / CTO REVIEW REQUIRED`
-- **Acceptance Gate:** `VAL-12-PG` (16/16 PASS on real PostgreSQL container)
-- **Next Task:** `AXODUS-TRADING-EPIC-01 / REQ-13` (Autonomous Operational Safety, Recovery & Kill-Switch Coordination)
-
+- **Acceptance Gate:** `VAL-13-PG` (20/20 PASS on real PostgreSQL container)
+- **Next Task:** `AXODUS-TRADING-EPIC-01 / REQ-14` (Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate)

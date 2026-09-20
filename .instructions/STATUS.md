@@ -23,6 +23,8 @@
   - `VAL-11-PG` (Real PostgreSQL Performance Drift Acceptance): `COMPLETE / PASS / CTO REVIEW REQUIRED`
   - `REQ-12` (Strategy Operational Governance, Revalidation Resolution & Controlled Intervention): `COMPLETE / CTO REVIEW REQUIRED`
   - `VAL-12-PG` (Real PostgreSQL Operational Governance Acceptance): `COMPLETE / PASS / CTO REVIEW REQUIRED`
+  - `REQ-13` (Autonomous Operational Safety, Recovery & Kill-Switch Coordination): `COMPLETE / CTO REVIEW REQUIRED`
+  - `VAL-13-PG` (Real PostgreSQL Durable System Safety & Recovery Acceptance): `COMPLETE / PASS / CTO REVIEW REQUIRED`
 
 ## Preserved Invariants & Boundaries
 - Operational Governance is Coordination Authority, NOT Super-Authority.
@@ -33,4 +35,3 @@
 - Mainnet: `PROHIBITED`. Real Capital: `PROHIBITED`. Live Order Submission: `PROHIBITED`.
 - Shared Contract Freeze (SCF-01): `PRESERVED / NO SEMANTIC CHANGE`.
 - Residual Debt `DEBT-AUD-A-03`: `OPEN / PARTIALLY REMEDIATED`.
-
