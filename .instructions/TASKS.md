@@ -2130,3 +2130,28 @@ Validation:
 Next Gate:
 - CTO review and acceptance of `REQ-07D`.
 - Advancement to Execution Boundary / ExecutionIntent integration gates.
+
+## AXODUS-TRADING-EPIC-01 / VAL-07D-PG — PostgreSQL Durable Pre-Execution Acceptance
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Executed comprehensive 11-gate acceptance test suite against real containerized PostgreSQL 18 (`127.0.0.1:55433`, database `axodus_trading_local`).
+- Verified migration `0006_pre_execution_authorization.sql` table creation and unique indexes.
+- Verified bidirectional column mapping and persistence for `TradingIntent` and `PreExecutionAuthorizationRecord`.
+- Verified durable idempotent replay and conflict rejection on payload mismatch.
+- Verified single-use `RiskDecision` consumption prevention.
+- Verified two-worker concurrency race condition protection via PostgreSQL unique constraints.
+- Verified transaction rollback on failure injection with zero residual state.
+- Verified transactional outbox atomicity with `TradingIntentCreated` event insertion.
+- Verified state survival across connection pool disconnect/reconnect and service/repository process restarts.
+- Verified multi-strategy durability and exact 12-decimal `FixedDecimal` precision under Risk `MODIFY` proportional sizing.
+
+Validation:
+- Real PostgreSQL acceptance test suite: 11/11 PASS.
+- Full Trading Core test suites: 33/33 PASS (526 passed, 0 failed, 1 skipped).
+- Python quants-lab test suites: 45/45 PASS.
+- Zero external mutations, zero real capital, zero credentials exposed.
+
+Next Gate:
+- CTO review and closure of `REQ-07D` and `VAL-07D-PG`.

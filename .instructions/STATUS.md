@@ -701,3 +701,24 @@ Validation:
 - `git diff --check` and `git -C quants-lab diff --check` — PASS
 
 Boundaries preserved: no TradingIntent, no execution adapter, no exchange mutation, no credentials, no mainnet, and no real capital. `DEBT-AUD-A-03` remains open / partially remediated.
+
+## AXODUS-TRADING-EPIC-01 / REQ-07D & VAL-07D-PG — Canonical TradingIntent & PostgreSQL Durable Pre-Execution Acceptance
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Canonical, deterministic pre-execution authorization boundary and provider-neutral `TradingIntent` authority in Trading Core.
+- Strict binding of `TradeProposal`, `PortfolioDecision`, `RiskDecision`, and `StrategyOperationalSnapshot` for TOCTOU elimination.
+- Risk monotonicity preservation, exact 12-decimal `FixedDecimal` arithmetic, and single-use `RiskDecision` consumption.
+- Real PostgreSQL 18 end-to-end acceptance suite (`test/val-07d-postgres-acceptance.test.mjs`, 11/11 PASS) verifying migration 0006 application, durable persistence, idempotent replay, idempotency conflict rejection, unique constraint concurrency protection, transaction rollback on failure injection, transactional outbox atomicity, disconnect/reconnect survival, and process restart persistence.
+
+Validation:
+- TypeScript typecheck & build: PASS (0 errors)
+- TypeScript test suites: 33/33 PASS (526 passed, 0 failed, 1 skipped)
+- Python quants-lab test suites: 45/45 PASS (100% green)
+- `git diff --check` & `git -C quants-lab diff --check`: PASS (0 errors)
+- External mutations: 0, Mainnet calls: 0, Real capital: 0, Credentials exposed: false.
+
+Next Gate:
+- CTO review and formal acceptance of `VAL-07D-PG` and closure of `REQ-07D`.
+- Advancement to Execution Boundary / ExecutionIntent integration gates.
