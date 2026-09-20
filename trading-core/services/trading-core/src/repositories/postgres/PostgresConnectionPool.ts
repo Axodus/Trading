@@ -54,8 +54,18 @@ async function importPg(): Promise<{ Pool: PgPoolConstructor }> {
     if (!cwd) {
       throw error;
     }
-    const localPg = `file://${cwd.replace(/\/$/, '')}/node_modules/pg/lib/index.js`;
-    return normalizePgModule(await import(localPg));
+    const candidatePaths = [
+      `file://${cwd.replace(/\/$/, '')}/node_modules/pg/lib/index.js`,
+      `file://${cwd.replace(/\/$/, '')}/trading-core/services/trading-core/node_modules/pg/lib/index.js`,
+    ];
+    for (const candidate of candidatePaths) {
+      try {
+        return normalizePgModule(await import(candidate));
+      } catch {
+        // try next
+      }
+    }
+    throw error;
   }
 }
 

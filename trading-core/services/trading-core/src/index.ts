@@ -297,3 +297,8 @@ export * from './execution/drift/PerformanceEvaluationAuthority.js';
 export * from './execution/drift/DriftDetectionAuthority.js';
 export * from './execution/drift/RevalidationRequestAuthority.js';
 export * from './execution/drift/PostgresPerformanceDriftRepository.js';
+
+export * from './governance/operational/StrategyOperationalGovernanceErrors.js';
+export * from './governance/operational/StrategyOperationalGovernanceAuthority.js';
+export * from './governance/operational/InterventionResolutionAuthority.js';
+export * from './governance/operational/PostgresStrategyOperationalGovernanceRepository.js';

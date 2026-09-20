@@ -35,3 +35,4 @@ export * from './execution/executionBoundary.js';
 export * from './execution/executionLifecycle.js';
 export * from './execution/economicFeedback.js';
 export * from './execution/performanceDrift.js';
+export * from './governance/strategyOperationalGovernance.js';

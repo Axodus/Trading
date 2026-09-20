@@ -17,4 +17,7 @@
 - [x] **VAL-10-PG**: Real PostgreSQL Durable Economic Feedback & Attribution Acceptance
 - [x] **REQ-11**: Strategy Performance Evaluation, Drift Detection & Controlled Revalidation
 - [x] **VAL-11-PG**: Real PostgreSQL Durable Performance Drift Acceptance
-- [ ] **REQ-12**: Strategy Operational Governance, Revalidation Resolution & Controlled Intervention
+- [x] **REQ-12**: Strategy Operational Governance, Revalidation Resolution & Controlled Intervention
+- [x] **VAL-12-PG**: Real PostgreSQL Durable Operational Governance Acceptance
+- [ ] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
+
