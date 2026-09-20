@@ -1,6 +1,6 @@
 # AXODUS TRADING — SYSTEM STATUS
 
-**Latest Milestone:** `AXODUS-TRADING-EPIC-01 / REQ-10` (Controlled Continuous Feedback, Execution Diagnostics & PnL Attribution)
+**Latest Milestone:** `AXODUS-TRADING-EPIC-01 / REQ-11` (Strategy Performance Evaluation, Drift Detection & Controlled Revalidation)
 **Status:** `COMPLETE / CTO REVIEW REQUIRED`
 **Date:** 2026-09-20
 
@@ -17,5 +17,7 @@
   - `REQ-09` (Controlled Execution Lifecycle & Reconciliation): `COMPLETE / CTO ACCEPTED / PERSISTED`
   - `VAL-09-PG` (Postgres Acceptance): `COMPLETE / CTO ACCEPTED / PERSISTED`
   - `VAL-09-TESTNET` (Testnet Provider Execution Certification): `COMPLETE / CTO ACCEPTED / PERSISTED`
-  - `REQ-10` (Economic Feedback, Execution Diagnostics & PnL Attribution): `COMPLETE / CTO REVIEW REQUIRED`
-  - `VAL-10-PG` (PostgreSQL Economic Attribution Acceptance): `COMPLETE / PASS / CTO REVIEW REQUIRED`
+  - `REQ-10` (Economic Feedback, Execution Diagnostics & PnL Attribution): `COMPLETE / CTO ACCEPTED / PERSISTED`
+  - `VAL-10-PG` (PostgreSQL Economic Attribution Acceptance): `COMPLETE / PASS / CTO ACCEPTED`
+  - `REQ-11` (Strategy Performance Evaluation, Drift Detection & Controlled Revalidation): `COMPLETE / CTO REVIEW REQUIRED`
+  - `VAL-11-PG` (Real PostgreSQL Performance Drift Acceptance): `COMPLETE / PASS / CTO REVIEW REQUIRED`

@@ -291,3 +291,9 @@ export * from './execution/feedback/PnLAttributionAuthority.js';
 export * from './execution/feedback/TradingPerformanceAggregator.js';
 export * from './execution/feedback/TradingFeedbackService.js';
 export * from './execution/feedback/PostgresEconomicAttributionRepository.js';
+
+export * from './execution/drift/PerformanceDriftErrors.js';
+export * from './execution/drift/PerformanceEvaluationAuthority.js';
+export * from './execution/drift/DriftDetectionAuthority.js';
+export * from './execution/drift/RevalidationRequestAuthority.js';
+export * from './execution/drift/PostgresPerformanceDriftRepository.js';

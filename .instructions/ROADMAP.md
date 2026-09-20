@@ -15,4 +15,6 @@
 - [x] **VAL-09-TESTNET**: Bounded Testnet Provider Execution & Reconciliation Certification
 - [x] **REQ-10**: Controlled Continuous Feedback, Execution Diagnostics & PnL Attribution
 - [x] **VAL-10-PG**: Real PostgreSQL Durable Economic Feedback & Attribution Acceptance
-- [ ] **REQ-11**: Strategy Performance Evaluation, Drift Detection & Controlled Revalidation
+- [x] **REQ-11**: Strategy Performance Evaluation, Drift Detection & Controlled Revalidation
+- [x] **VAL-11-PG**: Real PostgreSQL Durable Performance Drift Acceptance
+- [ ] **REQ-12**: Strategy Operational Governance, Revalidation Resolution & Controlled Intervention
