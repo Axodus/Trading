@@ -12,6 +12,7 @@ import type {
 import type {
   CanonicalPortfolioSnapshot,
 } from '../portfolio/PortfolioTypes.js';
+import type { StrategyOperationalSnapshot } from '../health/StrategyHealthTypes.js';
 
 export type HaltScope = 'PROPOSAL' | 'STRATEGY' | 'INSTRUMENT' | 'PORTFOLIO' | 'SYSTEM';
 
@@ -37,7 +38,9 @@ export type RiskReasonCode =
   | 'OPPOSING_POSITION_FAIL_CLOSED'
   | 'KILL_SWITCH_ACTIVE'
   | 'PORTFOLIO_STATE_INCONSISTENT'
-  | 'MONOTONICITY_VIOLATION';
+  | 'MONOTONICITY_VIOLATION'
+  | 'STALE_OPERATIONAL_SNAPSHOT'
+  | 'OPERATIONAL_SNAPSHOT_INCOMPATIBLE';
 
 export interface RiskPolicyLimits {
   policyVersion: string;
@@ -70,6 +73,7 @@ export interface RiskEvaluationContext {
   policy: RiskPolicyLimits;
   exposureSnapshot: CanonicalPortfolioSnapshot;
   strategyHealth?: StrategyHealth;
+  operationalSnapshot?: StrategyOperationalSnapshot;
   marketState?: MarketState;
   eligibility?: PromotionEligibility;
   evaluationTime: string; // Injected deterministic ISO timestamp

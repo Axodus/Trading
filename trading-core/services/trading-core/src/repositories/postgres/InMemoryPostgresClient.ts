@@ -5,6 +5,7 @@ import type {
 } from './PostgresClient.js';
 
 type Row = Record<string, unknown>;
+export type InMemoryPostgresFault = (normalizedSql: string) => Error | undefined;
 
 export interface InMemoryPostgresStorage {
   trading_schema_migrations: Row[];
@@ -19,6 +20,13 @@ export interface InMemoryPostgresStorage {
   trading_submission_attempts: Row[];
   trading_execution_outbox: Row[];
   trading_val05_session_budgets: Row[];
+  strategy_lifecycle_heads: Row[];
+  strategy_lifecycle_transitions: Row[];
+  strategy_lifecycle_policies: Row[];
+  strategy_health_heads: Row[];
+  strategy_health_transitions: Row[];
+  strategy_health_policies: Row[];
+  strategy_operational_snapshots: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -35,18 +43,33 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     trading_submission_attempts: [],
     trading_execution_outbox: [],
     trading_val05_session_budgets: [],
+    strategy_lifecycle_heads: [],
+    strategy_lifecycle_transitions: [],
+    strategy_lifecycle_policies: [],
+    strategy_health_heads: [],
+    strategy_health_transitions: [],
+    strategy_health_policies: [],
+    strategy_operational_snapshots: [],
   };
 }
 
 export class InMemoryPostgresClient implements TransactionalPostgresQueryClient {
-  constructor(private readonly storage: InMemoryPostgresStorage = createInMemoryPostgresStorage()) {}
+  constructor(
+    private readonly storage: InMemoryPostgresStorage = createInMemoryPostgresStorage(),
+    private readonly fault?: InMemoryPostgresFault,
+  ) {}
 
   async transaction<T>(callback: (client: PostgresTransactionClient) => Promise<T>): Promise<T> {
-    return callback(this);
+    const staged = new InMemoryPostgresClient(JSON.parse(JSON.stringify(this.storage)) as InMemoryPostgresStorage, this.fault);
+    const result = await callback(staged);
+    Object.assign(this.storage, staged.getStorage());
+    return result;
   }
 
   async query<T = Row>(sql: string, params: unknown[] = []): Promise<PostgresQueryResult<T>> {
     const normalized = sql.toLowerCase().trim();
+    const injectedFailure = this.fault?.(normalized);
+    if (injectedFailure) throw injectedFailure;
     if (normalized === 'select 1') {
       return { rows: [{ '?column?': 1 }] as T[] };
     }
@@ -217,6 +240,127 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       });
       return { rows: [] };
     }
+    if (normalized.startsWith('insert into strategy_lifecycle_heads')) {
+      if (!this.storage.strategy_lifecycle_heads.some((row) => row.strategy_id === params[0])) {
+        this.storage.strategy_lifecycle_heads.push({
+          strategy_id: params[0],
+          current_revision_id: params[1],
+          current_state: params[2],
+          lifecycle_version: 0,
+          updated_at: params[3],
+        });
+      }
+      return { rows: [] };
+    }
+    if (normalized.startsWith('update strategy_lifecycle_heads set')) {
+      const row = this.storage.strategy_lifecycle_heads.find((item) => item.strategy_id === params[4] && Number(item.lifecycle_version) === Number(params[5]));
+      if (!row) return { rows: [], rowCount: 0 };
+      Object.assign(row, {
+        current_revision_id: params[0], current_state: params[1], updated_at: params[2],
+        last_transition_id: params[3], lifecycle_version: Number(params[5]) + 1,
+      });
+      return { rows: [row] as T[], rowCount: 1 };
+    }
+    if (normalized.includes('from strategy_lifecycle_heads') && !normalized.includes('inner join strategy_health_heads')) {
+      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_lifecycle_transitions')) {
+      this.storage.strategy_lifecycle_transitions.push({
+        transition_id: params[0], strategy_id: params[1], strategy_revision_id: params[2],
+        from_state: params[3], to_state: params[4], previous_version: params[5], new_version: params[6],
+        policy_revision: params[7], eligibility_ref: params[8], authorization_refs: params[9],
+        decision: params[10], reason_codes: params[11], idempotency_key: params[12], command_hash: params[13],
+        rationale: params[14], requested_at: params[15], decided_at: params[16], created_at: params[17],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from strategy_lifecycle_transitions')) {
+      let rows = this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0]);
+      if (normalized.includes('idempotency_key = $2')) rows = rows.filter((row) => row.idempotency_key === params[1]);
+      return { rows: rows as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_lifecycle_policies')) {
+      this.upsert('strategy_lifecycle_policies', 'policy_revision', {
+        policy_revision: params[0], name: params[1], description: params[2], rules: params[3],
+        default_max_eligibility_age_ms: params[4], created_at: params[5],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from strategy_lifecycle_policies')) {
+      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_health_heads')) {
+      if (!this.storage.strategy_health_heads.some((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1])) {
+        this.storage.strategy_health_heads.push({
+          strategy_id: params[0], strategy_revision_id: params[1], health_state: 'UNKNOWN', health_version: 0,
+          effective_at: params[2], evaluation_policy_revision: params[3], reason_codes: [], evidence_refs: [],
+        });
+      }
+      return { rows: [] };
+    }
+    if (normalized.startsWith('update strategy_health_heads set')) {
+      const row = this.storage.strategy_health_heads.find((item) =>
+        item.strategy_id === params[7] && item.strategy_revision_id === params[8] && Number(item.health_version) === Number(params[9]));
+      if (!row) return { rows: [], rowCount: 0 };
+      Object.assign(row, {
+        health_state: params[0], health_version: Number(params[9]) + 1, effective_at: params[1],
+        evaluation_policy_revision: params[2], reason_codes: params[3], evidence_refs: params[4],
+        previous_health_version: params[5], last_transition_id: params[6],
+      });
+      return { rows: [row] as T[], rowCount: 1 };
+    }
+    if (normalized.includes('from strategy_health_heads') && !normalized.includes('inner join strategy_health_heads')) {
+      return { rows: this.storage.strategy_health_heads.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]) as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_health_transitions')) {
+      if (this.storage.strategy_health_transitions.some((row) => row.strategy_id === params[1] && row.strategy_revision_id === params[2] && row.idempotency_key === params[12])) {
+        throw new Error('StrategyHealth idempotency uniqueness violation');
+      }
+      this.storage.strategy_health_transitions.push({
+        transition_id: params[0], strategy_id: params[1], strategy_revision_id: params[2],
+        previous_health: params[3], new_health: params[4], previous_version: params[5], new_version: params[6],
+        policy_revision: params[7], reason_codes: params[8], evidence_refs: params[9], authorization_refs: params[10],
+        decision: params[11], idempotency_key: params[12], command_hash: params[13], actor_type: params[14],
+        actor_id: params[15], decided_at: params[16], created_at: params[17],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from strategy_health_transitions')) {
+      let rows = this.storage.strategy_health_transitions.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]);
+      if (normalized.includes('idempotency_key = $3')) rows = rows.filter((row) => row.idempotency_key === params[2]);
+      return { rows: rows as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_health_policies')) {
+      this.upsert('strategy_health_policies', 'policy_revision', {
+        policy_revision: params[0], name: params[1], rules: params[2], created_at: params[3],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes('from strategy_health_policies')) {
+      return { rows: this.storage.strategy_health_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+    }
+    if (normalized.includes('from strategy_lifecycle_heads lifecycle') && normalized.includes('inner join strategy_health_heads')) {
+      const lifecycle = this.storage.strategy_lifecycle_heads.find((row) => row.strategy_id === params[0] && row.current_revision_id === params[1]);
+      const health = lifecycle && this.storage.strategy_health_heads.find((row) =>
+        row.strategy_id === lifecycle.strategy_id && row.strategy_revision_id === lifecycle.current_revision_id);
+      if (!lifecycle || !health) return { rows: [] };
+      return { rows: [{
+        strategy_id: lifecycle.strategy_id, strategy_revision_id: lifecycle.current_revision_id,
+        lifecycle_state: lifecycle.current_state, lifecycle_version: lifecycle.lifecycle_version,
+        lifecycle_updated_at: lifecycle.updated_at, health_state: health.health_state,
+        health_version: health.health_version, health_effective_at: health.effective_at,
+      }] as T[] };
+    }
+    if (normalized.startsWith('insert into strategy_operational_snapshots')) {
+      if (!this.storage.strategy_operational_snapshots.some((row) => row.snapshot_id === params[0])) {
+        this.storage.strategy_operational_snapshots.push({
+          snapshot_id: params[0], strategy_id: params[1], strategy_revision_id: params[2],
+          lifecycle_state: params[3], lifecycle_version: params[4], health_state: params[5], health_version: params[6],
+          compatibility: params[7], effective_at: params[8], expires_at: params[9], snapshot_version: params[10],
+        });
+      }
+      return { rows: [] };
+    }
     if (normalized.startsWith('insert into trading_val05_session_budgets')) {
       this.upsert('trading_val05_session_budgets', 'session_id', {
         session_id: params[0],
@@ -237,6 +381,92 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         return { rows: this.storage.trading_execution_outbox.filter((row) => row.outbox_id === params[0]) as T[] };
       }
       return { rows: this.storage.trading_execution_outbox as T[] };
+    }
+
+    if (normalized.startsWith("insert into strategy_lifecycle_heads")) {
+      const existing = this.storage.strategy_lifecycle_heads.find((row) => row.strategy_id === params[0]);
+      if (!existing) {
+        this.storage.strategy_lifecycle_heads.push({
+          strategy_id: params[0],
+          current_revision_id: params[1],
+          current_state: params[2],
+          lifecycle_version: 0,
+          updated_at: params[3],
+        });
+      }
+      return { rows: [] };
+    }
+    if (normalized.startsWith("update strategy_lifecycle_heads set")) {
+      const strategyId = params[4];
+      const expectedVersion = Number(params[5]);
+      const existing = this.storage.strategy_lifecycle_heads.find((row) => row.strategy_id === strategyId);
+      if (!existing || Number(existing.lifecycle_version) !== expectedVersion) {
+        return { rows: [], rowCount: 0 };
+      }
+      Object.assign(existing, {
+        current_revision_id: params[0],
+        current_state: params[1],
+        lifecycle_version: expectedVersion + 1,
+        updated_at: params[2],
+        last_transition_id: params[3],
+      });
+      return { rows: [existing] as T[], rowCount: 1 };
+    }
+    if (normalized.includes("from strategy_lifecycle_heads")) {
+      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as T[] };
+    }
+    if (normalized.startsWith("insert into strategy_lifecycle_transitions")) {
+      const existing = this.storage.strategy_lifecycle_transitions.find(
+        (row) => row.strategy_id === params[1] && row.idempotency_key === params[12]
+      );
+      if (existing) {
+        throw new Error(`Duplicate transition idempotency key: ${params[12]} for strategy ${params[1]}`);
+      }
+      this.storage.strategy_lifecycle_transitions.push({
+        transition_id: params[0],
+        strategy_id: params[1],
+        strategy_revision_id: params[2],
+        from_state: params[3],
+        to_state: params[4],
+        previous_version: params[5],
+        new_version: params[6],
+        policy_revision: params[7],
+        eligibility_ref: params[8],
+        authorization_refs: params[9],
+        decision: params[10],
+        reason_codes: params[11],
+        idempotency_key: params[12],
+        command_hash: params[13],
+        rationale: params[14],
+        requested_at: params[15],
+        decided_at: params[16],
+        created_at: params[17],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes("from strategy_lifecycle_transitions")) {
+      if (normalized.includes("where transition_id = $1")) {
+        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.transition_id === params[0]) as T[] };
+      }
+      if (normalized.includes("where strategy_id = $1 and idempotency_key = $2")) {
+        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as T[] };
+      }
+      const matching = this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0]);
+      return { rows: matching.sort((a, b) => Number(a.new_version) - Number(b.new_version)) as T[] };
+    }
+    if (normalized.startsWith("insert into strategy_lifecycle_policies")) {
+      this.upsert("strategy_lifecycle_policies", "policy_revision", {
+        policy_revision: params[0],
+        name: params[1],
+        description: params[2],
+        rules: params[3],
+        default_max_eligibility_age_ms: params[4],
+        created_at: params[5],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes("from strategy_lifecycle_policies")) {
+      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }

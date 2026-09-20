@@ -2062,3 +2062,47 @@ Validation:
 Next Gate:
 - CTO review and acceptance of `REQ-07A`.
 - Unblocking of `REQ-07B` (Strategy Lifecycle Authority Implementation), `REQ-07C` (Strategy Health Authority Implementation), and `REQ-07D` (Canonical TradingIntent & Execution Boundary Integration).
+
+## AXODUS-TRADING-EPIC-01 / REQ-07B — Strategy Lifecycle Authority Implementation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Defined canonical strategy lifecycle contracts in `trading-contracts/src/strategy/lifecycle.ts`: `StrategyLifecycleReasonCode`, `StrategyLifecycleDecision`, `StrategyLifecycleActorType`, `AuthorizationRef`, `StrategyLifecycleTransitionRule`, `StrategyLifecyclePolicy`, `StrategyLifecycleTransitionCommand`, `StrategyLifecycleTransitionResult`, `StrategyLifecycleHead`, `StrategyLifecycleTransitionRecord`, and `DEFAULT_LIFECYCLE_POLICY_V1`.
+- Created PostgreSQL migration `migrations/0004_strategy_lifecycle_authority.sql` defining `strategy_lifecycle_heads`, `strategy_lifecycle_transitions`, and `strategy_lifecycle_policies` with unique idempotency indices.
+- Implemented pure deterministic `StrategyLifecycleValidator` with prioritized reason codes enforcing exact StrategyRevision binding, transition graph edges, PromotionEligibility constraints, operational authorization validity, retirement terminal status, and agent mutation rejection.
+- Implemented durable `PostgresStrategyLifecycleRepository` providing CAS updates, append-only history, idempotency lookup, and transactional outbox persistence.
+- Implemented canonical `StrategyLifecycleAuthority` executing idempotent transition commands, atomic database transactions (CAS head update + transition record + outbox events), and specialized semantic event emission (`StrategyLifecycleTransitionAccepted`, `StrategyRetired`, `StrategyDemoted`, `StrategyRevalidationEntered`).
+- Added comprehensive unit and integration test suite `test/epic01-req07b-strategy-lifecycle.test.mjs` covering forward progression, operational demotions, revalidation, retirement, CAS concurrency, idempotency, restart safety, outbox events, and agent/quant/health/risk bypass protection.
+
+Validation:
+- TypeScript typecheck & build: PASS (0 errors)
+- TypeScript test suites: 30/30 PASS (100% green)
+- Python quants-lab test suites: 45/45 PASS (100% green)
+- `git diff --check`: PASS (0 errors)
+- External mutations: 0, Mainnet calls: 0, Real capital: 0, Credentials exposed: false.
+
+Next Gate:
+- CTO review and acceptance of `REQ-07B`.
+- Unblocking / completion of `REQ-07C` (Strategy Health Authority Implementation) and `REQ-07D` (Canonical TradingIntent & Execution Boundary Integration).
+
+## AXODUS-TRADING-EPIC-01 / REQ-07C — Strategy Health Authority & Operational Snapshot
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered:
+- Canonical `StrategyHealthAuthority` and `PostgresStrategyHealthRepository`.
+- Exact StrategyRevision health heads, append-only transitions, policy revision binding, durable idempotency, CAS, and transactional outbox.
+- Exhaustive REQ-07A 6 × 12 lifecycle-health compatibility projection.
+- Atomic `StrategyOperationalSnapshot` with lifecycle/health version binding, deterministic identity, and expiry.
+- Risk operational-snapshot binding and stale-decision detection preparation.
+
+Validation:
+- Trading typecheck/build: PASS.
+- Trading regression: 31/31 test suites PASS; REQ-07C has 8/8 focused tests.
+- Quant regression: 45/45 PASS.
+- No external execution or capital mutation.
+
+Next Gate:
+- CTO review of REQ-07B and REQ-07C.
+- REQ-07D remains blocked pending both accepted gates.

@@ -1,3 +1,11 @@
+## AXODUS-TRADING-EPIC-01 / REQ-07B — Strategy Lifecycle Authority Implementation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+The canonical, deterministic, durable, non-agentic `StrategyLifecycleAuthority` has been implemented in Trading Core. Governs strategy lifecycle state transitions under immutable, versioned policies (`DEFAULT_LIFECYCLE_POLICY_V1`), exact `StrategyRevision` binding, optimistic concurrency control (CAS) on lifecycle heads, durable append-only PostgreSQL transition history, idempotent replay suppression, and transactional outbox event emission (`StrategyLifecycleTransitionAccepted`, `StrategyRetired`, `StrategyDemoted`, `StrategyRevalidationEntered`, `StrategyLifecycleTransitionRejected`). Enforces strict boundary invariants: `QUALIFICATION ≠ TRANSITION` (PromotionEligibility is a necessary policy input where required, never a self-mutating authority), `LIFECYCLE ≠ HEALTH`, `LIFECYCLE ≠ RISK`, and `LIFECYCLE ≠ TRADINGINTENT`. Agents, Quant lab, Risk, and Health are strictly prevented from directly mutating lifecycle state.
+
+Validation: contracts typecheck PASS; Trading Core typecheck PASS; build PASS; tests PASS (30 test suites passed / 0 failed / 0 skipped); Quant lab tests PASS (45/45); `git diff --check` PASS. Zero external trading mutations, zero real capital, zero mainnet calls.
+
 # Trading Status
 
 ## AXODUS-TRADING-EPIC-01 / REQ-05
@@ -654,3 +662,20 @@ Validation:
 Next Gate:
 - CTO review and acceptance of `REQ-07A`.
 - Unblocking of `REQ-07B` (Strategy Lifecycle Authority Implementation), `REQ-07C` (Strategy Health Authority Implementation), and `REQ-07D` (Canonical TradingIntent & Execution Boundary Integration).
+
+## AXODUS-TRADING-EPIC-01 / REQ-07C — Strategy Health Authority & Operational Snapshot
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Delivered the canonical non-agentic `StrategyHealthAuthority` with exact StrategyRevision binding, immutable policy revisions, append-only transition history, CAS, durable idempotency, and transactional outbox writes. The authority preserves the six frozen health states and rejects direct Agent or Quant state mutation.
+
+Delivered `StrategyOperationalSnapshot` as the atomic read-side join of lifecycle and health heads. It binds StrategyRevision, lifecycle version, health version, compatibility disposition, deterministic identity, and explicit expiry. The 6 × 12 lifecycle-health compatibility matrix is exhaustive; it is distinct from RiskDecision dispositions. Live Risk evaluation now requires and records the operational snapshot binding, making health or lifecycle drift detectable before future TradingIntent work.
+
+Validation:
+- `npm --prefix trading-core/services/trading-core run typecheck` — PASS (0 errors)
+- `npm --prefix trading-core/services/trading-core run build` — PASS (0 errors)
+- `npm --prefix trading-core/services/trading-core test` — PASS (31/31 suites; REQ-07C: 8/8 tests)
+- `PYTHONPATH=quants-lab python3 -m unittest discover -s quants-lab/tests -p 'test_*.py' -v` — PASS (45/45 tests)
+- `git diff --check` and `git -C quants-lab diff --check` — PASS
+
+Boundaries preserved: no TradingIntent, no execution adapter, no exchange mutation, no credentials, no mainnet, and no real capital. `DEBT-AUD-A-03` remains open / partially remediated.

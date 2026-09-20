@@ -185,21 +185,35 @@ function buildMarketState(overrides = {}) {
 }
 
 function buildContext(overrides = {}) {
+  const strategyHealth = overrides.strategyHealth ?? {
+    strategyId: 'strat-swing-1',
+    strategyRevisionId: 'strat-swing-1:1',
+    state: 'HEALTHY',
+    observedAt: '2026-09-19T12:00:00.000Z',
+    expectedEvidenceRefs: [],
+    observedEvidenceRefs: [],
+    divergenceRefs: [],
+    rationale: 'All health checks green',
+  };
   return {
     portfolioDecision: overrides.portfolioDecision ?? buildPortfolioDecision(),
     proposal: overrides.proposal ?? buildProposal(),
     strategyRevision: overrides.strategyRevision ?? buildStrategyRevision(),
     policy: overrides.policy ?? buildPolicy(),
     exposureSnapshot: overrides.exposureSnapshot ?? buildSnapshot(),
-    strategyHealth: overrides.strategyHealth ?? {
+    strategyHealth,
+    operationalSnapshot: overrides.operationalSnapshot ?? {
+      snapshotId: 'ops-risk-1',
       strategyId: 'strat-swing-1',
       strategyRevisionId: 'strat-swing-1:1',
-      state: 'HEALTHY',
-      observedAt: '2026-09-19T12:00:00.000Z',
-      expectedEvidenceRefs: [],
-      observedEvidenceRefs: [],
-      divergenceRefs: [],
-      rationale: 'All health checks green',
+      lifecycleState: 'PRODUCTION',
+      lifecycleVersion: 1,
+      healthState: strategyHealth.state,
+      healthVersion: 1,
+      compatibility: strategyHealth.state === 'HEALTHY' ? 'FULL' : strategyHealth.state === 'DEGRADED' ? 'CONDITIONAL' : 'REJECTED',
+      effectiveAt: '2026-09-19T12:00:00.000Z',
+      expiresAt: '2026-09-19T12:10:00.000Z',
+      snapshotVersion: 'ops-risk-v1',
     },
     marketState: overrides.marketState ?? buildMarketState(),
     eligibility: overrides.eligibility ?? {

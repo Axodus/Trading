@@ -1109,3 +1109,15 @@ Validation:
 Next Gate:
 - CTO review and acceptance of `REQ-07A`.
 - Unblocking of `REQ-07B` (Strategy Lifecycle Authority Implementation), `REQ-07C` (Strategy Health Authority Implementation), and `REQ-07D` (Canonical TradingIntent & Execution Boundary Integration).
+
+## AXODUS-TRADING-EPIC-01 / REQ-07B — Strategy Lifecycle Authority Implementation
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+Implemented the canonical, deterministic, durable StrategyLifecycleAuthority in Trading Core. Governs strategy lifecycle state transitions under immutable, versioned policies (`DEFAULT_LIFECYCLE_POLICY_V1`), exact `StrategyRevision` binding, optimistic concurrency control (CAS) on lifecycle heads, durable append-only PostgreSQL transition history, idempotent replay suppression, and transactional outbox event emission. Strictly enforces `QUALIFICATION ≠ TRANSITION`, `LIFECYCLE ≠ HEALTH`, `LIFECYCLE ≠ RISK`, and `LIFECYCLE ≠ TRADINGINTENT`.
+
+## AXODUS-TRADING-EPIC-01 / REQ-07C — Strategy Health Authority & Operational Snapshot
+
+Status: `COMPLETE / CTO REVIEW REQUIRED`
+
+The Health Authority now owns the durable operational health projection for exact StrategyRevisions. It uses a versioned policy, explicit transition graph, CAS, durable idempotency, append-only history, and transactional outbox. The separate StrategyOperationalSnapshot atomically binds lifecycle and health versions for Risk consumption. REQ-07D remains blocked until CTO accepts both REQ-07B and REQ-07C.

@@ -30,3 +30,4 @@ export * from './foundation/decimal.js';
 export * from './telemetry/types.js';
 export * from './treasury/types.js';
 export * from './whiterabbit/types.js';
+export * from './strategy/lifecycle.js';

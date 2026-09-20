@@ -38,6 +38,35 @@ export class RiskAuthorityService {
     const modifications: RiskRuleModification[] = [];
     const reasonCodes: RiskReasonCode[] = [];
 
+    // 0. Operational state is mandatory and snapshot-bound for live decisions.
+    if (context.environment === 'live' && context.operationalSnapshot) {
+      const operational = context.operationalSnapshot;
+      if (Date.parse(context.evaluationTime) >= Date.parse(operational.expiresAt)) {
+        violations.push({
+          code: 'STALE_OPERATIONAL_SNAPSHOT',
+          message: `Operational snapshot ${operational.snapshotId} is expired`,
+          severity: 'REJECT',
+        });
+        reasonCodes.push('STALE_OPERATIONAL_SNAPSHOT');
+      }
+      if (operational.compatibility === 'REJECTED') {
+        violations.push({
+          code: 'OPERATIONAL_SNAPSHOT_INCOMPATIBLE',
+          message: `Operational snapshot ${operational.snapshotId} has rejected lifecycle/health compatibility`,
+          severity: 'REJECT',
+        });
+        reasonCodes.push('OPERATIONAL_SNAPSHOT_INCOMPATIBLE');
+      }
+      if (operational.compatibility === 'RISK_REDUCING_ONLY' && !['reduce', 'close'].includes(context.proposal.action)) {
+        violations.push({
+          code: 'OPERATIONAL_SNAPSHOT_INCOMPATIBLE',
+          message: 'MONITOR + HEALTHY permits only risk-reducing actions',
+          severity: 'REJECT',
+        });
+        reasonCodes.push('OPERATIONAL_SNAPSHOT_INCOMPATIBLE');
+      }
+    }
+
     // 1. System-level halt check
     if (context.policy.systemHaltActive) {
       violations.push({
@@ -501,6 +530,12 @@ export class RiskAuthorityService {
       effectiveLeverage,
       correlationId: context.correlationId,
       snapshotId: context.exposureSnapshot?.snapshotId ?? 'snap-unknown',
+      operationalSnapshot: context.operationalSnapshot ? {
+        snapshotId: context.operationalSnapshot.snapshotId,
+        snapshotVersion: context.operationalSnapshot.snapshotVersion,
+        lifecycleVersion: context.operationalSnapshot.lifecycleVersion,
+        healthVersion: context.operationalSnapshot.healthVersion,
+      } : undefined,
     };
     const idHash = stableHash(identityPayload);
 
@@ -542,6 +577,14 @@ export class RiskAuthorityService {
         maxLeverageCeiling: context.policy?.maxLeverageCeiling,
         evaluatedAt: context.evaluationTime,
         passed: outcome === 'ALLOW',
+        ...(context.operationalSnapshot ? {
+          operationalSnapshot: {
+            snapshotId: context.operationalSnapshot.snapshotId,
+            snapshotVersion: context.operationalSnapshot.snapshotVersion,
+            lifecycleVersion: context.operationalSnapshot.lifecycleVersion,
+            healthVersion: context.operationalSnapshot.healthVersion,
+          },
+        } : {}),
       },
       killSwitch: {
         active: outcome === 'HALT',

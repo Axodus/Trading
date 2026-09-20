@@ -68,6 +68,20 @@ export function validateRiskEvaluationContext(context: RiskEvaluationContext): R
     issues.push('valid evaluationTime ISO timestamp is required');
   }
 
+  if (context.environment === 'live') {
+    const snapshot = context.operationalSnapshot;
+    if (!snapshot) {
+      issues.push('operationalSnapshot is required for live risk evaluation');
+    } else {
+      if (snapshot.strategyRevisionId !== context.strategyRevision?.revisionId) {
+        issues.push('operationalSnapshot strategyRevisionId must match strategyRevision');
+      }
+      if (context.strategyHealth && snapshot.healthState !== context.strategyHealth.state) {
+        issues.push('operationalSnapshot healthState must match strategyHealth');
+      }
+    }
+  }
+
   return {
     valid: issues.length === 0,
     issues,
