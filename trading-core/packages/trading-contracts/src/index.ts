@@ -31,3 +31,4 @@ export * from './treasury/types.js';
 export * from './whiterabbit/types.js';
 export * from './strategy/lifecycle.js';
 export * from './governance/preExecution.js';
+export * from './execution/executionBoundary.js';

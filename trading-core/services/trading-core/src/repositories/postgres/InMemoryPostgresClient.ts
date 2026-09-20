@@ -29,6 +29,9 @@ export interface InMemoryPostgresStorage {
   strategy_operational_snapshots: Row[];
   trading_intents: Row[];
   pre_execution_authorizations: Row[];
+  execution_intents: Row[];
+  execution_translations: Row[];
+  execution_results: Row[];
 }
 
 export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
@@ -54,6 +57,9 @@ export function createInMemoryPostgresStorage(): InMemoryPostgresStorage {
     strategy_operational_snapshots: [],
     trading_intents: [],
     pre_execution_authorizations: [],
+    execution_intents: [],
+    execution_translations: [],
+    execution_results: [],
   };
 }
 
@@ -75,7 +81,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     const injectedFailure = this.fault?.(normalized);
     if (injectedFailure) throw injectedFailure;
     if (normalized === 'select 1') {
-      return { rows: [{ '?column?': 1 }] as T[] };
+      return { rows: [{ '?column?': 1 }] as unknown as T[] };
     }
     if (normalized.startsWith('create table') || normalized.startsWith('create index')) {
       return { rows: [] };
@@ -84,21 +90,21 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from information_schema.tables')) {
-      return { rows: this.selectInformationSchema(params) as T[] };
+      return { rows: this.selectInformationSchema(params) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_schema_migrations')) {
       this.insertMigration(params);
       return { rows: [] };
     }
     if (normalized.includes('from trading_schema_migrations')) {
-      return { rows: this.selectMigrations() as T[] };
+      return { rows: this.selectMigrations() as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_events')) {
       this.insertEvent(params);
       return { rows: [] };
     }
     if (normalized.includes('from trading_events')) {
-      return { rows: this.selectEvents(normalized, params) as T[] };
+      return { rows: this.selectEvents(normalized, params) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_orders')) {
       this.upsert('trading_orders', 'providerOrderId', {
@@ -112,7 +118,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from trading_orders')) {
-      return { rows: this.storage.trading_orders.filter((row) => row.providerOrderId === params[0]) as T[] };
+      return { rows: this.storage.trading_orders.filter((row) => row.providerOrderId === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_fills')) {
       this.upsert('trading_fills', 'fillId', {
@@ -129,21 +135,21 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from trading_fills')) {
-      return { rows: this.storage.trading_fills.filter((row) => row.providerOrderId === params[0]) as T[] };
+      return { rows: this.storage.trading_fills.filter((row) => row.providerOrderId === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_positions')) {
       this.storage.trading_positions.push({ owner_id: params[0], provider_id: params[1], captured_at: params[2], snapshot: params[3] });
       return { rows: [] };
     }
     if (normalized.includes('from trading_positions')) {
-      return { rows: this.latestByOwner(this.storage.trading_positions, params[0]) as T[] };
+      return { rows: this.latestByOwner(this.storage.trading_positions, params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_portfolios')) {
       this.storage.trading_portfolios.push({ owner_id: params[0], provider_id: params[1], captured_at: params[2], snapshot: params[3] });
       return { rows: [] };
     }
     if (normalized.includes('from trading_portfolios')) {
-      return { rows: this.latestByOwner(this.storage.trading_portfolios, params[0]) as T[] };
+      return { rows: this.latestByOwner(this.storage.trading_portfolios, params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_runtime_instances')) {
       this.upsert('trading_runtime_instances', 'id', {
@@ -160,7 +166,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from trading_runtime_instances')) {
-      return { rows: this.storage.trading_runtime_instances.filter((row) => row.id === params[0]) as T[] };
+      return { rows: this.storage.trading_runtime_instances.filter((row) => row.id === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_provider_state')) {
       this.upsert('trading_provider_state', 'provider_id', {
@@ -173,7 +179,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from trading_provider_state')) {
-      return { rows: this.storage.trading_provider_state.filter((row) => row.provider_id === params[0]) as T[] };
+      return { rows: this.storage.trading_provider_state.filter((row) => row.provider_id === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_submission_attempts')) {
       this.upsert('trading_submission_attempts', 'attempt_id', {
@@ -223,14 +229,14 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         updated_at: params[14],
         version: expectedVersion + 1,
       });
-      return { rows: [existing] as T[], rowCount: 1 };
+      return { rows: [existing] as unknown as T[], rowCount: 1 };
     }
     if (normalized.includes('from trading_submission_attempts')) {
       if (normalized.includes('where attempt_id = $1')) {
-        return { rows: this.storage.trading_submission_attempts.filter((row) => row.attempt_id === params[0]) as T[] };
+        return { rows: this.storage.trading_submission_attempts.filter((row) => row.attempt_id === params[0]) as unknown as T[] };
       }
       const terminalStates = ['provider-acknowledged', 'failed', 'rejected', 'cancelled', 'cancellation-rejected', 'cancellation-failed', 'reconciled-found', 'reconciled-not-found'];
-      return { rows: this.storage.trading_submission_attempts.filter((row) => !terminalStates.includes(String(row.state))) as T[] };
+      return { rows: this.storage.trading_submission_attempts.filter((row) => !terminalStates.includes(String(row.state))) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_execution_outbox')) {
       this.storage.trading_execution_outbox.push({
@@ -263,10 +269,10 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         current_revision_id: params[0], current_state: params[1], updated_at: params[2],
         last_transition_id: params[3], lifecycle_version: Number(params[5]) + 1,
       });
-      return { rows: [row] as T[], rowCount: 1 };
+      return { rows: [row] as unknown as T[], rowCount: 1 };
     }
     if (normalized.includes('from strategy_lifecycle_heads') && !normalized.includes('inner join strategy_health_heads')) {
-      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as T[] };
+      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_lifecycle_transitions')) {
       this.storage.strategy_lifecycle_transitions.push({
@@ -281,7 +287,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     if (normalized.includes('from strategy_lifecycle_transitions')) {
       let rows = this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0]);
       if (normalized.includes('idempotency_key = $2')) rows = rows.filter((row) => row.idempotency_key === params[1]);
-      return { rows: rows as T[] };
+      return { rows: rows as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_lifecycle_policies')) {
       this.upsert('strategy_lifecycle_policies', 'policy_revision', {
@@ -291,7 +297,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from strategy_lifecycle_policies')) {
-      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_health_heads')) {
       if (!this.storage.strategy_health_heads.some((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1])) {
@@ -311,10 +317,10 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         evaluation_policy_revision: params[2], reason_codes: params[3], evidence_refs: params[4],
         previous_health_version: params[5], last_transition_id: params[6],
       });
-      return { rows: [row] as T[], rowCount: 1 };
+      return { rows: [row] as unknown as T[], rowCount: 1 };
     }
     if (normalized.includes('from strategy_health_heads') && !normalized.includes('inner join strategy_health_heads')) {
-      return { rows: this.storage.strategy_health_heads.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]) as T[] };
+      return { rows: this.storage.strategy_health_heads.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_health_transitions')) {
       if (this.storage.strategy_health_transitions.some((row) => row.strategy_id === params[1] && row.strategy_revision_id === params[2] && row.idempotency_key === params[12])) {
@@ -332,7 +338,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     if (normalized.includes('from strategy_health_transitions')) {
       let rows = this.storage.strategy_health_transitions.filter((row) => row.strategy_id === params[0] && row.strategy_revision_id === params[1]);
       if (normalized.includes('idempotency_key = $3')) rows = rows.filter((row) => row.idempotency_key === params[2]);
-      return { rows: rows as T[] };
+      return { rows: rows as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_health_policies')) {
       this.upsert('strategy_health_policies', 'policy_revision', {
@@ -341,7 +347,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from strategy_health_policies')) {
-      return { rows: this.storage.strategy_health_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+      return { rows: this.storage.strategy_health_policies.filter((row) => row.policy_revision === params[0]) as unknown as T[] };
     }
     if (normalized.includes('from strategy_lifecycle_heads lifecycle') && normalized.includes('inner join strategy_health_heads')) {
       const lifecycle = this.storage.strategy_lifecycle_heads.find((row) => row.strategy_id === params[0] && row.current_revision_id === params[1]);
@@ -353,7 +359,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         lifecycle_state: lifecycle.current_state, lifecycle_version: lifecycle.lifecycle_version,
         lifecycle_updated_at: lifecycle.updated_at, health_state: health.health_state,
         health_version: health.health_version, health_effective_at: health.effective_at,
-      }] as T[] };
+      }] as unknown as T[] };
     }
     if (normalized.startsWith('insert into strategy_operational_snapshots')) {
       if (!this.storage.strategy_operational_snapshots.some((row) => row.snapshot_id === params[0])) {
@@ -375,16 +381,16 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes('from trading_val05_session_budgets')) {
-      return { rows: this.storage.trading_val05_session_budgets.filter((row) => row.session_id === params[0]) as T[] };
+      return { rows: this.storage.trading_val05_session_budgets.filter((row) => row.session_id === params[0]) as unknown as T[] };
     }
     if (normalized.includes('from trading_execution_outbox')) {
       if (normalized.includes('where aggregate_id = $1')) {
-        return { rows: this.storage.trading_execution_outbox.filter((row) => row.aggregate_id === params[0]) as T[] };
+        return { rows: this.storage.trading_execution_outbox.filter((row) => row.aggregate_id === params[0]) as unknown as T[] };
       }
       if (normalized.includes('where outbox_id = $1')) {
-        return { rows: this.storage.trading_execution_outbox.filter((row) => row.outbox_id === params[0]) as T[] };
+        return { rows: this.storage.trading_execution_outbox.filter((row) => row.outbox_id === params[0]) as unknown as T[] };
       }
-      return { rows: this.storage.trading_execution_outbox as T[] };
+      return { rows: this.storage.trading_execution_outbox as unknown as T[] };
     }
 
     if (normalized.startsWith("insert into strategy_lifecycle_heads")) {
@@ -414,10 +420,10 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
         updated_at: params[2],
         last_transition_id: params[3],
       });
-      return { rows: [existing] as T[], rowCount: 1 };
+      return { rows: [existing] as unknown as T[], rowCount: 1 };
     }
     if (normalized.includes("from strategy_lifecycle_heads")) {
-      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as T[] };
+      return { rows: this.storage.strategy_lifecycle_heads.filter((row) => row.strategy_id === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith("insert into strategy_lifecycle_transitions")) {
       const existing = this.storage.strategy_lifecycle_transitions.find(
@@ -450,13 +456,13 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     }
     if (normalized.includes("from strategy_lifecycle_transitions")) {
       if (normalized.includes("where transition_id = $1")) {
-        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.transition_id === params[0]) as T[] };
+        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.transition_id === params[0]) as unknown as T[] };
       }
       if (normalized.includes("where strategy_id = $1 and idempotency_key = $2")) {
-        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as T[] };
+        return { rows: this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as unknown as T[] };
       }
       const matching = this.storage.strategy_lifecycle_transitions.filter((row) => row.strategy_id === params[0]);
-      return { rows: matching.sort((a, b) => Number(a.new_version) - Number(b.new_version)) as T[] };
+      return { rows: matching.sort((a, b) => Number(a.new_version) - Number(b.new_version)) as unknown as T[] };
     }
     if (normalized.startsWith("insert into strategy_lifecycle_policies")) {
       this.upsert("strategy_lifecycle_policies", "policy_revision", {
@@ -470,7 +476,7 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
       return { rows: [] };
     }
     if (normalized.includes("from strategy_lifecycle_policies")) {
-      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as T[] };
+      return { rows: this.storage.strategy_lifecycle_policies.filter((row) => row.policy_revision === params[0]) as unknown as T[] };
     }
     if (normalized.startsWith('insert into trading_intents')) {
       if (this.storage.trading_intents.some((row) => row.risk_decision_id === params[7])) {
@@ -508,12 +514,12 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     }
     if (normalized.includes('from trading_intents')) {
       if (normalized.includes('where intent_id = $1')) {
-        return { rows: this.storage.trading_intents.filter((row) => row.intent_id === params[0]) as T[] };
+        return { rows: this.storage.trading_intents.filter((row) => row.intent_id === params[0]) as unknown as T[] };
       }
       if (normalized.includes('where risk_decision_id = $1')) {
-        return { rows: this.storage.trading_intents.filter((row) => row.risk_decision_id === params[0]) as T[] };
+        return { rows: this.storage.trading_intents.filter((row) => row.risk_decision_id === params[0]) as unknown as T[] };
       }
-      return { rows: this.storage.trading_intents as T[] };
+      return { rows: this.storage.trading_intents as unknown as T[] };
     }
     if (normalized.startsWith('insert into pre_execution_authorizations')) {
       if (this.storage.pre_execution_authorizations.some((row) => row.strategy_id === params[1] && row.idempotency_key === params[12])) {
@@ -545,15 +551,129 @@ export class InMemoryPostgresClient implements TransactionalPostgresQueryClient 
     }
     if (normalized.includes('from pre_execution_authorizations')) {
       if (normalized.includes('where strategy_id = $1 and idempotency_key = $2')) {
-        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as T[] };
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.strategy_id === params[0] && row.idempotency_key === params[1]) as unknown as T[] };
       }
       if (normalized.includes('where risk_decision_id = $1')) {
-        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.risk_decision_id === params[0]) as T[] };
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.risk_decision_id === params[0]) as unknown as T[] };
       }
       if (normalized.includes('where authorization_id = $1')) {
-        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.authorization_id === params[0]) as T[] };
+        return { rows: this.storage.pre_execution_authorizations.filter((row) => row.authorization_id === params[0]) as unknown as T[] };
       }
-      return { rows: this.storage.pre_execution_authorizations as T[] };
+      return { rows: this.storage.pre_execution_authorizations as unknown as T[] };
+    }
+    if (normalized.startsWith("insert into execution_intents")) {
+      if (this.storage.execution_intents.some((row) => row.trading_intent_id === params[1])) {
+        throw new Error("Duplicate key violation: unique trading_intent_id in execution_intents");
+      }
+      if (this.storage.execution_intents.some((row) => row.execution_intent_id === params[0])) {
+        throw new Error("Duplicate key violation: unique execution_intent_id in execution_intents");
+      }
+      this.storage.execution_intents.push({
+        execution_intent_id: params[0],
+        trading_intent_id: params[1],
+        strategy_id: params[2],
+        strategy_revision_id: params[3],
+        instrument: params[4],
+        market_type: params[5],
+        side: params[6],
+        authorized_capital: params[7],
+        authorized_quantity: params[8],
+        authorized_leverage: params[9],
+        execution_capital: params[10],
+        execution_quantity: params[11],
+        execution_leverage: params[12],
+        venue: params[13],
+        target_adapter_type: params[14],
+        constraints: params[15],
+        trading_intent_digest: params[16],
+        authorization_context_digest: params[17],
+        execution_policy_ref: params[18],
+        correlation_id: params[19],
+        idempotency_key: params[20],
+        created_at: params[21],
+        expires_at: params[22],
+        evidence_refs: params[23],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes("from execution_intents")) {
+      if (normalized.includes("where execution_intent_id = $1")) {
+        return { rows: this.storage.execution_intents.filter((row) => row.execution_intent_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes("where trading_intent_id = $1")) {
+        return { rows: this.storage.execution_intents.filter((row) => row.trading_intent_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.execution_intents as unknown as T[] };
+    }
+    if (normalized.startsWith("insert into execution_translations")) {
+      if (this.storage.execution_translations.some((row) => row.trading_intent_id === params[1] && row.idempotency_key === params[12])) {
+        throw new Error("Duplicate key violation: unique idempotency_key in execution_translations");
+      }
+      if (this.storage.execution_translations.some((row) => row.translation_id === params[0])) {
+        throw new Error("Duplicate key violation: unique translation_id in execution_translations");
+      }
+      this.storage.execution_translations.push({
+        translation_id: params[0],
+        trading_intent_id: params[1],
+        strategy_id: params[2],
+        strategy_revision_id: params[3],
+        target_adapter_type: params[4],
+        decision: params[5],
+        reason_codes: params[6],
+        execution_intent_id: params[7],
+        effective_capital: params[8],
+        effective_quantity: params[9],
+        effective_leverage: params[10],
+        policy_revision: params[11],
+        idempotency_key: params[12],
+        command_hash: params[13],
+        rationale: params[14],
+        evaluated_at: params[15],
+        created_at: params[16],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes("from execution_translations")) {
+      if (normalized.includes("where trading_intent_id = $1 and idempotency_key = $2")) {
+        return { rows: this.storage.execution_translations.filter((row) => row.trading_intent_id === params[0] && row.idempotency_key === params[1]) as unknown as T[] };
+      }
+      if (normalized.includes("where translation_id = $1")) {
+        return { rows: this.storage.execution_translations.filter((row) => row.translation_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.execution_translations as unknown as T[] };
+    }
+    if (normalized.startsWith("insert into execution_results")) {
+      if (this.storage.execution_results.some((row) => row.execution_result_id === params[0])) {
+        throw new Error("Duplicate key violation: unique execution_result_id in execution_results");
+      }
+      this.storage.execution_results.push({
+        execution_result_id: params[0],
+        execution_intent_id: params[1],
+        trading_intent_id: params[2],
+        strategy_id: params[3],
+        strategy_revision_id: params[4],
+        adapter_type: params[5],
+        mode: params[6],
+        status: params[7],
+        requested_quantity: params[8],
+        accepted_quantity: params[9],
+        simulated_filled_quantity: params[10],
+        simulated_average_price: params[11],
+        fees: params[12],
+        reason_codes: params[13],
+        created_at: params[14],
+        completed_at: params[15],
+      });
+      return { rows: [] };
+    }
+    if (normalized.includes("from execution_results")) {
+      if (normalized.includes("where execution_result_id = $1")) {
+        return { rows: this.storage.execution_results.filter((row) => row.execution_result_id === params[0]) as unknown as T[] };
+      }
+      if (normalized.includes("where execution_intent_id = $1")) {
+        return { rows: this.storage.execution_results.filter((row) => row.execution_intent_id === params[0]) as unknown as T[] };
+      }
+      return { rows: this.storage.execution_results as unknown as T[] };
     }
     throw new Error(`Unsupported in-memory postgres query: ${sql}`);
   }
