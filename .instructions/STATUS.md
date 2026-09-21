@@ -1,8 +1,8 @@
 # AXODUS TRADING — SYSTEM STATUS
 
-**Latest Milestone:** `AXODUS-TRADING-EPIC-01 / FIX-FINAL-01` (Harness Exact Arithmetic & Capital Conservation Remediation)
-**Status:** `REMEDIATED / REVALIDATION REQUIRED`
-**Date:** 2026-09-20
+**Latest Milestone:** `AXODUS-TRADING-EPIC-01 / VAL-FINAL-R1` (Closure Revalidation)
+**Status:** `TECHNICALLY COMPLETE / CTO ACCEPTED`
+**Date:** 2026-09-21
 
 ## Summary of Active Epic State
 - **EPIC-01 (Trading Harness):**
@@ -12,10 +12,13 @@
   - `VAL-14-FAULT`: `COMPLETE / PASS / CTO REVIEW REQUIRED`
   - `VAL-14-TESTNET`: `COMPLETE / PASS / CTO REVIEW REQUIRED`
   - `VAL-FINAL`: `FAIL / CTO ACCEPTED AS VALID FAILURE`
-  - `FIX-FINAL-01`: `REMEDIATED / REVALIDATION REQUIRED`
+  - `FIX-FINAL-01`: `COMPLETE / CTO ACCEPTED`
+  - `VAL-FINAL-R1`: `PASSED / CTO ACCEPTED`
+  - `VAL-FINAL-P0-001`: `CLOSED`
+  - `EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`
 
-## Blocking Finding
-- `VAL-FINAL-P0-001`: `REMEDIATED / REVALIDATION REQUIRED` — `TradingHarnessCoordinator` now enforces Risk MODIFY capital/quantity/leverage conservation with canonical `FixedDecimal` comparisons. VAL-FINAL focused regression passes; final closure still requires `VAL-FINAL-R1`.
+## Closure Note
+- `VAL-FINAL` remains preserved as an accepted valid failure; `FIX-FINAL-01` and independent `VAL-FINAL-R1` remediated and closed `VAL-FINAL-P0-001` on baseline `8c406dfc97188074a7ac1788683a8e7371eda940`.
 
 ## Preserved Invariants & Boundaries
 - Mainnet: `PROHIBITED`.
@@ -24,4 +27,4 @@
 - Production/Customer Credentials: `PROHIBITED`.
 - External mutation during VAL-FINAL: `0`.
 - Push: `NOT AUTHORIZED`.
-- `DEBT-AUD-A-03`: `OPEN / PARTIALLY REMEDIATED`; remains P2 for Paper/Testnet scope and blocking for future real-capital readiness.
+- `DEBT-AUD-A-03`: `OPEN / NON-BLOCKING FOR EPIC-01 TECHNICAL CLOSURE / BLOCKING FOR FUTURE REAL-CAPITAL READINESS`.

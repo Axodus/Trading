@@ -1,9 +1,10 @@
 # AXODUS-TRADING-EPIC-01 / VAL-FINAL — Technical Closure Certification
 
-**Status:** `FAIL / CTO REVIEW REQUIRED`
-**Date:** 2026-09-20
-**Baseline:** `eae4a57` (`feat(trading): integrate autonomous trading harness`)
-**Gate:** `AXODUS-TRADING-EPIC-01 / VAL-FINAL`
+**Status:** `TECHNICALLY COMPLETE / CTO ACCEPTED`
+**Date:** 2026-09-21
+**Original VAL-FINAL baseline:** `eae4a57` (`feat(trading): integrate autonomous trading harness`)
+**Closure baseline:** `8c406dfc97188074a7ac1788683a8e7371eda940` (`fix(trading): enforce exact harness capital conservation`)
+**Gate:** `AXODUS-TRADING-EPIC-01 / VAL-FINAL-R1`
 **External mutation:** `0`
 **Mainnet:** `PROHIBITED`
 **Real capital:** `PROHIBITED`
@@ -13,7 +14,12 @@
 
 ## Executive Result
 
-`VAL-FINAL` failed and remains accepted as a valid failure. `FIX-FINAL-01` has remediated the P0 implementation defect, but final closure still requires `VAL-FINAL-R1`.
+`VAL-FINAL` failed and remains preserved as an accepted valid failure. `FIX-FINAL-01` remediated the P0 implementation defect, and independent `VAL-FINAL-R1` passed. CTO accepted R1 and closed `VAL-FINAL-P0-001` on 2026-09-21.
+
+```text
+VAL-FINAL-P0-001 = CLOSED
+AXODUS-TRADING-EPIC-01 = TECHNICALLY COMPLETE / CTO ACCEPTED
+```
 
 The failing conformance fixture proves that the coordinator accepts a Portfolio-approved capital value larger than the requested proposal capital when the values exceed the safe integer precision range:
 
@@ -42,7 +48,7 @@ FIX-FINAL-01 replaces the authoritative Harness comparison with canonical `Fixed
 
 | ID | Severity | Domain | Finding | Evidence | Gate Result |
 |---|---:|---|---|---|---|
-| `VAL-FINAL-P0-001` | P0 | Harness / Risk MODIFY / Capital Conservation | `REMEDIATED / REVALIDATION REQUIRED`: `TradingHarnessCoordinator` now uses `FixedDecimal` for authoritative capital/quantity/leverage conservation and fails closed on malformed or negative canonical economic values. | `trading-core/services/trading-core/src/harness/TradingHarnessCoordinator.ts`; passing regression `trading-core/services/trading-core/test/val-final-epic01-technical-closure.test.mjs`. | `REMEDIATED / REVALIDATION REQUIRED` |
+| `VAL-FINAL-P0-001` | P0 | Harness / Risk MODIFY / Capital Conservation | `CLOSED`: `TradingHarnessCoordinator` uses `FixedDecimal` for authoritative capital/quantity/leverage conservation and fails closed on malformed or negative canonical economic values. | R1 report `AXODUS-TRADING-VAL-FINAL-R1_CLOSURE_REVALIDATION.md`; regression `trading-core/services/trading-core/test/val-final-epic01-technical-closure.test.mjs`. | `CLOSED / CTO ACCEPTED` |
 
 ---
 
@@ -66,25 +72,22 @@ No new provider mutation was performed. No Testnet order was submitted. VAL-FINA
 
 ## Decision
 
-`AXODUS-TRADING-EPIC-01` remains **OPEN / TECHNICAL CLOSURE BLOCKED** until `VAL-FINAL-R1` independently revalidates FIX-FINAL-01 and closes `VAL-FINAL-P0-001`.
+`AXODUS-TRADING-EPIC-01` is **TECHNICALLY COMPLETE / CTO ACCEPTED**. `VAL-FINAL-R1` independently revalidated FIX-FINAL-01 and CTO closed `VAL-FINAL-P0-001`.
 
-Completed remediation gate:
+The R1 record preserves one transient `VAL-08-PG` Gate 6 concurrency failure: the isolated rerun and subsequent complete Trading rerun passed. It did not reproduce as a P0/P1 and was not connected to the exact-arithmetic remediation.
+
+Completed remediation and closure gates:
 
 ```text
-FIX-FINAL-01
-Exact FixedDecimal Risk MODIFY Capital Conservation in Harness Coordinator
-Status: REMEDIATED / REVALIDATION REQUIRED
+FIX-FINAL-01 = COMPLETE / CTO ACCEPTED
+VAL-FINAL-R1 = PASSED / CTO ACCEPTED
+VAL-FINAL-P0-001 = CLOSED
 ```
 
-Minimum remediation requirements:
-
-1. Replace all authoritative Harness economic comparisons using `Number()` with canonical `FixedDecimal` or equivalent exact deterministic arithmetic.
-2. Add focused regression coverage for values above `Number.MAX_SAFE_INTEGER` with 12-decimal fractional precision.
-3. Re-run VAL-FINAL, VAL-14 focused suites, full Trading regression, full Quant regression, typecheck, build, and diff hygiene.
-4. Preserve `DEBT-AUD-A-03` as open unless independently remediated and validated.
+The remediation requirements were satisfied by replacing authoritative Harness economic comparisons with canonical `FixedDecimal` checks, adding focused regressions above `Number.MAX_SAFE_INTEGER` and at 12-decimal precision, and preserving `DEBT-AUD-A-03` as separate open debt.
 
 ---
 
 ## Non-Authorization
 
-This failed closure gate does not authorize production, Mainnet, real capital, production credentials, customer credentials, continuous Testnet trading, or any automatic production readiness classification.
+This technical closure does not authorize production, Mainnet, real capital, production credentials, customer credentials, continuous Testnet trading, push, or any automatic production readiness classification.

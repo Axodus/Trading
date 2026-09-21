@@ -28,6 +28,9 @@
 - [x] **VAL-14-TESTNET**: Bounded Testnet Harness Acceptance
 - [x] **VAL-FINAL**: Technical Closure, Architecture Conformance & Readiness Certification — `FAIL / CTO ACCEPTED AS VALID FAILURE`
 
-## Required Next Remediation
-- [x] **FIX-FINAL-01**: Replace Harness Risk MODIFY capital/quantity/leverage conservation checks with canonical exact decimal arithmetic — `REMEDIATED / REVALIDATION REQUIRED`
-- [ ] **VAL-FINAL-R1**: Revalidate final closure-critical invariants after FIX-FINAL-01.
+## Final Closure
+- [x] **FIX-FINAL-01**: Exact Harness capital/quantity/leverage remediation — `COMPLETE / CTO ACCEPTED`.
+- [x] **VAL-FINAL-R1**: Independent closure revalidation — `PASSED / CTO ACCEPTED`.
+- [x] **EPIC-01**: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
+
+`DEBT-AUD-A-03` remains open and blocks future real-capital readiness; it does not reopen EPIC-01 technical closure.
