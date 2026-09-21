@@ -10,8 +10,8 @@
 
 ## Current Experimental Follow-up
 - **ID:** `AXODUS-TRADING-IMP-02 PAPER SHADOW`
-- **Status:** `PRINCIPAL PILOT COMPLETE / CTO REVIEW REQUIRED`.
-- **Result:** 11 Jev PAPER calls; 11 successful observations; 1 abstention; 0 failures; 5 stability probes; no Testnet/Mainnet/real-capital mutation. Principal outcomes remain `NO_DEFENSIBLE_OUTCOME`; H1 and H2 remain `INSUFFICIENT EVIDENCE`.
+- **Status:** `R2 COMPLETE / PRELIMINARY DATASET / CTO REVIEW REQUIRED`.
+- **Result:** 21 Jev PAPER calls; 1 read-only market-data call; 12 principal observations; 12 market-derived outcomes; 0 principal `NO_DEFENSIBLE_OUTCOME`; 9 stability probes; no Testnet/Mainnet/real-capital mutation. H2 has a usable preliminary dataset, but value/calibration remain `INSUFFICIENT EVIDENCE`; H1 had 0 organic TradeProposal observations.
 
 ## Preserved Closure
 - `AXODUS-TRADING-EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`.

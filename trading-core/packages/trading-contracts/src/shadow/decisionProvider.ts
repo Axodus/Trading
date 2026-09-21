@@ -47,10 +47,11 @@ export interface ShadowDecisionSnapshot {
   instrument: string;
   marketStateRef: string;
   marketStateDigest: string;
-  opportunityRef: string;
-  opportunityDigest: string;
-  tradeProposalRef: string;
-  tradeProposalDigest: string;
+  observationKind?: 'TRADE_PROPOSAL' | 'MARKET_STATE';
+  opportunityRef?: string;
+  opportunityDigest?: string;
+  tradeProposalRef?: string;
+  tradeProposalDigest?: string;
   experiment: ExperimentPolicyIdentity;
   questionSet: QuestionSetIdentity;
   requestedProvider: string;

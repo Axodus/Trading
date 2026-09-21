@@ -11,3 +11,5 @@ export * from './ShadowQuestionSets.js';
 export * from './ShadowStateSerializer.js';
 export * from './ShadowTradeProposalObserver.js';
 export * from './PaperShadowAnalysis.js';
+export * from './MarketReadingSnapshot.js';
+export * from './MarketDerivedOutcome.js';

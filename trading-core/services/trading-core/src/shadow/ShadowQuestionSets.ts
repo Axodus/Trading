@@ -55,3 +55,28 @@ export const JEV_SHADOW_PAPER_QUESTION_SET_V1: readonly ShadowQuestion[] = Objec
     options: Object.freeze({ suitable: 'Apparently suitable', unsuitable: 'Apparently unsuitable', uncertain: 'Insufficient evidence' }),
   }),
 ]);
+
+
+/** R2 H2 market-state reader question set. No trade/proposal authority semantics. */
+export const JEV_SHADOW_PAPER_R2_MARKET_READER_QUESTION_SET_V1: readonly ShadowQuestion[] = Object.freeze([
+  Object.freeze({
+    questionId: 'state_sufficiency', type: 'CHOICE' as const,
+    instructions: 'Classify whether the supplied deterministic candle-derived market features are sufficient for probabilistic market-state reading at the declared horizons.',
+    options: Object.freeze({ sufficient: 'Features support a bounded market-state reading', partial: 'Some useful information is present but important context is missing', insufficient: 'Too incomplete or ambiguous for a bounded reading' }),
+  }),
+  Object.freeze({
+    questionId: 'market_regime', type: 'CHOICE' as const,
+    instructions: 'Classify the tactical market regime from supplied deterministic features only. Do not infer unseen order-book or future data.',
+    options: Object.freeze({ trending: 'Directional persistence dominates', range: 'Bounded non-directional movement dominates', high_volatility: 'Recent volatility/range dominates', noisy: 'Low signal-to-noise dominates', uncertain: 'Insufficient evidence' }),
+  }),
+  Object.freeze({
+    questionId: 'directional_pressure', type: 'CHOICE' as const,
+    instructions: 'Classify near-term directional pressure implied by the supplied t0 features only.',
+    options: Object.freeze({ upward: 'Upward pressure is dominant', downward: 'Downward pressure is dominant', neutral: 'No clear directional pressure', uncertain: 'Insufficient evidence' }),
+  }),
+  Object.freeze({
+    questionId: 'contextual_risk', type: 'SCORE' as const,
+    instructions: 'Score non-authoritative contextual risk visible in the supplied market features.',
+    levels: Object.freeze(['low', 'moderate', 'high']),
+  }),
+]);

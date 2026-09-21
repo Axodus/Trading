@@ -173,6 +173,13 @@
       "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
     },
     {
+      "file": "imp-02-paper-shadow-r2-outcomes.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "R2 outcome calculation uses deterministic local candle fixtures only; no external market or exchange access."
+    },
+    {
       "file": "imp-02b-cex-lifecycle.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",
