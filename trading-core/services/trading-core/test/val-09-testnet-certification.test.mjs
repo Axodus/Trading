@@ -13,6 +13,7 @@ import {
   BinanceTestnetControlledLifecycleAdapter,
   VAL_04B2_BASE_URL,
   assertVal04B2TestnetUrl,
+  assertTestnetMutationAuthorized,
 } from '../../../../dist-test/trading-core/services/trading-core/src/index.js';
 import {
   FixedDecimal,
@@ -56,6 +57,7 @@ describe('AXODUS-TRADING-EPIC-01 / VAL-09-TESTNET — Bounded Provider Execution
   const testQuantity = '0.001000000000';
 
   before(async () => {
+    assertTestnetMutationAuthorized(process.env);
     loadWorkspaceEnv();
     apiKey = process.env.TRADING_BINANCE_API_KEY;
     apiSecret = process.env.TRADING_BINANCE_API_SECRET;

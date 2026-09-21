@@ -15,6 +15,7 @@ import {
 } from './Val04B2ControlledOrderHarness.js';
 import { Val04B2CredentialSource } from './Val04B2CredentialSource.js';
 import { Val04B2LiveTransport } from './Val04B2LiveTransport.js';
+import { assertTestnetMutationAuthorized } from './ExternalMutationTestGuard.js';
 
 type RunnerEnvironment = Readonly<Record<string, string | undefined>>;
 type RuntimeProcess = {
@@ -119,6 +120,7 @@ export async function runVal04B2Execute(
       `VAL-04B2 execute mode requires ${VAL_04B2_EXECUTE_CONFIRMATION_VARIABLE}=${VAL_04B2_EXECUTE_CONFIRMATION}`,
     );
   }
+  assertTestnetMutationAuthorized(environment);
 
   const harness = createHarness(environment);
   const result = await harness.executeControlledOrderLifecycle({

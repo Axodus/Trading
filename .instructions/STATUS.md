@@ -1,7 +1,7 @@
 # AXODUS TRADING — SYSTEM STATUS
 
-**Latest Milestone:** `AXODUS-TRADING-IMP-02` (Jev Shadow Decision Provider & Experimental Characterization)
-**Status:** `STAGE 0 A–F COMPLETE / CTO REVIEW REQUIRED`
+**Latest Milestone:** `AXODUS-TRADING-FIX-IMP02-01` (External-Mutation Test Isolation)
+**Status:** `IMPLEMENTED / VALIDATION IN PROGRESS / CTO REVIEW REQUIRED`
 **Date:** 2026-09-21
 
 ## Summary of Active Epic State
@@ -15,10 +15,10 @@
 
 ## Active Research / Experiment
 - `AXODUS-TRADING-RESEARCH-REQ-02`: research package complete with disposition `SHADOW-IMPLEMENTATION CANDIDATE`.
-- `AXODUS-TRADING-IMP-02`: provider-neutral SHADOW infrastructure A–E accepted by CTO; Phase F live Stage 0 resumed after local credential restoration.
-- Stage 0 R3 live characterization: `PASS` with requested and resolved model `jev-1.13.0`, 6 total Jev API calls in this continuation, single-attempt behavior, sanitized response summaries, and no exchange mutation.
-- Jev has no Portfolio, Risk, Intent, execution or exchange authority and is absent from the canonical critical path.
-- `ADVISORY`, `GATED`, extended PAPER/TESTNET campaigns, commit and push remain not authorized pending CTO review.
+- `AXODUS-TRADING-IMP-02`: Stage 0 passed and remains uncommitted; PAPER SHADOW is paused.
+- `AXODUS-TRADING-FIX-IMP02-01`: generic `npm test` previously reached the real `VAL-09-TESTNET` mutation suite. The remediation classifies tests, routes default regression through SAFE tests only, and requires `AXODUS_TRADING_ALLOW_TESTNET_MUTATION=true` for Testnet-mutating acceptance.
+- The incident record remains preserved at `.instructions/handoffs/Trading/2026-09-21T-paper-shadow-blocked-testnet-scope-violation.md`.
+- Jev has no Portfolio, Risk, Intent, execution or exchange authority and is absent from the canonical critical path. Advisory, Gated, extended PAPER/TESTNET campaigns, commit and push remain unauthorized pending CTO review.
 
 ## Preserved Invariants & Boundaries
 - Mainnet: `PROHIBITED`.

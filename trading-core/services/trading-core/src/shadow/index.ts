@@ -10,3 +10,4 @@ export * from './ShadowDecisionValidation.js';
 export * from './ShadowQuestionSets.js';
 export * from './ShadowStateSerializer.js';
 export * from './ShadowTradeProposalObserver.js';
+export * from './PaperShadowAnalysis.js';

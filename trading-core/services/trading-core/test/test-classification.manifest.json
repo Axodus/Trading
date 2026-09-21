@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "generatedFor": "AXODUS-TRADING-FIX-IMP02-01",
+  "defaultClassification": "SAFE",
+  "mutationOptInEnv": "AXODUS_TRADING_ALLOW_TESTNET_MUTATION",
+  "classifications": [
+    {
+      "file": "epic-quant-req01-acs.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req01-contracts.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req02-market-intelligence.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req03-opportunity-discovery.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req04-strategy-intelligence.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req05-portfolio-allocation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req06-risk-authority.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req07b-strategy-lifecycle.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req07c-strategy-health-authority.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req07d-pre-execution-authorization.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req08-execution-boundary.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req09-execution-lifecycle.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req10-execution-diagnostics-pnl.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req11-performance-drift-revalidation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req12-operational-governance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req13-system-safety.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "epic01-req14-harness-integration.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "execution-orchestrator.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "fix-imp02-external-mutation-isolation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Test-routing and fail-closed guard verification using local process interception"
+    },
+    {
+      "file": "imp-01a-foundations.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-01b-http-adapter.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-01d-http-market-data.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-02-jev-shadow-postgres.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-02-jev-shadow-stage0.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-02b-cex-lifecycle.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-02c-durable-lifecycle.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-02c0-durable-persistence.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05a-continuous-runtime.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05b-recovery-reconciliation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05c-risk-envelope-kill-switch.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05d-intent-admission.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05e-continuous-hardening.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-05f-live-provider-composition.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "postgres.e2e.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-02a-identity.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-02b-cex-lifecycle.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-04a-safety-preflight.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-04b-precredential-harness.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-04b1-authenticated-read-harness.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-04b2-controlled-order-harness.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-04b2-r4-runner.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-05-fix01-exact-reconciliation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-07d-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-08-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-09-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-09-testnet-certification.test.mjs",
+      "classification": "TESTNET_MUTATING",
+      "network": "external-testnet",
+      "externalMutation": true,
+      "reason": "Performs real Binance Futures Testnet order submit/cancel/residual-state checks"
+    },
+    {
+      "file": "val-10-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-11-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-12-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-13-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-14-fault-injection.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-14-paper-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-14-postgres-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-14-testnet-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-final-epic01-technical-closure.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    }
+  ]
+}

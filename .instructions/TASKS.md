@@ -1,11 +1,16 @@
 # AXODUS TRADING — ACTIVE TASKS
 
 ## Current Task
-- **ID:** `AXODUS-TRADING-IMP-02`
-- **Description:** Provider-neutral Jev SHADOW contracts, mock/replay, authority isolation, adapter, persistence and Stage 0 characterization.
-- **Status:** `STAGE 0 A–F COMPLETE / CTO REVIEW REQUIRED / UNCOMMITTED`.
-- **Validation:** Build PASS; Stage 0 focused/unit coverage included in full Trading run `800 passed / 0 failed / 1 skipped`; Jev Stage 0 live characterization PASS; diff hygiene PASS; `.env.local` ignored; secret-pattern check found no committed credential value.
-- **Next Task:** CTO review decides whether to authorize commit of A–F and whether to authorize PAPER SHADOW. Extended TESTNET SHADOW, Advisory and Gated remain unauthorized.
+- **ID:** `AXODUS-TRADING-FIX-IMP02-01`
+- **Description:** External-mutation test isolation after the PAPER SHADOW scope violation.
+- **Status:** `IMPLEMENTED / VALIDATION IN PROGRESS / UNCOMMITTED / CTO REVIEW REQUIRED`.
+- **Validation:** Focused guard tests, typecheck, build, safe default regression, diff hygiene and secret scan are required.
+- **Next Task:** CTO review decides FIX acceptance, commit authorization, push authorization and whether PAPER SHADOW may resume.
+
+## Paused Task
+- **ID:** `AXODUS-TRADING-IMP-02 PAPER SHADOW`
+- **Status:** `PAUSED`.
+- **Reason:** Generic regression previously reached a real Testnet mutation suite. H1 and H2 remain `INSUFFICIENT EVIDENCE`.
 
 ## Preserved Closure
 - `AXODUS-TRADING-EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`.

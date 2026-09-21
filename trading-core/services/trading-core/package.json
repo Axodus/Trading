@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "tsc -p tsconfig.test.json && node --test test/*.test.mjs",
+    "test": "npm run test:safe",
     "val:04b2:r4:public": "npm run build && node ../../../dist/services/trading-core/trading-core/services/trading-core/src/external/val-04b2-live-runner.js --public",
     "val:04b2:r4:execute": "npm run build && node ../../../dist/services/trading-core/trading-core/services/trading-core/src/external/val-04b2-live-runner.js --execute",
     "val:04b2:r4:verify-built": "npm run build && node scripts/verify-val-04b2-built-runner.mjs",
@@ -19,7 +19,9 @@
     "db:smoke-local": "npm run build && node --experimental-strip-types scripts/smoke-local-postgres.ts",
     "db:reset-local": "npm run build && node --experimental-strip-types scripts/reset-local-db.ts",
     "trading:local:e2e": "npm run build && node --experimental-strip-types scripts/trading-local-e2e.ts",
-    "jev:stage0": "npm run build && node scripts/jev-stage0-characterization.mjs"
+    "jev:stage0": "npm run build && node scripts/jev-stage0-characterization.mjs",
+    "test:safe": "tsc -p tsconfig.test.json && node scripts/run-classified-tests.mjs SAFE",
+    "test:testnet:acceptance": "tsc -p tsconfig.test.json && node scripts/run-classified-tests.mjs TESTNET_MUTATING"
   },
   "dependencies": {
     "pg": "^8.13.1"

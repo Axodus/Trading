@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import {
+  TESTNET_MUTATION_OPT_IN_ENV,
   VAL_04B2_BASE_URL,
   VAL_04B2_EXECUTE_CONFIRMATION,
   VAL_04B2_EXECUTE_CONFIRMATION_VARIABLE,
@@ -85,6 +86,21 @@ test('R4 execute mode rejects missing or incorrect operational confirmation with
   assert.equal(factoryCalls, 0);
 });
 
+test('R4 execute mode rejects explicit execution confirmation without the separate Testnet mutation capability', async () => {
+  let factoryCalls = 0;
+  await assert.rejects(
+    () => runVal04B2Execute(
+      { [VAL_04B2_EXECUTE_CONFIRMATION_VARIABLE]: VAL_04B2_EXECUTE_CONFIRMATION },
+      () => {
+        factoryCalls += 1;
+        throw new Error('harness must not be created');
+      },
+    ),
+    new RegExp(`${TESTNET_MUTATION_OPT_IN_ENV}=true`),
+  );
+  assert.equal(factoryCalls, 0);
+});
+
 test('R4 execute mode delegates exactly once with the technical approval token and sanitized result', async () => {
   let calls = 0;
   let receivedOptions;
@@ -115,7 +131,10 @@ test('R4 execute mode delegates exactly once with the technical approval token a
   };
 
   const result = await runVal04B2Execute(
-    { [VAL_04B2_EXECUTE_CONFIRMATION_VARIABLE]: VAL_04B2_EXECUTE_CONFIRMATION },
+    {
+      [VAL_04B2_EXECUTE_CONFIRMATION_VARIABLE]: VAL_04B2_EXECUTE_CONFIRMATION,
+      [TESTNET_MUTATION_OPT_IN_ENV]: 'true',
+    },
     () => ({
       async executeControlledOrderLifecycle(options) {
         calls += 1;

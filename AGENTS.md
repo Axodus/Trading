@@ -10,7 +10,7 @@ Run TypeScript commands from `trading-core/services/trading-core`:
 
 - `npm run build` compiles the service and shared contracts.
 - `npm run typecheck` performs strict type checking without emitting files.
-- `npm test` compiles test targets and runs `node --test test/*.test.mjs`.
+- `npm test` runs the classified SAFE graph through `npm run test:safe`; it must not reach external exchange mutation. Mutation-capable Testnet acceptance uses an explicit command and runtime opt-in.
 - `npm run trading:local:e2e -- --json --cleanup` runs the documented simulation-only PostgreSQL workflow.
 
 For `backend-api/`, use `make install` to create the Conda environment, `make run` to start Uvicorn with reload, and `docker compose up --build` for the containerized stack. Initialize linked repositories with `git submodule update --init --recursive`.
@@ -29,7 +29,7 @@ Recent history uses Conventional Commit subjects such as `feat(trading): ...` an
 
 ## Security & Configuration
 
-Copy settings from `.env.example`; never commit credentials, wallet keys, exchange secrets, or generated bot data. Preserve governance, risk, telemetry, and accounting gates. Treat local and paper execution as the default unless production activity is explicitly authorized.
+Copy settings from `.env.example`; never commit credentials, wallet keys, exchange secrets, or generated bot data. Preserve governance, risk, telemetry, and accounting gates. Treat local and paper execution as the default unless production activity is explicitly authorized. Before executing a previously unclassified test command, inspect its package script, runner, and test-discovery path for external mutation capability. Never infer execution authorization from available credentials. Mutation-capable acceptance tests require explicit task authorization plus repository runtime gates.
 
 ## AXODUS_WORKSPACE_COORDINATION
 
