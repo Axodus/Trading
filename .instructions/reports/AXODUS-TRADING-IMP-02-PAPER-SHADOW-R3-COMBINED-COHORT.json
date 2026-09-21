@@ -43,68 +43,119 @@
         "first": "2026-09-21T17:24:59.999Z",
         "last": "2026-09-21T17:27:59.999Z"
       }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-d-20260921-RESULTS.json",
+      "windowId": "r3e-window-d-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T20:16:59.999Z",
+        "last": "2026-09-21T20:19:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-e-20260921-RESULTS.json",
+      "windowId": "r3e-window-e-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T20:26:59.999Z",
+        "last": "2026-09-21T20:29:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-f-20260921-RESULTS.json",
+      "windowId": "r3e-window-f-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T20:32:59.999Z",
+        "last": "2026-09-21T20:35:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-g-20260921-RESULTS.json",
+      "windowId": "r3e-window-g-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T20:40:59.999Z",
+        "last": "2026-09-21T20:43:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-h-20260921-RESULTS.json",
+      "windowId": "r3e-window-h-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T20:48:59.999Z",
+        "last": "2026-09-21T20:51:59.999Z"
+      }
     }
   ],
   "volume": {
-    "windows": 3,
-    "principalObservations": 12,
-    "completedOutcomes": 12,
-    "stabilityObservations": 21,
-    "providerFailures": 1
+    "windows": 8,
+    "principalObservations": 32,
+    "completedOutcomes": 32,
+    "stabilityObservations": 66,
+    "providerFailures": 3
   },
   "distributions": {
     "jevRegime": {
-      "failure": 1,
-      "range": 7,
-      "uncertain": 4
+      "failure": 2,
+      "noisy": 1,
+      "range": 18,
+      "uncertain": 11
     },
     "jevDirectionalPressure": {
-      "downward": 2,
-      "failure": 1,
-      "neutral": 1,
-      "upward": 8
+      "downward": 11,
+      "failure": 2,
+      "neutral": 2,
+      "upward": 17
     },
     "deterministicRegime": {
-      "high_volatility": 1,
-      "range": 9,
-      "trending": 2
+      "high_volatility": 6,
+      "range": 20,
+      "trending": 6
     },
     "deterministicDirectionalPressure": {
-      "downward": 1,
-      "neutral": 8,
-      "upward": 3
+      "downward": 5,
+      "neutral": 19,
+      "upward": 8
     }
   },
   "comparatorComparison": {
     "1m": {
       "horizonMinutes": 1,
-      "directionalOutcomes": 2,
-      "deterministicPredictions": 0,
-      "deterministicCorrect": 0,
-      "deterministicAbstentions": 2,
-      "jevPredictions": 1,
-      "jevCorrect": 1,
+      "directionalOutcomes": 12,
+      "deterministicPredictions": 5,
+      "deterministicCorrect": 3,
+      "deterministicAbstentions": 7,
+      "jevPredictions": 11,
+      "jevCorrect": 8,
       "jevAbstentions": 1,
-      "jointPredictions": 0,
-      "bothCorrect": 0,
+      "jointPredictions": 5,
+      "bothCorrect": 3,
       "deterministicOnlyCorrect": 0,
       "jevOnlyCorrect": 0,
-      "neitherCorrect": 0
+      "neitherCorrect": 2
     },
     "3m": {
       "horizonMinutes": 3,
-      "directionalOutcomes": 4,
-      "deterministicPredictions": 0,
-      "deterministicCorrect": 0,
-      "deterministicAbstentions": 4,
-      "jevPredictions": 3,
-      "jevCorrect": 2,
+      "directionalOutcomes": 21,
+      "deterministicPredictions": 7,
+      "deterministicCorrect": 4,
+      "deterministicAbstentions": 14,
+      "jevPredictions": 20,
+      "jevCorrect": 11,
       "jevAbstentions": 1,
-      "jointPredictions": 0,
-      "bothCorrect": 0,
+      "jointPredictions": 7,
+      "bothCorrect": 4,
       "deterministicOnlyCorrect": 0,
       "jevOnlyCorrect": 0,
-      "neitherCorrect": 0
+      "neitherCorrect": 3
     }
   },
   "disposition": "COLLECTION_CONTINUES_INSUFFICIENT_DIVERSITY_AND_N"

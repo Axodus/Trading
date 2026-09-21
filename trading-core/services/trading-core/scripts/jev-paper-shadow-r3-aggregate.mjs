@@ -4,7 +4,7 @@ import { comparePaperR3Direction } from '../../../../dist/services/trading-core/
 
 const reportDirectory = resolve(process.cwd(), '../../../.instructions/reports');
 const files = readdirSync(reportDirectory)
-  .filter((file) => /^AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-.+-RESULTS\.json$/.test(file))
+  .filter((file) => /^AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e?-window-.+-RESULTS\.json$/.test(file))
   .sort();
 if (!files.length) throw new Error('R3_WINDOW_RESULTS_NOT_FOUND');
 
