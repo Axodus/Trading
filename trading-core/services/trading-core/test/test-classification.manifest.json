@@ -180,6 +180,13 @@
       "reason": "R2 outcome calculation uses deterministic local candle fixtures only; no external market or exchange access."
     },
     {
+      "file": "imp-02-paper-shadow-r3-comparator.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "R3 comparator uses deterministic local t0 feature fixtures only; no provider, market or exchange access."
+    },
+    {
       "file": "imp-02b-cex-lifecycle.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",

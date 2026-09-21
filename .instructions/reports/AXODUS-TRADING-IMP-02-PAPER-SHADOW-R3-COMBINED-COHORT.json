@@ -1,0 +1,111 @@
+{
+  "scope": "PAPER_SHADOW_R3_COMBINED_COHORT_READ_MODEL",
+  "caveat": "Descriptive combination of version-compatible PAPER SHADOW windows. It is not a fitted model, statistical significance result, or authority surface.",
+  "policyIdentity": {
+    "questionSet": {
+      "questionSetId": "jev-paper-r2-market-reader",
+      "questionSetVersion": "1"
+    },
+    "samplingPolicyId": "paper-r2-sampling@1",
+    "featurePolicyId": "paper-r2-candle-features@1",
+    "outcomeHorizonPolicy": "outcome-horizons@1",
+    "referencePricePolicyId": "candle-close@1",
+    "requestedModel": "jev-1.13.0",
+    "comparatorPolicyId": "deterministic-market-comparator@1"
+  },
+  "windows": [
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3-window-a-20260921-RESULTS.json",
+      "windowId": "r3-window-a-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T17:08:59.999Z",
+        "last": "2026-09-21T17:11:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3-window-b-20260921-RESULTS.json",
+      "windowId": "r3-window-b-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T17:18:59.999Z",
+        "last": "2026-09-21T17:21:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3-window-c-20260921-RESULTS.json",
+      "windowId": "r3-window-c-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T17:24:59.999Z",
+        "last": "2026-09-21T17:27:59.999Z"
+      }
+    }
+  ],
+  "volume": {
+    "windows": 3,
+    "principalObservations": 12,
+    "completedOutcomes": 12,
+    "stabilityObservations": 21,
+    "providerFailures": 1
+  },
+  "distributions": {
+    "jevRegime": {
+      "failure": 1,
+      "range": 7,
+      "uncertain": 4
+    },
+    "jevDirectionalPressure": {
+      "downward": 2,
+      "failure": 1,
+      "neutral": 1,
+      "upward": 8
+    },
+    "deterministicRegime": {
+      "high_volatility": 1,
+      "range": 9,
+      "trending": 2
+    },
+    "deterministicDirectionalPressure": {
+      "downward": 1,
+      "neutral": 8,
+      "upward": 3
+    }
+  },
+  "comparatorComparison": {
+    "1m": {
+      "horizonMinutes": 1,
+      "directionalOutcomes": 2,
+      "deterministicPredictions": 0,
+      "deterministicCorrect": 0,
+      "deterministicAbstentions": 2,
+      "jevPredictions": 1,
+      "jevCorrect": 1,
+      "jevAbstentions": 1,
+      "jointPredictions": 0,
+      "bothCorrect": 0,
+      "deterministicOnlyCorrect": 0,
+      "jevOnlyCorrect": 0,
+      "neitherCorrect": 0
+    },
+    "3m": {
+      "horizonMinutes": 3,
+      "directionalOutcomes": 4,
+      "deterministicPredictions": 0,
+      "deterministicCorrect": 0,
+      "deterministicAbstentions": 4,
+      "jevPredictions": 3,
+      "jevCorrect": 2,
+      "jevAbstentions": 1,
+      "jointPredictions": 0,
+      "bothCorrect": 0,
+      "deterministicOnlyCorrect": 0,
+      "jevOnlyCorrect": 0,
+      "neitherCorrect": 0
+    }
+  },
+  "disposition": "COLLECTION_CONTINUES_INSUFFICIENT_DIVERSITY_AND_N"
+}

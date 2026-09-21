@@ -13,3 +13,5 @@ export * from './ShadowTradeProposalObserver.js';
 export * from './PaperShadowAnalysis.js';
 export * from './MarketReadingSnapshot.js';
 export * from './MarketDerivedOutcome.js';
+export * from './DeterministicMarketComparator.js';
+export * from './PaperR3ComparatorAnalysis.js';

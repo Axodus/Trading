@@ -15,7 +15,8 @@
 - [x] **AXODUS-TRADING-IMP-02 F**: live Stage 0 provider characterization — `PASS / CTO REVIEW REQUIRED / UNCOMMITTED`.
 - [x] **AXODUS-TRADING-FIX-IMP02-01**: external-mutation test isolation — `COMMITTED / CTO REVIEW REQUIRED`.
 - [x] **AXODUS-TRADING-IMP-02 PAPER principal pilot**: 6 principal observations plus 5 stability probes — `COMPLETE / INSUFFICIENT EVIDENCE / CTO REVIEW REQUIRED`.
-- [x] **AXODUS-TRADING-IMP-02 PAPER SHADOW R2**: outcome-labeled market reading — `COMPLETE / PRELIMINARY DATASET / CTO REVIEW REQUIRED`.
-- [ ] **AXODUS-TRADING-IMP-02 G–J expanded evaluation**: defensible PAPER/TESTNET dataset and incremental-value evaluation — `NOT YET AUTHORIZED`.
+- [x] **AXODUS-TRADING-IMP-02 PAPER SHADOW R2**: outcome-labeled market reading — `COMPLETE / CTO ACCEPTED / COMMITTED 4d98c6311a9f3771acbedf281f26a4984cc7efc7`.
+- [ ] **AXODUS-TRADING-IMP-02 PAPER SHADOW R3**: expanded distributed OHLCV market reading with deterministic comparator — `AUTHORIZED IN PRINCIPLE / IN PROGRESS`.
+- [ ] **AXODUS-TRADING-IMP-02 TESTNET SHADOW**: `NOT AUTHORIZED`.
 
 IMP-02 preserves SHADOW-only authority and does not authorize Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.
