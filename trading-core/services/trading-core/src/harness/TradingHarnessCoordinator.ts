@@ -4,6 +4,7 @@
  */
 
 import { stableJson } from '../repositories/postgres/PostgresClient.js';
+import { FixedDecimal } from '../../../../packages/trading-contracts/src/index.js';
 import type {
   TradingHarnessRun,
   HarnessStageTransition,
@@ -302,19 +303,7 @@ export class TradingHarnessCoordinator {
 
     // Monotonicity Check on Risk MODIFY
     if (riskStatus === 'MODIFY') {
-      if (
-        deps.tradeProposal &&
-        deps.portfolioDecision &&
-        deps.riskDecision
-      ) {
-        const portCapital = Number(deps.portfolioDecision.approvedCapital ?? '0');
-        const propCapital = Number(deps.tradeProposal.sizing?.requestedCapital ?? '0');
-        if (portCapital > propCapital) {
-          throw new HarnessAuthorityBypassAttemptError(
-            `Portfolio approved capital ${portCapital} enlarged requested capital ${propCapital}`
-          );
-        }
-      }
+      this.validateRiskModifyEconomicMonotonicity(deps);
     }
 
     // If Risk REJECT or HALT, stop ordinary execution progression cleanly
@@ -491,6 +480,170 @@ export class TradingHarnessCoordinator {
     }
 
     return { run, transitions, evidencePackage: evidencePkg };
+  }
+
+  /**
+   * The Harness does not decide sizing. It verifies that the canonical values it
+   * forwards preserve the upstream Portfolio/Risk reductions. These comparisons
+   * deliberately remain in FixedDecimal space: converting a canonical decimal to
+   * Number before a conservation check can make distinct values compare equal.
+   */
+  private validateRiskModifyEconomicMonotonicity(deps: ControlCycleDependencies): void {
+    const proposal = deps.tradeProposal;
+    const portfolio = deps.portfolioDecision;
+    const risk = deps.riskDecision;
+    const tradingIntent = deps.tradingIntent;
+    const executionIntent = deps.executionIntent;
+    const riskModifications = risk?.modifications as Readonly<Record<string, unknown>> | undefined;
+
+    const riskRecord = risk as unknown as Readonly<Record<string, unknown>> | undefined;
+    const riskCapital = riskModifications?.effectiveCapital
+      ?? riskModifications?.approvedCapital
+      ?? riskModifications?.capital
+      ?? riskRecord?.authorizedCapital
+      ?? riskRecord?.effectiveCapital;
+    const riskQuantity = riskModifications?.effectiveQuantity
+      ?? riskModifications?.approvedQuantity
+      ?? riskModifications?.quantity
+      ?? riskRecord?.authorizedQuantity
+      ?? riskRecord?.effectiveQuantity;
+    const riskLeverage = riskModifications?.effectiveLeverage
+      ?? riskModifications?.approvedLeverage
+      ?? riskModifications?.leverage
+      ?? riskRecord?.authorizedLeverage
+      ?? riskRecord?.effectiveLeverage;
+    const proposedQuantity = proposal?.sizing?.requestedQuantity
+      ?? (proposal as unknown as Readonly<Record<string, unknown>> | undefined)?.proposedQuantity;
+    const proposedLeverage = proposal?.sizing?.leverage;
+    const tradingIntentLeverage = tradingIntent?.approvedLeverage;
+
+    this.assertCanonicalDecimalNotGreaterThan(
+      'Portfolio approved capital',
+      portfolio?.approvedCapital,
+      'TradeProposal requested capital',
+      proposal?.sizing?.requestedCapital,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'Risk effective capital',
+      riskCapital,
+      'Portfolio approved capital',
+      portfolio?.approvedCapital,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'TradingIntent approved capital',
+      tradingIntent?.approvedCapital,
+      'Risk effective capital',
+      riskCapital,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'TradingIntent approved capital',
+      tradingIntent?.approvedCapital,
+      'Portfolio approved capital',
+      portfolio?.approvedCapital,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent authorized capital',
+      executionIntent?.authorizedCapital,
+      'TradingIntent approved capital',
+      tradingIntent?.approvedCapital,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent execution capital',
+      executionIntent?.executionCapital,
+      'ExecutionIntent authorized capital',
+      executionIntent?.authorizedCapital,
+    );
+
+    this.assertCanonicalDecimalNotGreaterThan(
+      'TradingIntent approved quantity',
+      tradingIntent?.approvedQuantity,
+      'TradeProposal requested quantity',
+      proposedQuantity,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent authorized quantity',
+      executionIntent?.authorizedQuantity,
+      'TradingIntent approved quantity',
+      tradingIntent?.approvedQuantity,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent execution quantity',
+      executionIntent?.executionQuantity,
+      'ExecutionIntent authorized quantity',
+      executionIntent?.authorizedQuantity,
+    );
+
+    this.assertCanonicalDecimalNotGreaterThan(
+      'Risk effective quantity',
+      riskQuantity,
+      'TradeProposal requested quantity',
+      proposedQuantity,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'TradingIntent approved quantity',
+      tradingIntent?.approvedQuantity,
+      'Risk effective quantity',
+      riskQuantity,
+    );
+
+    this.assertCanonicalDecimalNotGreaterThan(
+      'Risk effective leverage',
+      riskLeverage,
+      'TradeProposal requested leverage',
+      proposedLeverage,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'TradingIntent approved leverage',
+      tradingIntentLeverage,
+      'Risk effective leverage',
+      riskLeverage,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent authorized leverage',
+      executionIntent?.authorizedLeverage,
+      'TradingIntent approved leverage',
+      tradingIntentLeverage,
+    );
+    this.assertCanonicalDecimalNotGreaterThan(
+      'ExecutionIntent execution leverage',
+      executionIntent?.executionLeverage,
+      'ExecutionIntent authorized leverage',
+      executionIntent?.authorizedLeverage,
+    );
+  }
+
+  private assertCanonicalDecimalNotGreaterThan(
+    downstreamLabel: string,
+    downstreamValue: unknown,
+    upstreamLabel: string,
+    upstreamValue: unknown,
+  ): void {
+    // A comparison is applicable only when both canonical contracts provide the
+    // matching field. Missing optional fields remain absent; they are never
+    // normalized to zero.
+    if (downstreamValue === undefined || upstreamValue === undefined) return;
+
+    try {
+      if (typeof downstreamValue !== 'string' || typeof upstreamValue !== 'string') {
+        throw new Error('canonical economic values must be decimal strings');
+      }
+
+      const downstream = FixedDecimal.from(downstreamValue);
+      const upstream = FixedDecimal.from(upstreamValue);
+      if (downstream.isNegative() || upstream.isNegative()) {
+        throw new Error('canonical economic values must be non-negative');
+      }
+      if (downstream.gt(upstream)) {
+        throw new HarnessAuthorityBypassAttemptError(
+          `${downstreamLabel} ${downstream.toString()} exceeds ${upstreamLabel} ${upstream.toString()}`
+        );
+      }
+    } catch (error) {
+      if (error instanceof HarnessAuthorityBypassAttemptError) throw error;
+      throw new HarnessAuthorityBypassAttemptError(
+        `Invalid canonical economic comparison for ${downstreamLabel} against ${upstreamLabel}: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 
   private buildEvidencePackage(

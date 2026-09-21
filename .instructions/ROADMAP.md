@@ -22,7 +22,12 @@
 - [x] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
 - [x] **VAL-13-PG**: Real PostgreSQL Durable System Safety & Recovery Acceptance
 - [x] **REQ-14**: Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate
-  - [x] **VAL-14-PG**: Real PostgreSQL Durable Trading Harness Acceptance (16/16 Gates)
-  - [x] **VAL-14-PAPER**: End-to-End Paper Trading Acceptance (8/8 Scenarios)
-  - [x] **VAL-14-FAULT**: Fault Injection & Resilience Acceptance (8/8 Scenarios)
-  - [x] **VAL-14-TESTNET**: Bounded Testnet Harness Acceptance (6/6 Gates)
+- [x] **VAL-14-PG**: Real PostgreSQL Durable Trading Harness Acceptance
+- [x] **VAL-14-PAPER**: End-to-End Paper Trading Acceptance
+- [x] **VAL-14-FAULT**: Fault Injection & Resilience Acceptance
+- [x] **VAL-14-TESTNET**: Bounded Testnet Harness Acceptance
+- [x] **VAL-FINAL**: Technical Closure, Architecture Conformance & Readiness Certification — `FAIL / CTO ACCEPTED AS VALID FAILURE`
+
+## Required Next Remediation
+- [x] **FIX-FINAL-01**: Replace Harness Risk MODIFY capital/quantity/leverage conservation checks with canonical exact decimal arithmetic — `REMEDIATED / REVALIDATION REQUIRED`
+- [ ] **VAL-FINAL-R1**: Revalidate final closure-critical invariants after FIX-FINAL-01.
