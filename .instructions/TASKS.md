@@ -1,9 +1,14 @@
 # AXODUS TRADING — ACTIVE TASKS
 
 ## Current Task
-- **ID:** `AXODUS-TRADING-EPIC-01 / VAL-FINAL-R1`
-- **Description:** Independent closure revalidation for `VAL-FINAL-P0-001` after FIX-FINAL-01
-- **Status:** `TECHNICALLY COMPLETE / CTO ACCEPTED`
-- **Finding Status:** `VAL-FINAL-P0-001 = CLOSED`
-- **Validation:** focused R1 regression: `33 passed, 0 failed, 0 skipped`; full Trading rerun: `785 passed, 0 failed, 1 skipped`; Quant: `45 passed`.
-- **Next Task:** No additional EPIC-01 implementation work is authorized. Any future real-capital readiness work remains blocked by `DEBT-AUD-A-03`. Push remains not authorized.
+- **ID:** `AXODUS-TRADING-RESEARCH-REQ-02`
+- **Description:** TypeSafe Jev technical/public audit, SHADOW architecture and incremental-value evaluation design.
+- **Status:** `RESEARCH COMPLETE / CTO REVIEW REQUIRED`
+- **Disposition:** `SHADOW-IMPLEMENTATION CANDIDATE` (recommendation only).
+- **Validation:** documentation/source/repository audit and diff hygiene; no live Jev or exchange mutation.
+- **Next Task:** CTO review. A future `RESEARCH-REQ-03` may implement a provider-neutral PAPER/Testnet SHADOW experiment only under separate authorization. Advisory/Gated remain unauthorized.
+
+## Preserved Closure
+- `AXODUS-TRADING-EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
+- `VAL-FINAL-P0-001`: `CLOSED`.
+- `DEBT-AUD-A-03`: `OPEN / BLOCKING FOR FUTURE REAL-CAPITAL READINESS`.

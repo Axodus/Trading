@@ -34,3 +34,9 @@
 - [x] **EPIC-01**: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
 
 `DEBT-AUD-A-03` remains open and blocks future real-capital readiness; it does not reopen EPIC-01 technical closure.
+
+## Research Program — Decision Providers
+- [x] **AXODUS-TRADING-RESEARCH-REQ-02**: TypeSafe Jev Trading Decision Integration Study — `RESEARCH COMPLETE / CTO REVIEW REQUIRED`.
+- [ ] **Candidate RESEARCH-REQ-03**: provider-neutral Jev SHADOW implementation and characterization — `NOT AUTHORIZED`.
+
+The REQ-02 disposition is `SHADOW-IMPLEMENTATION CANDIDATE`. It does not authorize Jev integration, Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.

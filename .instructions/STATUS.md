@@ -1,7 +1,7 @@
 # AXODUS TRADING — SYSTEM STATUS
 
-**Latest Milestone:** `AXODUS-TRADING-EPIC-01 / VAL-FINAL-R1` (Closure Revalidation)
-**Status:** `TECHNICALLY COMPLETE / CTO ACCEPTED`
+**Latest Milestone:** `AXODUS-TRADING-RESEARCH-REQ-02` (TypeSafe Jev Trading Decision Integration Study)
+**Status:** `RESEARCH COMPLETE / CTO REVIEW REQUIRED`
 **Date:** 2026-09-21
 
 ## Summary of Active Epic State
@@ -19,6 +19,11 @@
 
 ## Closure Note
 - `VAL-FINAL` remains preserved as an accepted valid failure; `FIX-FINAL-01` and independent `VAL-FINAL-R1` remediated and closed `VAL-FINAL-P0-001` on baseline `8c406dfc97188074a7ac1788683a8e7371eda940`.
+
+## Active Research
+- `AXODUS-TRADING-RESEARCH-REQ-02`: research package complete with disposition `SHADOW-IMPLEMENTATION CANDIDATE`.
+- This is a recommendation only: Jev is not integrated and has no Portfolio, Risk, Intent, execution or exchange authority.
+- `ADVISORY` and `GATED` remain not authorized. Commit and push remain not authorized pending CTO review.
 
 ## Preserved Invariants & Boundaries
 - Mainnet: `PROHIBITED`.
