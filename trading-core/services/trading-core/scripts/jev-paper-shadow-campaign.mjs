@@ -27,6 +27,7 @@ const STATES = [
   { id: '5', mid: '65500', spread: '1.2', trend: 'range', volatility: 'low', baseline: 'ACCEPT' },
   { id: '6', mid: '65550', spread: '8.0', trend: 'breakout', volatility: 'high', baseline: 'ACCEPT' }
 ];
+const STABILITY_PROBE_COUNT = 5;
 
 const records = [];
 
@@ -46,12 +47,31 @@ for (const state of STATES) {
   });
 }
 
+// Repeat one *identical immutable snapshot* to characterize provider variation.
+// This is provider behavior evidence only; it is neither a market sample nor a
+// trading decision and therefore carries no economic outcome label.
+const stabilitySnapshot = buildSnapshot(STATES[0]);
+for (let probe = 1; probe <= STABILITY_PROBE_COUNT; probe += 1) {
+  console.log(`[STABILITY_PROBE] Evaluating immutable snapshot ${stabilitySnapshot.snapshotId} (${probe}/${STABILITY_PROBE_COUNT})`);
+  const observation = await evaluate(provider, stabilitySnapshot, `stability-${probe}`);
+  records.push({
+    cohort: 'STABILITY_PROBE',
+    opportunityId: stabilitySnapshot.opportunityRef,
+    instrument: stabilitySnapshot.instrument,
+    strategyId: stabilitySnapshot.strategyId,
+    capturedAt: stabilitySnapshot.capturedAt,
+    baselineDecision: STATES[0].baseline,
+    observation,
+    outcomeProvenance: 'NO_DEFENSIBLE_OUTCOME'
+  });
+}
+
 const report = analyzePaperShadow(records);
 const outDir = resolve(process.cwd(), '../../../.instructions/reports');
 mkdirSync(outDir, { recursive: true });
 const outPath = resolve(outDir, 'AXODUS-TRADING-IMP-02-PAPER-SHADOW-RESULTS.json');
 writeFileSync(outPath, JSON.stringify({
-  scope: 'PAPER_SHADOW_PRINCIPAL_ONLY',
+  scope: 'PAPER_SHADOW_PRINCIPAL_AND_STABILITY_PROBE',
   caveat: 'Deterministic PAPER fixtures validate shadow plumbing and provider behavior only; no outcome labels or incremental-value conclusion are claimed.',
   externalMutationCounters: {
     jevPaperApiCalls: records.length,

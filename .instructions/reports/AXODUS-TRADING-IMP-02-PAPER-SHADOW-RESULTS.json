@@ -1,8 +1,8 @@
 {
-  "scope": "PAPER_SHADOW_PRINCIPAL_ONLY",
+  "scope": "PAPER_SHADOW_PRINCIPAL_AND_STABILITY_PROBE",
   "caveat": "Deterministic PAPER fixtures validate shadow plumbing and provider behavior only; no outcome labels or incremental-value conclusion are claimed.",
   "externalMutationCounters": {
-    "jevPaperApiCalls": 6,
+    "jevPaperApiCalls": 11,
     "exchangeTestnetOrderPost": 0,
     "exchangeTestnetOrderDelete": 0,
     "exchangeMainnetOrderPost": 0,
@@ -18,7 +18,7 @@
       "capturedAt": "2026-09-21T12:01:00.000Z",
       "baselineDecision": "ACCEPT",
       "observation": {
-        "observationId": "shadow-observation:867e50c65fff8f1c",
+        "observationId": "shadow-observation:0523a9dbbe386be8",
         "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-principal",
         "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
         "correlationId": "corr-1",
@@ -31,11 +31,11 @@
             "questionId": "state_sufficiency",
             "type": "CHOICE",
             "value": "partial",
-            "confidence": 0.34,
+            "confidence": 0.35,
             "probabilities": {
-              "partial": 0.55,
-              "insufficient": 0.03,
-              "sufficient": 0.42
+              "sufficient": 0.41,
+              "partial": 0.5700000000000001,
+              "insufficient": 0.02
             }
           },
           {
@@ -45,8 +45,8 @@
             "confidence": 1,
             "probabilities": {
               "not_aligned": 0,
-              "uncertain": 0,
-              "aligned": 1
+              "aligned": 1,
+              "uncertain": 0
             }
           },
           {
@@ -55,25 +55,25 @@
             "value": "trending",
             "confidence": 1,
             "probabilities": {
+              "high_volatility": 0,
+              "uncertain": 0,
+              "low_liquidity": 0,
+              "mean_reverting": 0,
+              "breakout": 0,
+              "noisy": 0,
               "range": 0,
               "trending": 1,
-              "high_volatility": 0,
-              "unstable": 0,
-              "low_liquidity": 0,
-              "noisy": 0,
-              "uncertain": 0,
-              "mean_reverting": 0,
-              "breakout": 0
+              "unstable": 0
             }
           },
           {
             "questionId": "contextual_risk",
             "type": "SCORE",
-            "value": "0.14",
-            "confidence": 0.79,
+            "value": "0.11",
+            "confidence": 0.84,
             "probabilities": {
-              "0": 0.89,
-              "1": 0.09,
+              "0": 0.91,
+              "1": 0.07,
               "2": 0.02
             }
           },
@@ -81,11 +81,11 @@
             "questionId": "strategy_suitability",
             "type": "CHOICE",
             "value": "uncertain",
-            "confidence": 0.27,
+            "confidence": 0.3,
             "probabilities": {
-              "uncertain": 0.51,
-              "suitable": 0.47,
-              "unsuitable": 0.02
+              "uncertain": 0.53,
+              "unsuitable": 0.02,
+              "suitable": 0.45
             }
           }
         ],
@@ -93,19 +93,19 @@
         "attempts": [
           {
             "attempt": 1,
-            "startedAt": "2026-09-21T12:35:33.846Z",
-            "completedAt": "2026-09-21T12:35:35.163Z",
-            "latencyMs": 1299,
+            "startedAt": "2026-09-21T13:46:38.104Z",
+            "completedAt": "2026-09-21T13:46:39.514Z",
+            "latencyMs": 1404,
             "outcome": "SUCCEEDED"
           }
         ],
-        "totalProviderWallTimeMs": 1299,
+        "totalProviderWallTimeMs": 1404,
         "usage": {
           "inputTokens": 1488,
           "outputTokens": 249
         },
-        "observedAt": "2026-09-21T12:35:35.163Z",
-        "inputDigest": "fnv1a64:867e50c65fff8f1c"
+        "observedAt": "2026-09-21T13:46:39.514Z",
+        "inputDigest": "fnv1a64:0523a9dbbe386be8"
       },
       "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
     },
@@ -117,7 +117,7 @@
       "capturedAt": "2026-09-21T12:02:00.000Z",
       "baselineDecision": "ACCEPT",
       "observation": {
-        "observationId": "shadow-observation:28202f4c5215cadd",
+        "observationId": "shadow-observation:c273f726b72de853",
         "requestId": "paper-shadow-snapshot:b5ac7489d2959723-principal",
         "snapshotId": "shadow-snapshot:b5ac7489d2959723",
         "correlationId": "corr-2",
@@ -132,8 +132,503 @@
             "value": "partial",
             "confidence": 0.37,
             "probabilities": {
-              "partial": 0.58,
               "sufficient": 0.4,
+              "insufficient": 0.03,
+              "partial": 0.57
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 1,
+            "probabilities": {
+              "uncertain": 0,
+              "aligned": 1,
+              "not_aligned": 0
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "trending",
+            "confidence": 1,
+            "probabilities": {
+              "unstable": 0,
+              "trending": 1,
+              "noisy": 0,
+              "high_volatility": 0,
+              "range": 0,
+              "uncertain": 0,
+              "low_liquidity": 0,
+              "breakout": 0,
+              "mean_reverting": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.1",
+            "confidence": 0.86,
+            "probabilities": {
+              "0": 0.92,
+              "1": 0.07,
+              "2": 0.01
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.3,
+            "probabilities": {
+              "uncertain": 0.54,
+              "suitable": 0.44,
+              "unsuitable": 0.02
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:39.518Z",
+            "completedAt": "2026-09-21T13:46:40.393Z",
+            "latencyMs": 873,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 873,
+        "usage": {
+          "inputTokens": 1488,
+          "outputTokens": 249
+        },
+        "observedAt": "2026-09-21T13:46:40.393Z",
+        "inputDigest": "fnv1a64:c273f726b72de853"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "opportunityId": "opp-3",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:03:00.000Z",
+      "baselineDecision": "REJECT",
+      "observation": {
+        "observationId": "shadow-observation:ae59d35df1b049a8",
+        "requestId": "paper-shadow-snapshot:a5744698bd4d8788-principal",
+        "snapshotId": "shadow-snapshot:a5744698bd4d8788",
+        "correlationId": "corr-3",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.38,
+            "probabilities": {
+              "sufficient": 0.38,
+              "partial": 0.59,
+              "insufficient": 0.03
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 0.99,
+            "probabilities": {
+              "uncertain": 0,
+              "aligned": 1,
+              "not_aligned": 0
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "high_volatility",
+            "confidence": 0.86,
+            "probabilities": {
+              "uncertain": 0,
+              "low_liquidity": 0,
+              "trending": 0.1,
+              "mean_reverting": 0,
+              "noisy": 0,
+              "unstable": 0.02,
+              "breakout": 0,
+              "high_volatility": 0.88,
+              "range": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "1.84",
+            "confidence": 0.76,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.11,
+              "2": 0.86
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.22,
+            "probabilities": {
+              "uncertain": 0.48,
+              "suitable": 0.44,
+              "unsuitable": 0.08
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:40.398Z",
+            "completedAt": "2026-09-21T13:46:40.703Z",
+            "latencyMs": 303,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 303,
+        "usage": {
+          "inputTokens": 1491,
+          "outputTokens": 252
+        },
+        "observedAt": "2026-09-21T13:46:40.703Z",
+        "inputDigest": "fnv1a64:ae59d35df1b049a8"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "opportunityId": "opp-4",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:04:00.000Z",
+      "baselineDecision": "REJECT",
+      "observation": {
+        "observationId": "shadow-observation:21b961b28b1a5e3d",
+        "requestId": "paper-shadow-snapshot:7d7f131df7b6864d-principal",
+        "snapshotId": "shadow-snapshot:7d7f131df7b6864d",
+        "correlationId": "corr-4",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.4,
+            "probabilities": {
+              "partial": 0.6,
+              "insufficient": 0.03,
+              "sufficient": 0.37
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 0.99,
+            "probabilities": {
+              "uncertain": 0,
+              "aligned": 1,
+              "not_aligned": 0
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "high_volatility",
+            "confidence": 0.87,
+            "probabilities": {
+              "breakout": 0,
+              "low_liquidity": 0,
+              "high_volatility": 0.89,
+              "trending": 0.09,
+              "range": 0,
+              "unstable": 0.02,
+              "mean_reverting": 0,
+              "uncertain": 0,
+              "noisy": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "1.8",
+            "confidence": 0.71,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.13,
+              "2": 0.84
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "suitable",
+            "confidence": 0.21,
+            "probabilities": {
+              "uncertain": 0.44,
+              "suitable": 0.47,
+              "unsuitable": 0.09
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:40.708Z",
+            "completedAt": "2026-09-21T13:46:41.926Z",
+            "latencyMs": 1216,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 1216,
+        "usage": {
+          "inputTokens": 1489,
+          "outputTokens": 252
+        },
+        "observedAt": "2026-09-21T13:46:41.926Z",
+        "inputDigest": "fnv1a64:21b961b28b1a5e3d"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "opportunityId": "opp-5",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:05:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:fed025cfe87260ae",
+        "requestId": "paper-shadow-snapshot:e190f27198aaaf2a-principal",
+        "snapshotId": "shadow-snapshot:e190f27198aaaf2a",
+        "correlationId": "corr-5",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.52,
+            "probabilities": {
+              "partial": 0.68,
+              "sufficient": 0.28,
+              "insufficient": 0.04
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.29,
+            "probabilities": {
+              "not_aligned": 0.21,
+              "uncertain": 0.53,
+              "aligned": 0.26
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 1,
+            "probabilities": {
+              "uncertain": 0,
+              "noisy": 0,
+              "low_liquidity": 0,
+              "mean_reverting": 0,
+              "range": 1,
+              "unstable": 0,
+              "breakout": 0,
+              "trending": 0,
+              "high_volatility": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.12",
+            "confidence": 0.82,
+            "probabilities": {
+              "0": 0.89,
+              "1": 0.09,
+              "2": 0.02
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.39,
+            "probabilities": {
+              "uncertain": 0.6,
+              "suitable": 0.11,
+              "unsuitable": 0.29
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:41.931Z",
+            "completedAt": "2026-09-21T13:46:42.271Z",
+            "latencyMs": 339,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 339,
+        "usage": {
+          "inputTokens": 1487,
+          "outputTokens": 250
+        },
+        "observedAt": "2026-09-21T13:46:42.271Z",
+        "inputDigest": "fnv1a64:fed025cfe87260ae"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "opportunityId": "opp-6",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:06:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:27b665d51ad22594",
+        "requestId": "paper-shadow-snapshot:726c573e7d4ff5ee-principal",
+        "snapshotId": "shadow-snapshot:726c573e7d4ff5ee",
+        "correlationId": "corr-6",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.42,
+            "probabilities": {
+              "insufficient": 0.03,
+              "sufficient": 0.35,
+              "partial": 0.62
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 0.94,
+            "probabilities": {
+              "aligned": 0.96,
+              "not_aligned": 0,
+              "uncertain": 0.04
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "breakout",
+            "confidence": 0.97,
+            "probabilities": {
+              "low_liquidity": 0,
+              "uncertain": 0,
+              "breakout": 0.97,
+              "range": 0,
+              "trending": 0,
+              "mean_reverting": 0,
+              "noisy": 0,
+              "high_volatility": 0.02,
+              "unstable": 0.01
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "1.83",
+            "confidence": 0.74,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.13,
+              "2": 0.85
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.34,
+            "probabilities": {
+              "suitable": 0.32,
+              "uncertain": 0.56,
+              "unsuitable": 0.12
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:42.274Z",
+            "completedAt": "2026-09-21T13:46:43.769Z",
+            "latencyMs": 1494,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 1494,
+        "usage": {
+          "inputTokens": 1489,
+          "outputTokens": 250
+        },
+        "observedAt": "2026-09-21T13:46:43.769Z",
+        "inputDigest": "fnv1a64:27b665d51ad22594"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "opportunityId": "opp-1",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:01:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:42b320410989559a",
+        "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-stability-1",
+        "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
+        "correlationId": "corr-1",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.31,
+            "probabilities": {
+              "sufficient": 0.44,
+              "partial": 0.54,
               "insufficient": 0.02
             }
           },
@@ -154,26 +649,125 @@
             "value": "trending",
             "confidence": 1,
             "probabilities": {
-              "low_liquidity": 0,
               "range": 0,
-              "high_volatility": 0,
-              "unstable": 0,
               "noisy": 0,
-              "uncertain": 0,
               "breakout": 0,
+              "low_liquidity": 0,
               "trending": 1,
-              "mean_reverting": 0
+              "mean_reverting": 0,
+              "high_volatility": 0,
+              "uncertain": 0,
+              "unstable": 0
             }
           },
           {
             "questionId": "contextual_risk",
             "type": "SCORE",
-            "value": "0.16",
-            "confidence": 0.77,
+            "value": "0.11",
+            "confidence": 0.84,
             "probabilities": {
-              "0": 0.87,
-              "1": 0.1,
-              "2": 0.03
+              "0": 0.91,
+              "1": 0.07,
+              "2": 0.02
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.34,
+            "probabilities": {
+              "uncertain": 0.56,
+              "unsuitable": 0.02,
+              "suitable": 0.42
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:43.775Z",
+            "completedAt": "2026-09-21T13:46:44.184Z",
+            "latencyMs": 408,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 408,
+        "usage": {
+          "inputTokens": 1488,
+          "outputTokens": 249
+        },
+        "observedAt": "2026-09-21T13:46:44.184Z",
+        "inputDigest": "fnv1a64:42b320410989559a"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "opportunityId": "opp-1",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:01:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:5720eba6020d6317",
+        "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-stability-2",
+        "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
+        "correlationId": "corr-1",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.34,
+            "probabilities": {
+              "sufficient": 0.41,
+              "partial": 0.56,
+              "insufficient": 0.03
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 1,
+            "probabilities": {
+              "uncertain": 0,
+              "not_aligned": 0,
+              "aligned": 1
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "trending",
+            "confidence": 1,
+            "probabilities": {
+              "uncertain": 0,
+              "noisy": 0,
+              "unstable": 0,
+              "low_liquidity": 0,
+              "high_volatility": 0,
+              "breakout": 0,
+              "mean_reverting": 0,
+              "range": 0,
+              "trending": 1
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.14",
+            "confidence": 0.8,
+            "probabilities": {
+              "0": 0.89,
+              "1": 0.09,
+              "2": 0.02
             }
           },
           {
@@ -182,8 +776,8 @@
             "value": "uncertain",
             "confidence": 0.35,
             "probabilities": {
+              "uncertain": 0.57,
               "unsuitable": 0.02,
-              "uncertain": 0.5700000000000001,
               "suitable": 0.41
             }
           }
@@ -192,331 +786,34 @@
         "attempts": [
           {
             "attempt": 1,
-            "startedAt": "2026-09-21T12:35:35.178Z",
-            "completedAt": "2026-09-21T12:35:36.272Z",
-            "latencyMs": 1093,
+            "startedAt": "2026-09-21T13:46:44.185Z",
+            "completedAt": "2026-09-21T13:46:44.690Z",
+            "latencyMs": 504,
             "outcome": "SUCCEEDED"
           }
         ],
-        "totalProviderWallTimeMs": 1093,
+        "totalProviderWallTimeMs": 504,
         "usage": {
           "inputTokens": 1488,
           "outputTokens": 249
         },
-        "observedAt": "2026-09-21T12:35:36.272Z",
-        "inputDigest": "fnv1a64:28202f4c5215cadd"
+        "observedAt": "2026-09-21T13:46:44.690Z",
+        "inputDigest": "fnv1a64:5720eba6020d6317"
       },
       "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
     },
     {
-      "cohort": "PRINCIPAL",
-      "opportunityId": "opp-3",
+      "cohort": "STABILITY_PROBE",
+      "opportunityId": "opp-1",
       "instrument": "BTCUSDT",
       "strategyId": "strategy-paper",
-      "capturedAt": "2026-09-21T12:03:00.000Z",
-      "baselineDecision": "REJECT",
-      "observation": {
-        "observationId": "shadow-observation:31cfbaa8b2d60ba5",
-        "requestId": "paper-shadow-snapshot:a5744698bd4d8788-principal",
-        "snapshotId": "shadow-snapshot:a5744698bd4d8788",
-        "correlationId": "corr-3",
-        "provider": "typesafe-jev",
-        "requestedModel": "jev-1.13.0",
-        "resolvedModel": "jev-1.13.0",
-        "status": "SUCCEEDED",
-        "answers": [
-          {
-            "questionId": "state_sufficiency",
-            "type": "CHOICE",
-            "value": "partial",
-            "confidence": 0.43,
-            "probabilities": {
-              "insufficient": 0.03,
-              "sufficient": 0.35,
-              "partial": 0.62
-            }
-          },
-          {
-            "questionId": "proposal_alignment",
-            "type": "CHOICE",
-            "value": "aligned",
-            "confidence": 0.99,
-            "probabilities": {
-              "uncertain": 0,
-              "aligned": 1,
-              "not_aligned": 0
-            }
-          },
-          {
-            "questionId": "market_regime",
-            "type": "CHOICE",
-            "value": "high_volatility",
-            "confidence": 0.82,
-            "probabilities": {
-              "low_liquidity": 0,
-              "mean_reverting": 0,
-              "breakout": 0,
-              "noisy": 0,
-              "unstable": 0.04,
-              "trending": 0.11,
-              "uncertain": 0,
-              "range": 0,
-              "high_volatility": 0.85
-            }
-          },
-          {
-            "questionId": "contextual_risk",
-            "type": "SCORE",
-            "value": "1.83",
-            "confidence": 0.74,
-            "probabilities": {
-              "0": 0.02,
-              "1": 0.13,
-              "2": 0.85
-            }
-          },
-          {
-            "questionId": "strategy_suitability",
-            "type": "CHOICE",
-            "value": "uncertain",
-            "confidence": 0.26,
-            "probabilities": {
-              "unsuitable": 0.1,
-              "suitable": 0.39,
-              "uncertain": 0.51
-            }
-          }
-        ],
-        "attemptCount": 1,
-        "attempts": [
-          {
-            "attempt": 1,
-            "startedAt": "2026-09-21T12:35:36.278Z",
-            "completedAt": "2026-09-21T12:35:36.571Z",
-            "latencyMs": 291,
-            "outcome": "SUCCEEDED"
-          }
-        ],
-        "totalProviderWallTimeMs": 291,
-        "usage": {
-          "inputTokens": 1491,
-          "outputTokens": 252
-        },
-        "observedAt": "2026-09-21T12:35:36.571Z",
-        "inputDigest": "fnv1a64:31cfbaa8b2d60ba5"
-      },
-      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
-    },
-    {
-      "cohort": "PRINCIPAL",
-      "opportunityId": "opp-4",
-      "instrument": "BTCUSDT",
-      "strategyId": "strategy-paper",
-      "capturedAt": "2026-09-21T12:04:00.000Z",
-      "baselineDecision": "REJECT",
-      "observation": {
-        "observationId": "shadow-observation:0a233684ab456dcf",
-        "requestId": "paper-shadow-snapshot:7d7f131df7b6864d-principal",
-        "snapshotId": "shadow-snapshot:7d7f131df7b6864d",
-        "correlationId": "corr-4",
-        "provider": "typesafe-jev",
-        "requestedModel": "jev-1.13.0",
-        "resolvedModel": "jev-1.13.0",
-        "status": "SUCCEEDED",
-        "answers": [
-          {
-            "questionId": "state_sufficiency",
-            "type": "CHOICE",
-            "value": "partial",
-            "confidence": 0.42,
-            "probabilities": {
-              "partial": 0.62,
-              "insufficient": 0.03,
-              "sufficient": 0.35
-            }
-          },
-          {
-            "questionId": "proposal_alignment",
-            "type": "CHOICE",
-            "value": "aligned",
-            "confidence": 0.99,
-            "probabilities": {
-              "uncertain": 0,
-              "aligned": 1,
-              "not_aligned": 0
-            }
-          },
-          {
-            "questionId": "market_regime",
-            "type": "CHOICE",
-            "value": "high_volatility",
-            "confidence": 0.86,
-            "probabilities": {
-              "noisy": 0,
-              "uncertain": 0,
-              "unstable": 0.02,
-              "high_volatility": 0.89,
-              "trending": 0.09,
-              "mean_reverting": 0,
-              "low_liquidity": 0,
-              "breakout": 0,
-              "range": 0
-            }
-          },
-          {
-            "questionId": "contextual_risk",
-            "type": "SCORE",
-            "value": "1.84",
-            "confidence": 0.77,
-            "probabilities": {
-              "0": 0.03,
-              "1": 0.1,
-              "2": 0.87
-            }
-          },
-          {
-            "questionId": "strategy_suitability",
-            "type": "CHOICE",
-            "value": "suitable",
-            "confidence": 0.18,
-            "probabilities": {
-              "suitable": 0.45,
-              "uncertain": 0.44,
-              "unsuitable": 0.11
-            }
-          }
-        ],
-        "attemptCount": 1,
-        "attempts": [
-          {
-            "attempt": 1,
-            "startedAt": "2026-09-21T12:35:36.576Z",
-            "completedAt": "2026-09-21T12:35:36.907Z",
-            "latencyMs": 329,
-            "outcome": "SUCCEEDED"
-          }
-        ],
-        "totalProviderWallTimeMs": 329,
-        "usage": {
-          "inputTokens": 1489,
-          "outputTokens": 252
-        },
-        "observedAt": "2026-09-21T12:35:36.907Z",
-        "inputDigest": "fnv1a64:0a233684ab456dcf"
-      },
-      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
-    },
-    {
-      "cohort": "PRINCIPAL",
-      "opportunityId": "opp-5",
-      "instrument": "BTCUSDT",
-      "strategyId": "strategy-paper",
-      "capturedAt": "2026-09-21T12:05:00.000Z",
+      "capturedAt": "2026-09-21T12:01:00.000Z",
       "baselineDecision": "ACCEPT",
       "observation": {
-        "observationId": "shadow-observation:fd10fd508f0ca337",
-        "requestId": "paper-shadow-snapshot:e190f27198aaaf2a-principal",
-        "snapshotId": "shadow-snapshot:e190f27198aaaf2a",
-        "correlationId": "corr-5",
-        "provider": "typesafe-jev",
-        "requestedModel": "jev-1.13.0",
-        "resolvedModel": "jev-1.13.0",
-        "status": "SUCCEEDED",
-        "answers": [
-          {
-            "questionId": "state_sufficiency",
-            "type": "CHOICE",
-            "value": "partial",
-            "confidence": 0.53,
-            "probabilities": {
-              "partial": 0.69,
-              "insufficient": 0.03,
-              "sufficient": 0.28
-            }
-          },
-          {
-            "questionId": "proposal_alignment",
-            "type": "CHOICE",
-            "value": "uncertain",
-            "confidence": 0.37,
-            "probabilities": {
-              "aligned": 0.19,
-              "uncertain": 0.59,
-              "not_aligned": 0.22
-            }
-          },
-          {
-            "questionId": "market_regime",
-            "type": "CHOICE",
-            "value": "range",
-            "confidence": 1,
-            "probabilities": {
-              "uncertain": 0,
-              "trending": 0,
-              "breakout": 0,
-              "low_liquidity": 0,
-              "noisy": 0,
-              "range": 1,
-              "mean_reverting": 0,
-              "unstable": 0,
-              "high_volatility": 0
-            }
-          },
-          {
-            "questionId": "contextual_risk",
-            "type": "SCORE",
-            "value": "0.12",
-            "confidence": 0.83,
-            "probabilities": {
-              "0": 0.9,
-              "1": 0.08,
-              "2": 0.02
-            }
-          },
-          {
-            "questionId": "strategy_suitability",
-            "type": "CHOICE",
-            "value": "uncertain",
-            "confidence": 0.38,
-            "probabilities": {
-              "uncertain": 0.58,
-              "suitable": 0.17,
-              "unsuitable": 0.25
-            }
-          }
-        ],
-        "attemptCount": 1,
-        "attempts": [
-          {
-            "attempt": 1,
-            "startedAt": "2026-09-21T12:35:36.913Z",
-            "completedAt": "2026-09-21T12:35:37.369Z",
-            "latencyMs": 455,
-            "outcome": "SUCCEEDED"
-          }
-        ],
-        "totalProviderWallTimeMs": 455,
-        "usage": {
-          "inputTokens": 1487,
-          "outputTokens": 250
-        },
-        "observedAt": "2026-09-21T12:35:37.369Z",
-        "inputDigest": "fnv1a64:fd10fd508f0ca337"
-      },
-      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
-    },
-    {
-      "cohort": "PRINCIPAL",
-      "opportunityId": "opp-6",
-      "instrument": "BTCUSDT",
-      "strategyId": "strategy-paper",
-      "capturedAt": "2026-09-21T12:06:00.000Z",
-      "baselineDecision": "ACCEPT",
-      "observation": {
-        "observationId": "shadow-observation:247adb5a38db20e3",
-        "requestId": "paper-shadow-snapshot:726c573e7d4ff5ee-principal",
-        "snapshotId": "shadow-snapshot:726c573e7d4ff5ee",
-        "correlationId": "corr-6",
+        "observationId": "shadow-observation:3de2c86d4ee95e7c",
+        "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-stability-3",
+        "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
+        "correlationId": "corr-1",
         "provider": "typesafe-jev",
         "requestedModel": "jev-1.13.0",
         "resolvedModel": "jev-1.13.0",
@@ -528,59 +825,59 @@
             "value": "partial",
             "confidence": 0.39,
             "probabilities": {
-              "insufficient": 0.03,
-              "partial": 0.6,
-              "sufficient": 0.37
+              "sufficient": 0.38,
+              "partial": 0.59,
+              "insufficient": 0.03
             }
           },
           {
             "questionId": "proposal_alignment",
             "type": "CHOICE",
             "value": "aligned",
-            "confidence": 0.92,
+            "confidence": 1,
             "probabilities": {
-              "aligned": 0.95,
               "not_aligned": 0,
-              "uncertain": 0.05
+              "aligned": 1,
+              "uncertain": 0
             }
           },
           {
             "questionId": "market_regime",
             "type": "CHOICE",
-            "value": "breakout",
-            "confidence": 0.97,
+            "value": "trending",
+            "confidence": 1,
             "probabilities": {
-              "unstable": 0.01,
-              "uncertain": 0,
-              "high_volatility": 0.01,
-              "breakout": 0.98,
-              "trending": 0,
+              "unstable": 0,
+              "high_volatility": 0,
+              "noisy": 0,
+              "trending": 1,
               "range": 0,
               "low_liquidity": 0,
-              "mean_reverting": 0,
-              "noisy": 0
+              "breakout": 0,
+              "uncertain": 0,
+              "mean_reverting": 0
             }
           },
           {
             "questionId": "contextual_risk",
             "type": "SCORE",
-            "value": "1.85",
-            "confidence": 0.78,
+            "value": "0.12",
+            "confidence": 0.81,
             "probabilities": {
-              "0": 0.02,
-              "1": 0.11,
-              "2": 0.87
+              "0": 0.89,
+              "1": 0.09,
+              "2": 0.02
             }
           },
           {
             "questionId": "strategy_suitability",
             "type": "CHOICE",
             "value": "uncertain",
-            "confidence": 0.34,
+            "confidence": 0.3,
             "probabilities": {
-              "suitable": 0.35,
-              "unsuitable": 0.09,
-              "uncertain": 0.56
+              "unsuitable": 0.02,
+              "suitable": 0.45,
+              "uncertain": 0.53
             }
           }
         ],
@@ -588,19 +885,217 @@
         "attempts": [
           {
             "attempt": 1,
-            "startedAt": "2026-09-21T12:35:37.374Z",
-            "completedAt": "2026-09-21T12:35:37.693Z",
-            "latencyMs": 317,
+            "startedAt": "2026-09-21T13:46:44.692Z",
+            "completedAt": "2026-09-21T13:46:45.015Z",
+            "latencyMs": 321,
             "outcome": "SUCCEEDED"
           }
         ],
-        "totalProviderWallTimeMs": 317,
+        "totalProviderWallTimeMs": 321,
         "usage": {
-          "inputTokens": 1489,
-          "outputTokens": 250
+          "inputTokens": 1488,
+          "outputTokens": 249
         },
-        "observedAt": "2026-09-21T12:35:37.693Z",
-        "inputDigest": "fnv1a64:247adb5a38db20e3"
+        "observedAt": "2026-09-21T13:46:45.015Z",
+        "inputDigest": "fnv1a64:3de2c86d4ee95e7c"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "opportunityId": "opp-1",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:01:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:968f619253bcaa04",
+        "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-stability-4",
+        "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
+        "correlationId": "corr-1",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.32,
+            "probabilities": {
+              "sufficient": 0.42,
+              "insufficient": 0.03,
+              "partial": 0.55
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 1,
+            "probabilities": {
+              "aligned": 1,
+              "not_aligned": 0,
+              "uncertain": 0
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "trending",
+            "confidence": 1,
+            "probabilities": {
+              "mean_reverting": 0,
+              "unstable": 0,
+              "noisy": 0,
+              "low_liquidity": 0,
+              "range": 0,
+              "breakout": 0,
+              "uncertain": 0,
+              "trending": 1,
+              "high_volatility": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.12",
+            "confidence": 0.82,
+            "probabilities": {
+              "0": 0.9,
+              "1": 0.08,
+              "2": 0.02
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.37,
+            "probabilities": {
+              "uncertain": 0.57,
+              "unsuitable": 0.02,
+              "suitable": 0.41
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:45.016Z",
+            "completedAt": "2026-09-21T13:46:45.321Z",
+            "latencyMs": 303,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 303,
+        "usage": {
+          "inputTokens": 1488,
+          "outputTokens": 249
+        },
+        "observedAt": "2026-09-21T13:46:45.321Z",
+        "inputDigest": "fnv1a64:968f619253bcaa04"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "opportunityId": "opp-1",
+      "instrument": "BTCUSDT",
+      "strategyId": "strategy-paper",
+      "capturedAt": "2026-09-21T12:01:00.000Z",
+      "baselineDecision": "ACCEPT",
+      "observation": {
+        "observationId": "shadow-observation:a17a43eb935007f6",
+        "requestId": "paper-shadow-snapshot:bed4e366e479e8e5-stability-5",
+        "snapshotId": "shadow-snapshot:bed4e366e479e8e5",
+        "correlationId": "corr-1",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.36,
+            "probabilities": {
+              "insufficient": 0.02,
+              "partial": 0.58,
+              "sufficient": 0.4
+            }
+          },
+          {
+            "questionId": "proposal_alignment",
+            "type": "CHOICE",
+            "value": "aligned",
+            "confidence": 1,
+            "probabilities": {
+              "aligned": 1,
+              "not_aligned": 0,
+              "uncertain": 0
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "trending",
+            "confidence": 1,
+            "probabilities": {
+              "low_liquidity": 0,
+              "uncertain": 0,
+              "high_volatility": 0,
+              "range": 0,
+              "unstable": 0,
+              "noisy": 0,
+              "breakout": 0,
+              "trending": 1,
+              "mean_reverting": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.15",
+            "confidence": 0.77,
+            "probabilities": {
+              "0": 0.87,
+              "1": 0.11,
+              "2": 0.02
+            }
+          },
+          {
+            "questionId": "strategy_suitability",
+            "type": "CHOICE",
+            "value": "uncertain",
+            "confidence": 0.35,
+            "probabilities": {
+              "suitable": 0.42,
+              "uncertain": 0.56,
+              "unsuitable": 0.02
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-21T13:46:45.322Z",
+            "completedAt": "2026-09-21T13:46:45.635Z",
+            "latencyMs": 312,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 312,
+        "usage": {
+          "inputTokens": 1488,
+          "outputTokens": 249
+        },
+        "observedAt": "2026-09-21T13:46:45.635Z",
+        "inputDigest": "fnv1a64:a17a43eb935007f6"
       },
       "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
     }
@@ -611,7 +1106,7 @@
       "successfulObservations": 6,
       "failures": 0,
       "abstentions": 1,
-      "stabilityProbes": 0
+      "stabilityProbes": 5
     },
     "matrix": {
       "A/A": 3,
@@ -633,20 +1128,20 @@
       "persistenceRate": 0.4
     },
     "stability": {
-      "probeCount": 0,
-      "maxRegimeProbabilityDelta": null
+      "probeCount": 5,
+      "maxRegimeProbabilityDelta": 0
     },
     "latencyMs": {
-      "n": 6,
-      "min": 291,
-      "p50": 329,
-      "p95": 1093,
-      "p99": 1093,
-      "max": 1299
+      "n": 11,
+      "min": 303,
+      "p50": 408,
+      "p95": 1404,
+      "p99": 1404,
+      "max": 1494
     },
     "tokens": {
-      "input": 8932,
-      "output": 1502
+      "input": 16372,
+      "output": 2747
     },
     "outcomes": {
       "OBSERVED_PAPER_EXECUTION": 0,
