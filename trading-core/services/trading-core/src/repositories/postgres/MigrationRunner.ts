@@ -64,6 +64,16 @@ export class MigrationRunner {
         );
         result.applied.push(record);
       } catch (error) {
+        // Concurrent services can observe the migration as absent, safely run
+        // idempotent DDL, and then race on the history primary key. The winner's
+        // matching durable record is authoritative; a different checksum still
+        // fails closed.
+        const concurrentlyApplied = (await this.listApplied()).find((item) => item.id === migration.id);
+        if (concurrentlyApplied?.checksum === checksum) {
+          result.skipped.push(concurrentlyApplied);
+          appliedById.set(migration.id, concurrentlyApplied);
+          continue;
+        }
         throw new MigrationError(`Migration ${migration.id} failed: ${String(error)}`, 'EXECUTION_FAILED');
       }
     }

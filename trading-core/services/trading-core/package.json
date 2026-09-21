@@ -18,7 +18,8 @@
     "db:seed-local": "npm run build && node --experimental-strip-types scripts/seed-local-trading.ts",
     "db:smoke-local": "npm run build && node --experimental-strip-types scripts/smoke-local-postgres.ts",
     "db:reset-local": "npm run build && node --experimental-strip-types scripts/reset-local-db.ts",
-    "trading:local:e2e": "npm run build && node --experimental-strip-types scripts/trading-local-e2e.ts"
+    "trading:local:e2e": "npm run build && node --experimental-strip-types scripts/trading-local-e2e.ts",
+    "jev:stage0": "npm run build && node scripts/jev-stage0-characterization.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"

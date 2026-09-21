@@ -1,34 +1,8 @@
 # AXODUS TRADING — PROGRAM ROADMAP
 
 ## Epic 01: Trading Harness Foundations & Sovereign Execution Pipeline
-- [x] **REQ-01 to REQ-05**: Market Intelligence, Opportunity, Strategy, Portfolio Foundations
-- [x] **REQ-06**: Deterministic Risk Authority & Pre-Execution Boundary
-- [x] **REQ-07A**: Strategy Promotion, Health & Risk Integration Boundary Freeze
-- [x] **REQ-07B**: Durable Strategy Lifecycle Authority
-- [x] **REQ-07C**: Durable Strategy Health Authority & Operational Snapshot
-- [x] **REQ-07D**: Canonical TradingIntent & Pre-Execution Authorization Boundary
-- [x] **VAL-07D-PG**: Real PostgreSQL Durable Pre-Execution Acceptance
-- [x] **REQ-08**: Canonical ExecutionIntent & Dry-Run Execution Boundary
-- [x] **VAL-08-PG**: Real PostgreSQL Durable Execution Boundary Acceptance
-- [x] **REQ-09**: Controlled Execution Lifecycle, Order State & Reconciliation Boundary
-- [x] **VAL-09-PG**: Real PostgreSQL Durable Execution Lifecycle Acceptance
-- [x] **VAL-09-TESTNET**: Bounded Testnet Provider Execution & Reconciliation Certification
-- [x] **REQ-10**: Controlled Continuous Feedback, Execution Diagnostics & PnL Attribution
-- [x] **VAL-10-PG**: Real PostgreSQL Durable Economic Feedback & Attribution Acceptance
-- [x] **REQ-11**: Strategy Performance Evaluation, Drift Detection & Controlled Revalidation
-- [x] **VAL-11-PG**: Real PostgreSQL Durable Performance Drift Acceptance
-- [x] **REQ-12**: Strategy Operational Governance, Revalidation Resolution & Controlled Intervention
-- [x] **VAL-12-PG**: Real PostgreSQL Durable Operational Governance Acceptance
-- [x] **REQ-13**: Autonomous Operational Safety, Recovery & Kill-Switch Coordination
-- [x] **VAL-13-PG**: Real PostgreSQL Durable System Safety & Recovery Acceptance
-- [x] **REQ-14**: Autonomous Trading Harness Integration, End-to-End Paper/Testnet Control Loop & Readiness Gate
-- [x] **VAL-14-PG**: Real PostgreSQL Durable Trading Harness Acceptance
-- [x] **VAL-14-PAPER**: End-to-End Paper Trading Acceptance
-- [x] **VAL-14-FAULT**: Fault Injection & Resilience Acceptance
-- [x] **VAL-14-TESTNET**: Bounded Testnet Harness Acceptance
-- [x] **VAL-FINAL**: Technical Closure, Architecture Conformance & Readiness Certification — `FAIL / CTO ACCEPTED AS VALID FAILURE`
-
-## Final Closure
+- [x] **REQ-01 to REQ-14**: Market Intelligence through full Paper/Testnet Harness integration.
+- [x] **VAL-FINAL**: Technical closure conformance — `FAIL / CTO ACCEPTED AS VALID FAILURE`.
 - [x] **FIX-FINAL-01**: Exact Harness capital/quantity/leverage remediation — `COMPLETE / CTO ACCEPTED`.
 - [x] **VAL-FINAL-R1**: Independent closure revalidation — `PASSED / CTO ACCEPTED`.
 - [x] **EPIC-01**: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
@@ -36,7 +10,9 @@
 `DEBT-AUD-A-03` remains open and blocks future real-capital readiness; it does not reopen EPIC-01 technical closure.
 
 ## Research Program — Decision Providers
-- [x] **AXODUS-TRADING-RESEARCH-REQ-02**: TypeSafe Jev Trading Decision Integration Study — `RESEARCH COMPLETE / CTO REVIEW REQUIRED`.
-- [ ] **Candidate RESEARCH-REQ-03**: provider-neutral Jev SHADOW implementation and characterization — `NOT AUTHORIZED`.
+- [x] **AXODUS-TRADING-RESEARCH-REQ-02**: TypeSafe Jev Trading Decision Integration Study — `CTO ACCEPTED / SHADOW-IMPLEMENTATION CANDIDATE`.
+- [x] **AXODUS-TRADING-IMP-02 A–E**: provider-neutral SHADOW implementation, isolation, adapter and persistence — `CTO PARTIAL ACCEPTED`.
+- [x] **AXODUS-TRADING-IMP-02 F**: live Stage 0 provider characterization — `PASS / CTO REVIEW REQUIRED / UNCOMMITTED`.
+- [ ] **AXODUS-TRADING-IMP-02 G–J**: PAPER/TESTNET campaign, dataset and incremental-value evaluation — `NOT YET AUTHORIZED`.
 
-The REQ-02 disposition is `SHADOW-IMPLEMENTATION CANDIDATE`. It does not authorize Jev integration, Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.
+IMP-02 preserves SHADOW-only authority and does not authorize Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.

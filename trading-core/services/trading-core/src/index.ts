@@ -304,3 +304,4 @@ export * from './governance/operational/InterventionResolutionAuthority.js';
 export * from './governance/operational/PostgresStrategyOperationalGovernanceRepository.js';
 export * from './safety/index.js';
 export * from './harness/index.js';
+export * from './shadow/index.js';

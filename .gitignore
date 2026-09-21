@@ -15,3 +15,4 @@ tradingbot
 .env.*
 !.env.example
 *.sql
+!trading-core/services/trading-core/migrations/0014_jev_shadow_decision_experiment.sql
