@@ -6,8 +6,9 @@
 - [x] **FIX-FINAL-01**: Exact Harness capital/quantity/leverage remediation — `COMPLETE / CTO ACCEPTED`.
 - [x] **VAL-FINAL-R1**: Independent closure revalidation — `PASSED / CTO ACCEPTED`.
 - [x] **EPIC-01**: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
+- [x] **DEBT-AUD-A-03**: Durable Portfolio Decision Idempotency — `RESOLVED / CTO ACCEPTED (FIX-02)`.
 
-`DEBT-AUD-A-03` remains open and blocks future real-capital readiness; it does not reopen EPIC-01 technical closure.
+`DEBT-AUD-A-03` is resolved via durable PostgreSQL boundary (FIX-02); future real-capital blocker cleared.
 
 ## Research Program — Decision Providers
 - [x] **AXODUS-TRADING-RESEARCH-REQ-02**: TypeSafe Jev Trading Decision Integration Study — `CTO ACCEPTED / SHADOW-IMPLEMENTATION CANDIDATE`.

@@ -28,4 +28,4 @@
 - Production/Customer Credentials: `PROHIBITED`.
 - Jev exchange authority: `NONE`.
 - Push: `NOT AUTHORIZED`.
-- `DEBT-AUD-A-03`: `OPEN / NON-BLOCKING FOR IMP-02 SHADOW / BLOCKING FOR FUTURE REAL-CAPITAL READINESS`.
+- `DEBT-AUD-A-03`: `RESOLVED / CTO ACCEPTED (FIX-02)` — Durable PostgreSQL proposal decision idempotency implemented; real-capital readiness blocker removed.
