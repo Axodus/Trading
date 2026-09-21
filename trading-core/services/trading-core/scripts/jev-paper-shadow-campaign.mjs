@@ -16,15 +16,16 @@ if (!configured) {
 }
 const provider = JevDecisionProvider.fromEnvironment(process.env);
 
-// Paper opportunity snapshots derived from simulated feature states.
-// Excludes raw tick/order-book L2 as they are not supported deterministically by Axodus MarketState.
+// Conservative PAPER SHADOW resumption.
+// These are deterministic PAPER snapshot fixtures for provider/evaluation plumbing only.
+// They are not observed market outcomes and must not be used as Jev quality evidence.
 const STATES = [
-  { id: '1', mid: '65000', spread: '1.5', trend: 'bullish', volatility: 'low', baseline: 'ACCEPT', outcome: 'POSITIVE' },
-  { id: '2', mid: '66000', spread: '2.0', trend: 'bullish', volatility: 'low', baseline: 'ACCEPT', outcome: 'POSITIVE' },
-  { id: '3', mid: '68000', spread: '15.0', trend: 'bearish', volatility: 'high', baseline: 'REJECT', outcome: 'NEGATIVE' },
-  { id: '4', mid: '64000', spread: '5.0', trend: 'bearish', volatility: 'high', baseline: 'REJECT', outcome: 'NEGATIVE' },
-  { id: '5', mid: '65500', spread: '1.2', trend: 'range', volatility: 'low', baseline: 'ACCEPT', outcome: 'NEUTRAL' },
-  { id: '6', mid: '65550', spread: '8.0', trend: 'breakout', volatility: 'high', baseline: 'ACCEPT', outcome: 'NEGATIVE' }
+  { id: '1', mid: '65000', spread: '1.5', trend: 'bullish', volatility: 'low', baseline: 'ACCEPT' },
+  { id: '2', mid: '66000', spread: '2.0', trend: 'bullish', volatility: 'low', baseline: 'ACCEPT' },
+  { id: '3', mid: '68000', spread: '15.0', trend: 'bearish', volatility: 'high', baseline: 'REJECT' },
+  { id: '4', mid: '64000', spread: '5.0', trend: 'bearish', volatility: 'high', baseline: 'REJECT' },
+  { id: '5', mid: '65500', spread: '1.2', trend: 'range', volatility: 'low', baseline: 'ACCEPT' },
+  { id: '6', mid: '65550', spread: '8.0', trend: 'breakout', volatility: 'high', baseline: 'ACCEPT' }
 ];
 
 const records = [];
@@ -41,35 +42,28 @@ for (const state of STATES) {
     capturedAt: snapshot.capturedAt,
     baselineDecision: state.baseline,
     observation,
-    outcome: state.outcome,
-    outcomeProvenance: 'SIMULATION_DERIVED_COUNTERFACTUAL'
+    outcomeProvenance: 'NO_DEFENSIBLE_OUTCOME'
   });
-
-  // Stability Probe on 3 of them
-  if (['1', '3', '6'].includes(state.id)) {
-    for (let p = 1; p <= 3; p++) {
-      console.log(`[PROBE] Evaluating state ${state.id} (probe ${p})`);
-      const probeObs = await evaluate(provider, snapshot, `probe-${p}`);
-      records.push({
-        cohort: 'STABILITY_PROBE',
-        opportunityId: snapshot.opportunityRef,
-        instrument: snapshot.instrument,
-        strategyId: snapshot.strategyId,
-        capturedAt: snapshot.capturedAt,
-        baselineDecision: state.baseline,
-        observation: probeObs,
-        outcome: state.outcome,
-        outcomeProvenance: 'SIMULATION_DERIVED_COUNTERFACTUAL'
-      });
-    }
-  }
 }
 
 const report = analyzePaperShadow(records);
 const outDir = resolve(process.cwd(), '../../../.instructions/reports');
 mkdirSync(outDir, { recursive: true });
 const outPath = resolve(outDir, 'AXODUS-TRADING-IMP-02-PAPER-SHADOW-RESULTS.json');
-writeFileSync(outPath, JSON.stringify({ records, report }, null, 2));
+writeFileSync(outPath, JSON.stringify({
+  scope: 'PAPER_SHADOW_PRINCIPAL_ONLY',
+  caveat: 'Deterministic PAPER fixtures validate shadow plumbing and provider behavior only; no outcome labels or incremental-value conclusion are claimed.',
+  externalMutationCounters: {
+    jevPaperApiCalls: records.length,
+    exchangeTestnetOrderPost: 0,
+    exchangeTestnetOrderDelete: 0,
+    exchangeMainnetOrderPost: 0,
+    exchangeMainnetOrderDelete: 0,
+    realCapital: 0,
+  },
+  records,
+  report,
+}, null, 2));
 
 console.log('\n[ANALYSIS REPORT]\n');
 console.log(JSON.stringify(report, null, 2));

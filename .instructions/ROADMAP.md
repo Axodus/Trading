@@ -13,7 +13,8 @@
 - [x] **AXODUS-TRADING-RESEARCH-REQ-02**: TypeSafe Jev Trading Decision Integration Study — `CTO ACCEPTED / SHADOW-IMPLEMENTATION CANDIDATE`.
 - [x] **AXODUS-TRADING-IMP-02 A–E**: provider-neutral SHADOW implementation, isolation, adapter and persistence — `CTO PARTIAL ACCEPTED`.
 - [x] **AXODUS-TRADING-IMP-02 F**: live Stage 0 provider characterization — `PASS / CTO REVIEW REQUIRED / UNCOMMITTED`.
-- [ ] **AXODUS-TRADING-FIX-IMP02-01**: external-mutation test isolation — `IMPLEMENTED / VALIDATION IN PROGRESS / CTO REVIEW REQUIRED`.
-- [ ] **AXODUS-TRADING-IMP-02 G–J**: PAPER/TESTNET campaign, dataset and incremental-value evaluation — `PAUSED / NOT YET AUTHORIZED`.
+- [x] **AXODUS-TRADING-FIX-IMP02-01**: external-mutation test isolation — `COMMITTED / CTO REVIEW REQUIRED`.
+- [x] **AXODUS-TRADING-IMP-02 PAPER principal pilot**: 6 observations — `COMPLETE / INSUFFICIENT EVIDENCE / CTO REVIEW REQUIRED`.
+- [ ] **AXODUS-TRADING-IMP-02 G–J expanded evaluation**: defensible PAPER/TESTNET dataset and incremental-value evaluation — `NOT YET AUTHORIZED`.
 
 IMP-02 preserves SHADOW-only authority and does not authorize Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.

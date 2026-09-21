@@ -3,14 +3,15 @@
 ## Current Task
 - **ID:** `AXODUS-TRADING-FIX-IMP02-01`
 - **Description:** External-mutation test isolation after the PAPER SHADOW scope violation.
-- **Status:** `IMPLEMENTED / VALIDATION IN PROGRESS / UNCOMMITTED / CTO REVIEW REQUIRED`.
-- **Validation:** Focused guard tests, typecheck, build, safe default regression, diff hygiene and secret scan are required.
-- **Next Task:** CTO review decides FIX acceptance, commit authorization, push authorization and whether PAPER SHADOW may resume.
+- **Status:** `COMMITTED / CTO REVIEW REQUIRED`.
+- **Validation:** Focused guard tests, typecheck, build, safe default regression, diff hygiene and secret scan passed before commit.
+- **Commit:** `8418a2cf588cb8727c0a6c369719d40587841205`.
+- **Next Task:** CTO review decides publication/push disposition.
 
-## Paused Task
+## Current Experimental Follow-up
 - **ID:** `AXODUS-TRADING-IMP-02 PAPER SHADOW`
-- **Status:** `PAUSED`.
-- **Reason:** Generic regression previously reached a real Testnet mutation suite. H1 and H2 remain `INSUFFICIENT EVIDENCE`.
+- **Status:** `PRINCIPAL PILOT COMPLETE / CTO REVIEW REQUIRED`.
+- **Result:** 6 Jev PAPER calls; 6 successful observations; 1 abstention; 0 failures; no Testnet/Mainnet/real-capital mutation. Outcomes remain `NO_DEFENSIBLE_OUTCOME`; H1 and H2 remain `INSUFFICIENT EVIDENCE`.
 
 ## Preserved Closure
 - `AXODUS-TRADING-EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
