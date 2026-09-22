@@ -40,18 +40,18 @@
       "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
     },
     {
-      "file": "epic01-req05-portfolio-allocation.test.mjs",
-      "classification": "SAFE",
-      "network": "none-or-local",
-      "externalMutation": false,
-      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
-    },
-    {
       "file": "epic01-req05-portfolio-allocation-coordinator.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",
       "externalMutation": false,
       "reason": "Durable Portfolio coordination uses deterministic in-memory repository fixtures and no exchange access"
+    },
+    {
+      "file": "epic01-req05-portfolio-allocation.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
     },
     {
       "file": "epic01-req06-risk-authority.test.mjs",
@@ -194,6 +194,13 @@
       "reason": "R3 comparator uses deterministic local t0 feature fixtures only; no provider, market or exchange access."
     },
     {
+      "file": "imp-02-paper-shadow-r3h-pipeline.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "R3H pipeline tests use deterministic local candle and schedule fixtures; zero external exchange mutation"
+    },
+    {
       "file": "imp-02b-cex-lifecycle.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",
@@ -313,18 +320,18 @@
       "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
     },
     {
-      "file": "val-05-postgres-portfolio-decision-acceptance.test.mjs",
-      "classification": "SAFE",
-      "network": "none-or-local",
-      "externalMutation": false,
-      "reason": "Local PostgreSQL acceptance for durable portfolio proposal decisions without external exchange mutation"
-    },
-    {
       "file": "val-05-fix01-exact-reconciliation.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",
       "externalMutation": false,
       "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "val-05-postgres-portfolio-decision-acceptance.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Local PostgreSQL acceptance for durable portfolio proposal decisions without external exchange mutation"
     },
     {
       "file": "val-07d-postgres-acceptance.test.mjs",

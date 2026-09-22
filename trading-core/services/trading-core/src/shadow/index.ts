@@ -15,3 +15,4 @@ export * from './MarketReadingSnapshot.js';
 export * from './MarketDerivedOutcome.js';
 export * from './DeterministicMarketComparator.js';
 export * from './PaperR3ComparatorAnalysis.js';
+export * from './HistoricalR3H.js';
