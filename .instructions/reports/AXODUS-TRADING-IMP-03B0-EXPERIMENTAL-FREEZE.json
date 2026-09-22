@@ -1,8 +1,16 @@
 {
-  "experimentId": "axodus-economic-benchmark-b0-freeze",
-  "freezeTimestamp": "2026-09-22T17:40:21Z",
-  "status": "PROTOCOL_SPECIFIED_PROVIDER_SELECTION_BLOCKED",
+  "schemaVersion": "1.1.0",
+  "experimentId": "axodus-economic-benchmark-b0-r1-freeze",
+  "freezeTimestamp": "2026-09-22T18:15:00Z",
+  "status": "FROZEN_PENDING_CTO_B1_AUTHORIZATION",
+  "providerSnapshotId": "axodus-trading-imp-03b0-r1-provider-snapshot",
+  "providerSnapshotFingerprint": "fnv1a64:e1932ef2af3369b7",
   "governingQuestion": "What is the lowest-cost inference architecture that satisfies the pre-specified quality and safety requirements of each Trading cognitive workload?",
+  "selectedProviders": {
+    "tier1": "TypeSafe/jev-1.13.0",
+    "tier2": "OpenAI/gpt-5.4-mini-2026-03-17",
+    "tier3": "OpenAI/gpt-5.4-2026-03-05"
+  },
   "workloads": [
     "STATE_SUFFICIENCY",
     "ESCALATION_PREFILTER",
@@ -13,83 +21,254 @@
       "kind": "NATURAL_WORKLOAD",
       "caseCount": 60,
       "fingerprint": "fnv1a64:bd0c5fb40f29b1b3",
-      "purpose": "Operational economics, QAC, FAC, realistic stream distribution"
+      "purpose": "Realistic operational distribution, QAC/FAC and escalation economics"
     },
     "datasetB": {
       "kind": "DIAGNOSTIC_CHALLENGE",
       "caseCount": 45,
       "fingerprint": "fnv1a64:91e5d5c846141688",
-      "purpose": "Capability limits, critical safety floor, traps, edge anomalies"
+      "purpose": "Capability, traps and critical safety testing"
     }
   },
-  "taskSpecificUsefulDecision": {
-    "STATE_SUFFICIENCY": "correct sufficiency classification OR defensible abstention; no critical false-safe (falsely declaring sufficient on corrupted data); valid schema",
-    "ESCALATION_PREFILTER": "correct escalation routing; no critical false-negative (falsely declaring routine on urgent anomaly); valid schema",
-    "PROPOSAL_CONTRADICTION": "correct contradiction determination; required contradictions identified; no fabricated contradiction; valid schema"
+  "datasetSeparation": "Dataset A and Dataset B denominators are never merged into one headline quality metric.",
+  "semanticInformationInvariant": "SEMANTIC_INFORMATION_SET(provider_i) = SEMANTIC_INFORMATION_SET(provider_j); provider adapters may serialize but may not add/remove semantic evidence.",
+  "groundTruthIsolation": "PROVIDER_VISIBLE_DATA ∩ GROUND_TRUTH = ∅",
+  "usefulDecision": {
+    "STATE_SUFFICIENCY": "schemaValid AND (correctSufficiency OR defensibleAbstentionWhenPermitted) AND noCriticalFalseSafe",
+    "ESCALATION_PREFILTER": "schemaValid AND correctEscalationRouting AND noCriticalMissedEscalation AND noCriticalFalseSafe",
+    "PROPOSAL_CONTRADICTION": "schemaValid AND correctContradictionPresence AND requiredCriticalContradictionsIdentified AND noFabricatedCriticalContradiction"
   },
   "qualityFloors": {
     "STATE_SUFFICIENCY": {
-      "maxCriticalFalseSafeRate": 0,
-      "maxSchemaFailureRate": 0.02,
-      "minUsefulDecisionRate": 0.9
+      "datasetA": {
+        "minUsefulDecisionRate": "0.90",
+        "maxSchemaFailureRate": "0.02",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      },
+      "datasetB": {
+        "observedCriticalFalseSafeCount": "0",
+        "observedCriticalErrorGate": "SAFETY_GATE_ONLY",
+        "minUsefulDecisionRate": "0.80",
+        "maxSchemaFailureRate": "0.10",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      }
     },
     "ESCALATION_PREFILTER": {
-      "maxCriticalFalseSafeRate": 0,
-      "maxSchemaFailureRate": 0.02,
-      "minUsefulDecisionRate": 0.88
+      "datasetA": {
+        "minUsefulDecisionRate": "0.88",
+        "maxSchemaFailureRate": "0.02",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      },
+      "datasetB": {
+        "observedCriticalMissedEscalationCount": "0",
+        "observedCriticalFalseSafeCount": "0",
+        "observedCriticalErrorGate": "SAFETY_GATE_ONLY",
+        "minUsefulDecisionRate": "0.80",
+        "maxSchemaFailureRate": "0.10",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      }
     },
     "PROPOSAL_CONTRADICTION": {
-      "maxCriticalFalseSafeRate": 0,
-      "maxSchemaFailureRate": 0.02,
-      "minUsefulDecisionRate": 0.9
+      "datasetA": {
+        "minUsefulDecisionRate": "0.90",
+        "maxSchemaFailureRate": "0.02",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      },
+      "datasetB": {
+        "observedCriticalContradictionMissCount": "0",
+        "observedCriticalFalsePositiveCount": "0",
+        "observedCriticalErrorGate": "SAFETY_GATE_ONLY",
+        "minUsefulDecisionRate": "0.80",
+        "maxSchemaFailureRate": "0.10",
+        "inferentialStatus": "PILOT_DESCRIPTIVE_ONLY"
+      }
     }
   },
-  "criticalSafetyFloor": "Zero observed critical false-safety breaches on Dataset B (pilot sample N=45)",
-  "nonInferiorityDesign": {
+  "criticalSafetyFloors": {
+    "datasetB": "Zero observed critical safety errors per task; this is a pilot gate, not proof of zero population error.",
+    "datasetA": "Report critical errors and confidence intervals; no safety-pass inference from Dataset A alone."
+  },
+  "nonInferiority": {
     "status": "PILOT_DESCRIPTIVE_ONLY",
-    "plannedMarginDelta": "Workload-specific: 2% for escalation pre-filter, 4% for proposal contradiction, 3% for state sufficiency"
+    "margins": {
+      "STATE_SUFFICIENCY": {
+        "primaryMetric": "usefulDecisionRate",
+        "delta": "0.03",
+        "rationale": "Operationally meaningful difference while retaining pilot descriptive status"
+      },
+      "ESCALATION_PREFILTER": {
+        "primaryMetric": "criticalMissedEscalationRate",
+        "delta": "0.00",
+        "secondaryMetric": "usefulDecisionRate",
+        "secondaryDelta": "0.03",
+        "rationale": "Critical misses are safety-gated at zero observed; pilot cannot prove population non-inferiority"
+      },
+      "PROPOSAL_CONTRADICTION": {
+        "primaryMetric": "usefulDecisionRate",
+        "delta": "0.04",
+        "rationale": "Higher tolerance reflects multi-label/partial-match complexity; pilot descriptive only"
+      }
+    }
   },
-  "metrics": {
-    "QAC": "Cost / Useful Decisions * 1000 (via FixedDecimal)",
-    "FAC": "Failure-Adjusted Cost including failures/retries (via FixedDecimal)",
-    "ICQ": "Delta Cost / Delta Quality (defined as 0 when Delta Quality = 0)"
+  "failurePolicy": {
+    "principalFailureCountsInDenominator": true,
+    "failureTypes": [
+      "timeout",
+      "HTTP_FAILURE",
+      "PROVIDER_ERROR",
+      "SCHEMA_FAILURE",
+      "MODEL_MISMATCH",
+      "RATE_LIMIT",
+      "EMPTY_RESPONSE",
+      "PARSING_FAILURE"
+    ],
+    "failedPrincipalIsNotReplaced": true,
+    "fallbackProvider": "NONE"
   },
-  "escalationPolicies": {
-    "defaultPolicyId": "jev-escalation-policy-v1",
-    "triggers": [
+  "retryPolicy": {
+    "expectedRetries": 0,
+    "principalAttemptsPerProviderCase": 1,
+    "unavoidableRetries": "Record every attempt, reason, latency and cost; preserve original failure state.",
+    "retryToGreen": "FORBIDDEN"
+  },
+  "abstentionPolicy": {
+    "distinctFromFailure": true,
+    "stateSufficiency": "Useful only when ground truth permits defensible abstention and schema is valid; otherwise safety-preserving but non-decisive.",
+    "escalationPrefilter": "Routes to escalation and is not a provider failure; usefulness depends on frozen routing ground truth.",
+    "proposalContradiction": "Non-decisive unless frozen ground truth permits abstention; never rewarded perpetually."
+  },
+  "stabilityPolicy": {
+    "cohort": "Separate from principal",
+    "snapshots": 10,
+    "repeatsPerSnapshot": 3,
+    "totalCalls": 30,
+    "providerParticipation": "All selected providers",
+    "metrics": [
+      "answer agreement",
+      "probability/confidence variance where exposed",
+      "schema/failure rate",
+      "latency variance"
+    ],
+    "principalInflation": "FORBIDDEN"
+  },
+  "escalationPolicy": {
+    "policyId": "jev-escalation-policy-v1",
+    "runtimeTriggers": [
       "provider abstention",
-      "confidence < 0.75",
-      "state_insufficient detected",
-      "anomaly / escalation_required detected"
-    ]
+      "provider-declared state insufficiency",
+      "provider-declared anomaly/escalation required",
+      "pre-specified provider uncertainty condition"
+    ],
+    "groundTruthInRouting": "FORBIDDEN"
   },
-  "budgetAndVolumeEstimates": {
+  "architectures": [
+    "JEV_ONLY",
+    "EFFICIENT_REFERENCE_ONLY",
+    "QUALITY_CEILING_ONLY",
+    "JEV_TO_EFFICIENT_REFERENCE",
+    "JEV_TO_QUALITY_CEILING"
+  ],
+  "metrics": {
+    "QAC": "Total incurred cost / useful decisions; report raw numerator and denominator and per-1000 normalization.",
+    "FAC": "Failure-adjusted total cost including retries, failures and escalation divided by useful non-faulty decisions; exact evaluator implementation remains the accepted IMP-03A formula.",
+    "ICQ": "Delta cost / delta quality; if delta quality is zero or within frozen parity tolerance, emit QUALITY_PARITY_COST_COMPARISON and compare cost directly; never emit NaN/Infinity as conclusion.",
+    "rawMetricsBeforeComposite": true
+  },
+  "pricingPolicy": {
+    "currency": "USD",
+    "usagePriority": "Provider usage metadata; otherwise conservative local token estimate with methodology",
+    "jevsOutputBilled": "0",
+    "referenceOutputHighSideTokensPerCall": 2000,
+    "referenceInputTokensPerCall": 1500,
+    "jevInputTokensPerCall": 1500,
+    "cachedInputApplied": "Only if actual B1 request qualifies; not assumed in base case",
+    "referenceOutputTypicalTokensPerCall": 200
+  },
+  "plannedCalls": {
     "principalCases": 105,
-    "providersPerBenchmark": 3,
-    "expectedPrincipalCalls": 315,
+    "providers": 3,
+    "principalCalls": 315,
     "stabilitySnapshots": 10,
     "repeatsPerSnapshot": 3,
-    "expectedStabilityCalls": 30,
+    "stabilityCalls": 30,
     "expectedRetries": 0,
-    "maximumProposedCalls": 360,
-    "expectedCostUsd": "UNKNOWN_PENDING_PROVIDER_SNAPSHOT",
-    "highSideCostUsd": "UNKNOWN_PENDING_PROVIDER_SNAPSHOT",
-    "maximumProposedBudgetUsd": "NOT_REQUESTED_UNTIL_PRICING_FREEZE"
+    "plannedTotal": 345,
+    "hardMaximum": 360
+  },
+  "costEstimate": {
+    "method": "Frozen payload-size proxy: 1,500 input tokens per call; 200 typical reference output tokens and 2,000 conservative high-side reference output tokens; Jev output is free. Actual B1 usage metadata supersedes estimates.",
+    "expectedCostUsd": "0.93",
+    "highSideCostUsd": "4.61",
+    "proposedHardBudgetUsd": "5.00",
+    "budgetIncludes": "principal, stability and unavoidable retry allowance; excludes unauthorized cohort expansion",
+    "costBreakdownExpectedUsd": {
+      "jev": "0.0066",
+      "tier2OpenAi": "0.2126",
+      "tier3OpenAi": "0.7088"
+    },
+    "costBreakdownHighSideUsd": {
+      "jev": "0.0066",
+      "tier2OpenAi": "1.0631",
+      "tier3OpenAi": "3.5438"
+    }
+  },
+  "projectedCostScenarios": {
+    "label": "PROJECTED COST SCENARIO — NOT OBSERVED BENCHMARK PERFORMANCE",
+    "cadencesPerStreamPerDay": {
+      "1_call_per_minute": 1440,
+      "1_call_per_30_seconds": 2880,
+      "1_call_per_5_minutes": 288
+    },
+    "streams": [
+      1,
+      10,
+      100
+    ],
+    "escalationRates": [
+      0.05,
+      0.1,
+      0.2,
+      0.5
+    ],
+    "formula": "At the selected token proxy, monthly cost = calls × input tokens × input price + calls × output tokens × output price. Values are projections only; escalation rates are scenarios, not observed performance.",
+    "monthlyProjectionUsd": {
+      "one_stream": {
+        "calls": 43200,
+        "jevOnly": "2.7216",
+        "tier2Universal": "437.4000",
+        "tier3Universal": "1458.0000",
+        "jevToTier2At5Percent": "24.5916",
+        "jevToTier3At5Percent": "75.6216"
+      },
+      "ten_streams": {
+        "calls": 432000,
+        "jevOnly": "27.2160",
+        "tier2Universal": "4374.0000",
+        "tier3Universal": "14580.0000",
+        "jevToTier2At5Percent": "245.9160",
+        "jevToTier3At5Percent": "756.2160"
+      },
+      "one_hundred_streams": {
+        "calls": 4320000,
+        "jevOnly": "272.1600",
+        "tier2Universal": "43740.0000",
+        "tier3Universal": "145800.0000",
+        "jevToTier2At5Percent": "2459.1600",
+        "jevToTier3At5Percent": "7562.1600"
+      }
+    }
   },
   "stopConditions": [
-    "Ground truth appears in provider payload",
-    "Live API call attempted during B0",
-    "Dataset A and B merged into single composite accuracy",
-    "Canonical Trading authority or critical path modified",
-    "R3E or R3H affected",
-    "Secret exposed",
-    "External mutation attempted"
+    "ground truth in provider payload",
+    "live inference during B0/R1",
+    "dataset merge",
+    "canonical authority/critical path change",
+    "R3E/R3H impact",
+    "secret exposure",
+    "external mutation",
+    "model/policy drift",
+    "budget ceiling reached in B1"
   ],
-  "providerSelection": {
-    "status": "PROVIDER_SELECTION_BLOCKED",
-    "tier1": "jev-1.13.0 candidate only",
-    "tier2": "not frozen",
-    "tier3": "not frozen",
-    "reason": "Official current pricing, active model identity, capability limits, and privacy terms were not fully verified without live provider inference or authenticated provider-console evidence."
-  }
+  "providerSelection": "FROZEN_CANDIDATES_PENDING_CTO_B1_AUTHORIZATION",
+  "experimentalFreezeFingerprint": "fnv1a64:a56bed512d08f777"
 }
