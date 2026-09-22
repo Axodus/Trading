@@ -93,69 +93,129 @@
         "first": "2026-09-21T20:48:59.999Z",
         "last": "2026-09-21T20:51:59.999Z"
       }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-i-20260921-RESULTS.json",
+      "windowId": "r3e-window-i-20260921",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-21T23:22:59.999Z",
+        "last": "2026-09-21T23:25:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-j-20260922-RESULTS.json",
+      "windowId": "r3e-window-j-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T02:26:59.999Z",
+        "last": "2026-09-22T02:29:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-k-20260922-RESULTS.json",
+      "windowId": "r3e-window-k-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T06:29:59.999Z",
+        "last": "2026-09-22T06:32:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-l-20260922-RESULTS.json",
+      "windowId": "r3e-window-l-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T10:33:59.999Z",
+        "last": "2026-09-22T10:37:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-m-20260922-RESULTS.json",
+      "windowId": "r3e-window-m-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T14:38:59.999Z",
+        "last": "2026-09-22T14:41:59.999Z"
+      }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-n-20260922-RESULTS.json",
+      "windowId": "r3e-window-n-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T18:38:59.999Z",
+        "last": "2026-09-22T18:41:59.999Z"
+      }
     }
   ],
   "volume": {
-    "windows": 8,
-    "principalObservations": 32,
-    "completedOutcomes": 32,
-    "stabilityObservations": 66,
-    "providerFailures": 3
+    "windows": 14,
+    "principalObservations": 56,
+    "completedOutcomes": 56,
+    "stabilityObservations": 120,
+    "providerFailures": 4
   },
   "distributions": {
     "jevRegime": {
       "failure": 2,
       "noisy": 1,
-      "range": 18,
-      "uncertain": 11
+      "range": 38,
+      "uncertain": 15
     },
     "jevDirectionalPressure": {
-      "downward": 11,
+      "downward": 21,
       "failure": 2,
-      "neutral": 2,
-      "upward": 17
+      "neutral": 5,
+      "upward": 28
     },
     "deterministicRegime": {
-      "high_volatility": 6,
-      "range": 20,
-      "trending": 6
+      "high_volatility": 9,
+      "range": 37,
+      "trending": 10
     },
     "deterministicDirectionalPressure": {
-      "downward": 5,
-      "neutral": 19,
-      "upward": 8
+      "downward": 9,
+      "neutral": 35,
+      "upward": 12
     }
   },
   "comparatorComparison": {
     "1m": {
       "horizonMinutes": 1,
-      "directionalOutcomes": 12,
-      "deterministicPredictions": 5,
-      "deterministicCorrect": 3,
-      "deterministicAbstentions": 7,
-      "jevPredictions": 11,
-      "jevCorrect": 8,
+      "directionalOutcomes": 19,
+      "deterministicPredictions": 9,
+      "deterministicCorrect": 5,
+      "deterministicAbstentions": 10,
+      "jevPredictions": 18,
+      "jevCorrect": 13,
       "jevAbstentions": 1,
-      "jointPredictions": 5,
-      "bothCorrect": 3,
+      "jointPredictions": 9,
+      "bothCorrect": 5,
       "deterministicOnlyCorrect": 0,
       "jevOnlyCorrect": 0,
-      "neitherCorrect": 2
+      "neitherCorrect": 4
     },
     "3m": {
       "horizonMinutes": 3,
-      "directionalOutcomes": 21,
-      "deterministicPredictions": 7,
-      "deterministicCorrect": 4,
-      "deterministicAbstentions": 14,
-      "jevPredictions": 20,
-      "jevCorrect": 11,
+      "directionalOutcomes": 33,
+      "deterministicPredictions": 13,
+      "deterministicCorrect": 8,
+      "deterministicAbstentions": 20,
+      "jevPredictions": 32,
+      "jevCorrect": 19,
       "jevAbstentions": 1,
-      "jointPredictions": 7,
-      "bothCorrect": 4,
+      "jointPredictions": 13,
+      "bothCorrect": 8,
       "deterministicOnlyCorrect": 0,
       "jevOnlyCorrect": 0,
-      "neitherCorrect": 3
+      "neitherCorrect": 5
     }
   },
   "disposition": "COLLECTION_CONTINUES_INSUFFICIENT_DIVERSITY_AND_N"

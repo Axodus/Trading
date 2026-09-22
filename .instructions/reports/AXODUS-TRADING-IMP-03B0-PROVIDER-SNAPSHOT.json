@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotTimestamp": "2026-09-22T17:40:21Z",
+  "snapshotAuthor": "Axodus Trading Research / IMP-03B0",
+  "status": "BLOCKED_PENDING_OFFICIAL_VERIFICATION",
+  "notes": "Authoritative pricing, active model pinning, rate limits, and enterprise ZDR terms could not be fully verified from public static pages without active API/portal access. Models and prices remain candidates with UNKNOWN status.",
+  "candidates": [
+    {
+      "role": "TIER_1_ECONOMIC_SENSOR",
+      "candidateProvider": "TypeSafe",
+      "candidateModel": "jev-1.13.0",
+      "officialSource": "https://docs.typesafe.ai/",
+      "accessDate": "2026-09-22",
+      "verificationStatus": "UNKNOWN_PENDING_B1",
+      "inputPricePerMillionTokensUsd": "UNKNOWN",
+      "outputPricePerMillionTokensUsd": "UNKNOWN",
+      "fixedSurchargeUsd": "UNKNOWN",
+      "structuredOutputsSupported": true,
+      "logprobsSupported": true,
+      "zeroDataRetention": "UNKNOWN",
+      "trainingOnCustomerData": "UNKNOWN",
+      "lifecycleStatus": "ACTIVE"
+    },
+    {
+      "role": "TIER_2_EFFICIENT_GENERAL_REFERENCE",
+      "candidateProvider": "OpenAI / Google / Anthropic",
+      "candidateModel": "GPT-4o-mini / Gemini-Flash / Claude-Haiku-Replacement",
+      "officialSource": "https://developers.openai.com / https://ai.google.dev / https://platform.claude.com",
+      "accessDate": "2026-09-22",
+      "verificationStatus": "UNKNOWN_PENDING_B1",
+      "inputPricePerMillionTokensUsd": "UNKNOWN",
+      "outputPricePerMillionTokensUsd": "UNKNOWN",
+      "fixedSurchargeUsd": "UNKNOWN",
+      "structuredOutputsSupported": true,
+      "logprobsSupported": true,
+      "zeroDataRetention": "UNKNOWN",
+      "trainingOnCustomerData": "UNKNOWN",
+      "lifecycleStatus": "CANDIDATE_ONLY"
+    },
+    {
+      "role": "TIER_3_QUALITY_CEILING_REFERENCE",
+      "candidateProvider": "OpenAI / Anthropic / Google",
+      "candidateModel": "GPT-4o / Claude-3.7-Sonnet / Gemini-Pro",
+      "officialSource": "https://developers.openai.com / https://platform.claude.com",
+      "accessDate": "2026-09-22",
+      "verificationStatus": "UNKNOWN_PENDING_B1",
+      "inputPricePerMillionTokensUsd": "UNKNOWN",
+      "outputPricePerMillionTokensUsd": "UNKNOWN",
+      "fixedSurchargeUsd": "UNKNOWN",
+      "structuredOutputsSupported": true,
+      "logprobsSupported": true,
+      "zeroDataRetention": "UNKNOWN",
+      "trainingOnCustomerData": "UNKNOWN",
+      "lifecycleStatus": "CANDIDATE_ONLY"
+    }
+  ]
+}

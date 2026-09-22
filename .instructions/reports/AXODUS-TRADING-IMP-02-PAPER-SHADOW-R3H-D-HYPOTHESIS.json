@@ -1,0 +1,48 @@
+{
+  "hypothesis": "Under the frozen OHLCV Market Reader v1 experiment, Jev jev-1.13.0 does not provide material incremental information over deterministic-market-comparator@1 for BTCUSDT 1-minute and 3-minute market outcomes.",
+  "recordedBeforeFirstInference": true,
+  "recordedAt": "2026-09-22T14:20:14.487Z",
+  "partition": "HOLDOUT",
+  "historicalPeriod": {
+    "start": "2026-09-06T00:00:00.000Z",
+    "end": "2026-09-20T23:59:59.999Z",
+    "days": 15
+  },
+  "scheduleEntries": 180,
+  "uniqueObservationIds": 180,
+  "uniqueT0": 180,
+  "firstT0": "2026-09-06T00:00:59.999Z",
+  "lastT0": "2026-09-20T22:00:59.999Z",
+  "days": [
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90
+  ],
+  "utcSlots": [
+    "00",
+    "02",
+    "04",
+    "06",
+    "08",
+    "10",
+    "12",
+    "14",
+    "16",
+    "18",
+    "20",
+    "22"
+  ],
+  "scheduleFingerprint": "fnv1a64:cff9900a560f0b7b"
+}

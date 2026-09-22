@@ -1,0 +1,95 @@
+{
+  "experimentId": "axodus-economic-benchmark-b0-freeze",
+  "freezeTimestamp": "2026-09-22T17:40:21Z",
+  "status": "PROTOCOL_SPECIFIED_PROVIDER_SELECTION_BLOCKED",
+  "governingQuestion": "What is the lowest-cost inference architecture that satisfies the pre-specified quality and safety requirements of each Trading cognitive workload?",
+  "workloads": [
+    "STATE_SUFFICIENCY",
+    "ESCALATION_PREFILTER",
+    "PROPOSAL_CONTRADICTION"
+  ],
+  "datasets": {
+    "datasetA": {
+      "kind": "NATURAL_WORKLOAD",
+      "caseCount": 60,
+      "fingerprint": "fnv1a64:bd0c5fb40f29b1b3",
+      "purpose": "Operational economics, QAC, FAC, realistic stream distribution"
+    },
+    "datasetB": {
+      "kind": "DIAGNOSTIC_CHALLENGE",
+      "caseCount": 45,
+      "fingerprint": "fnv1a64:91e5d5c846141688",
+      "purpose": "Capability limits, critical safety floor, traps, edge anomalies"
+    }
+  },
+  "taskSpecificUsefulDecision": {
+    "STATE_SUFFICIENCY": "correct sufficiency classification OR defensible abstention; no critical false-safe (falsely declaring sufficient on corrupted data); valid schema",
+    "ESCALATION_PREFILTER": "correct escalation routing; no critical false-negative (falsely declaring routine on urgent anomaly); valid schema",
+    "PROPOSAL_CONTRADICTION": "correct contradiction determination; required contradictions identified; no fabricated contradiction; valid schema"
+  },
+  "qualityFloors": {
+    "STATE_SUFFICIENCY": {
+      "maxCriticalFalseSafeRate": 0,
+      "maxSchemaFailureRate": 0.02,
+      "minUsefulDecisionRate": 0.9
+    },
+    "ESCALATION_PREFILTER": {
+      "maxCriticalFalseSafeRate": 0,
+      "maxSchemaFailureRate": 0.02,
+      "minUsefulDecisionRate": 0.88
+    },
+    "PROPOSAL_CONTRADICTION": {
+      "maxCriticalFalseSafeRate": 0,
+      "maxSchemaFailureRate": 0.02,
+      "minUsefulDecisionRate": 0.9
+    }
+  },
+  "criticalSafetyFloor": "Zero observed critical false-safety breaches on Dataset B (pilot sample N=45)",
+  "nonInferiorityDesign": {
+    "status": "PILOT_DESCRIPTIVE_ONLY",
+    "plannedMarginDelta": "Workload-specific: 2% for escalation pre-filter, 4% for proposal contradiction, 3% for state sufficiency"
+  },
+  "metrics": {
+    "QAC": "Cost / Useful Decisions * 1000 (via FixedDecimal)",
+    "FAC": "Failure-Adjusted Cost including failures/retries (via FixedDecimal)",
+    "ICQ": "Delta Cost / Delta Quality (defined as 0 when Delta Quality = 0)"
+  },
+  "escalationPolicies": {
+    "defaultPolicyId": "jev-escalation-policy-v1",
+    "triggers": [
+      "provider abstention",
+      "confidence < 0.75",
+      "state_insufficient detected",
+      "anomaly / escalation_required detected"
+    ]
+  },
+  "budgetAndVolumeEstimates": {
+    "principalCases": 105,
+    "providersPerBenchmark": 3,
+    "expectedPrincipalCalls": 315,
+    "stabilitySnapshots": 10,
+    "repeatsPerSnapshot": 3,
+    "expectedStabilityCalls": 30,
+    "expectedRetries": 0,
+    "maximumProposedCalls": 360,
+    "expectedCostUsd": "UNKNOWN_PENDING_PROVIDER_SNAPSHOT",
+    "highSideCostUsd": "UNKNOWN_PENDING_PROVIDER_SNAPSHOT",
+    "maximumProposedBudgetUsd": "NOT_REQUESTED_UNTIL_PRICING_FREEZE"
+  },
+  "stopConditions": [
+    "Ground truth appears in provider payload",
+    "Live API call attempted during B0",
+    "Dataset A and B merged into single composite accuracy",
+    "Canonical Trading authority or critical path modified",
+    "R3E or R3H affected",
+    "Secret exposed",
+    "External mutation attempted"
+  ],
+  "providerSelection": {
+    "status": "PROVIDER_SELECTION_BLOCKED",
+    "tier1": "jev-1.13.0 candidate only",
+    "tier2": "not frozen",
+    "tier3": "not frozen",
+    "reason": "Official current pricing, active model identity, capability limits, and privacy terms were not fully verified without live provider inference or authenticated provider-console evidence."
+  }
+}

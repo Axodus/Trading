@@ -1,0 +1,1882 @@
+{
+  "scope": "PAPER_SHADOW_R3_EXPANDED_MARKET_READING",
+  "windowId": "r3e-window-m-20260922",
+  "caveat": "Market-derived counterfactual labels are deterministic candle-close outcomes, not observed execution. Jev remains SHADOW-only.",
+  "policies": {
+    "experiment": {
+      "experimentId": "jev-paper-shadow-r3-expanded-market-reading",
+      "experimentVersion": "1"
+    },
+    "questionSet": {
+      "questionSetId": "jev-paper-r2-market-reader",
+      "questionSetVersion": "1"
+    },
+    "samplingPolicyId": "paper-r2-sampling@1",
+    "collectionPolicyId": "paper-r3-windowed-collection@1",
+    "deterministicComparatorPolicy": {
+      "policyId": "deterministic-market-comparator@1",
+      "featurePolicyId": "paper-r2-candle-features@1",
+      "directionalPressureThreshold": "0.0002",
+      "trendingReturnThreshold": "0.0004",
+      "highVolatilityRangeThreshold": "0.0015",
+      "outcomeDirectionThreshold": "0.0002",
+      "description": "Frozen transparent comparator over the same t0 OHLCV-derived features provided to Jev. It is intentionally not fitted to outcome data."
+    },
+    "featurePolicyId": "paper-r2-candle-features@1",
+    "outcomeHorizonPolicy": {
+      "policyId": "outcome-horizons@1",
+      "interval": "1m",
+      "horizonsMinutes": [
+        1,
+        3
+      ],
+      "referencePriceType": "CANDLE_CLOSE",
+      "calculationVersion": "market-derived-outcome@1"
+    },
+    "referencePricePolicyId": "candle-close@1",
+    "model": {
+      "requestedModel": "jev-1.13.0",
+      "resolvedModels": [
+        "jev-1.13.0"
+      ]
+    }
+  },
+  "marketData": {
+    "source": "Binance USD-M Futures Testnet public klines",
+    "endpoint": "GET /fapi/v1/klines",
+    "url": "https://testnet.binancefuture.com/fapi/v1/klines?symbol=BTCUSDT&interval=1m&limit=96",
+    "networkClass": "NETWORK_READONLY",
+    "rows": 96,
+    "firstCloseTime": "2026-09-22T13:09:59.999Z",
+    "lastCloseTime": "2026-09-22T14:44:59.999Z"
+  },
+  "externalMutationCounters": {
+    "jevPaperApiCalls": 13,
+    "marketDataReadonlyCalls": 5,
+    "exchangeTestnetOrderPost": 0,
+    "exchangeTestnetOrderDelete": 0,
+    "exchangeTestnetOtherMutation": 0,
+    "exchangeMainnetOrderPost": 0,
+    "exchangeMainnetOrderDelete": 0,
+    "exchangeMainnetOtherMutation": 0,
+    "realCapitalMutation": 0
+  },
+  "records": [
+    {
+      "cohort": "PRINCIPAL",
+      "hypothesis": "H2_MARKET_STATE_READER",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+      "marketStateRef": "market-r2-2026-09-22T14:38:59.999Z",
+      "capturedAt": "2026-09-22T14:38:59.999Z",
+      "samplingTrigger": "CLOSED_CANDLE_INTERVAL",
+      "windowId": "r3e-window-m-20260922",
+      "snapshot": {
+        "observationKind": "MARKET_STATE",
+        "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+        "correlationId": "r2-2026-09-22T14:38:59.999Z",
+        "capturedAt": "2026-09-22T14:38:59.999Z",
+        "environment": "PAPER",
+        "strategyId": "market-reader",
+        "strategyRevisionId": "market-reader@1",
+        "instrument": "BTCUSDT",
+        "marketStateRef": "market-r2-2026-09-22T14:38:59.999Z",
+        "marketStateDigest": "fnv1a64:766f50c6b6e9de46",
+        "experiment": {
+          "experimentId": "jev-paper-shadow-r3-expanded-market-reading",
+          "experimentVersion": "1"
+        },
+        "questionSet": {
+          "questionSetId": "jev-paper-r2-market-reader",
+          "questionSetVersion": "1"
+        },
+        "requestedProvider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "providerState": {
+          "task": "paper-shadow-r2-market-state-reading",
+          "sampling": {
+            "trigger": "CLOSED_CANDLE_INTERVAL",
+            "samplingPolicyId": "paper-r2-sampling@1",
+            "featurePolicyId": "paper-r2-candle-features@1",
+            "outcomeHorizonPolicyId": "outcome-horizons@1",
+            "referencePricePolicyId": "candle-close@1"
+          },
+          "market": {
+            "instrument": "BTCUSDT",
+            "venue": "binance-usdm-futures-testnet-public",
+            "timeframe": "1m",
+            "marketTime": "2026-09-22T14:38:59.999Z",
+            "observedAt": "2026-09-22T14:38:59.999Z",
+            "freshness": "historical",
+            "completeness": "partial",
+            "qualityStatus": "valid",
+            "sequenceStatus": "sequenced",
+            "features": [
+              {
+                "featureId": "reference_close",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "85806.70",
+                "unit": "USDT",
+                "computedAt": "2026-09-22T14:38:59.999Z"
+              },
+              {
+                "featureId": "candle_return_1m",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "-0.000817449162",
+                "unit": null,
+                "computedAt": "2026-09-22T14:38:59.999Z"
+              },
+              {
+                "featureId": "candle_range_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.004404084995",
+                "unit": null,
+                "computedAt": "2026-09-22T14:38:59.999Z"
+              },
+              {
+                "featureId": "candle_body_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.001548830103",
+                "unit": null,
+                "computedAt": "2026-09-22T14:38:59.999Z"
+              },
+              {
+                "featureId": "volume",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "96.3734",
+                "unit": "base",
+                "computedAt": "2026-09-22T14:38:59.999Z"
+              }
+            ]
+          }
+        },
+        "inputDigest": "fnv1a64:32a2e09711bcecf6"
+      },
+      "deterministicComparator": {
+        "policyId": "deterministic-market-comparator@1",
+        "directionalPressure": "downward",
+        "marketRegime": "high_volatility",
+        "inputs": {
+          "candle_return_1m": "-0.000817449162",
+          "candle_range_ratio": "0.004404084995",
+          "candle_body_ratio": "0.001548830103",
+          "volume": "96.3734"
+        },
+        "inputDigest": "fnv1a64:44441f9529b09993"
+      },
+      "observation": {
+        "observationId": "shadow-observation:cb9c85251ce64824",
+        "requestId": "r2-shadow-snapshot:32a2e09711bcecf6-principal",
+        "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+        "correlationId": "r2-2026-09-22T14:38:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.52,
+            "probabilities": {
+              "partial": 0.68,
+              "sufficient": 0.01,
+              "insufficient": 0.31
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.26,
+            "probabilities": {
+              "range": 0.39999999999999997,
+              "uncertain": 0.28,
+              "high_volatility": 0.02,
+              "noisy": 0.29,
+              "trending": 0.01
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.92,
+            "probabilities": {
+              "uncertain": 0.03,
+              "downward": 0.94,
+              "neutral": 0.03,
+              "upward": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.86",
+            "confidence": 0.26,
+            "probabilities": {
+              "0": 0.32,
+              "1": 0.5,
+              "2": 0.18
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:39:33.458Z",
+            "completedAt": "2026-09-22T14:39:34.424Z",
+            "latencyMs": 963,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 963,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:39:34.424Z",
+        "inputDigest": "fnv1a64:cb9c85251ce64824"
+      },
+      "outcomeProvenance": "MARKET_DERIVED_COUNTERFACTUAL",
+      "outcome": {
+        "outcomeId": "market-outcome:fnv1a64:b16821f28784064f",
+        "observationAt": "2026-09-22T14:38:59.999Z",
+        "provenance": "MARKET_DERIVED_COUNTERFACTUAL",
+        "horizonPolicyId": "outcome-horizons@1",
+        "referencePriceType": "CANDLE_CLOSE",
+        "calculationVersion": "market-derived-outcome@1",
+        "horizons": [
+          {
+            "horizonMinutes": 1,
+            "outcomeAt": "2026-09-22T14:39:59.999Z",
+            "referencePriceAtT0": "85806.7",
+            "referencePriceAtOutcome": "85874.3",
+            "forwardReturn": "0.000787817268",
+            "maximumFavorableExcursion": "0.002555744481",
+            "maximumAdverseExcursion": "0",
+            "realizedRange": "0.002555744481",
+            "regimeOutcome": "UPWARD",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790087880000",
+              "binance-testnet-kline:BTCUSDT:1m:1790087940000"
+            ]
+          },
+          {
+            "horizonMinutes": 3,
+            "outcomeAt": "2026-09-22T14:41:59.999Z",
+            "referencePriceAtT0": "85806.7",
+            "referencePriceAtOutcome": "85813.4",
+            "forwardReturn": "0.00007808248",
+            "maximumFavorableExcursion": "0.002555744481",
+            "maximumAdverseExcursion": "0",
+            "realizedRange": "0.002555744481",
+            "regimeOutcome": "RANGE",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790087880000",
+              "binance-testnet-kline:BTCUSDT:1m:1790087940000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088000000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000"
+            ]
+          }
+        ],
+        "inputDigest": "fnv1a64:b16821f28784064f"
+      }
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "hypothesis": "H2_MARKET_STATE_READER",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:275f2b323909756b",
+      "marketStateRef": "market-r2-2026-09-22T14:39:59.999Z",
+      "capturedAt": "2026-09-22T14:39:59.999Z",
+      "samplingTrigger": "CLOSED_CANDLE_INTERVAL",
+      "windowId": "r3e-window-m-20260922",
+      "snapshot": {
+        "observationKind": "MARKET_STATE",
+        "snapshotId": "shadow-snapshot:275f2b323909756b",
+        "correlationId": "r2-2026-09-22T14:39:59.999Z",
+        "capturedAt": "2026-09-22T14:39:59.999Z",
+        "environment": "PAPER",
+        "strategyId": "market-reader",
+        "strategyRevisionId": "market-reader@1",
+        "instrument": "BTCUSDT",
+        "marketStateRef": "market-r2-2026-09-22T14:39:59.999Z",
+        "marketStateDigest": "fnv1a64:88faa9c11429ea80",
+        "experiment": {
+          "experimentId": "jev-paper-shadow-r3-expanded-market-reading",
+          "experimentVersion": "1"
+        },
+        "questionSet": {
+          "questionSetId": "jev-paper-r2-market-reader",
+          "questionSetVersion": "1"
+        },
+        "requestedProvider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "providerState": {
+          "task": "paper-shadow-r2-market-state-reading",
+          "sampling": {
+            "trigger": "CLOSED_CANDLE_INTERVAL",
+            "samplingPolicyId": "paper-r2-sampling@1",
+            "featurePolicyId": "paper-r2-candle-features@1",
+            "outcomeHorizonPolicyId": "outcome-horizons@1",
+            "referencePricePolicyId": "candle-close@1"
+          },
+          "market": {
+            "instrument": "BTCUSDT",
+            "venue": "binance-usdm-futures-testnet-public",
+            "timeframe": "1m",
+            "marketTime": "2026-09-22T14:39:59.999Z",
+            "observedAt": "2026-09-22T14:39:59.999Z",
+            "freshness": "historical",
+            "completeness": "partial",
+            "qualityStatus": "valid",
+            "sequenceStatus": "sequenced",
+            "features": [
+              {
+                "featureId": "reference_close",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "85840.90",
+                "unit": "USDT",
+                "computedAt": "2026-09-22T14:39:59.999Z"
+              },
+              {
+                "featureId": "candle_return_1m",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.000398570274",
+                "unit": null,
+                "computedAt": "2026-09-22T14:39:59.999Z"
+              },
+              {
+                "featureId": "candle_range_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.002554726243",
+                "unit": null,
+                "computedAt": "2026-09-22T14:39:59.999Z"
+              },
+              {
+                "featureId": "candle_body_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.000326184837",
+                "unit": null,
+                "computedAt": "2026-09-22T14:39:59.999Z"
+              },
+              {
+                "featureId": "volume",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "366.6915",
+                "unit": "base",
+                "computedAt": "2026-09-22T14:39:59.999Z"
+              }
+            ]
+          }
+        },
+        "inputDigest": "fnv1a64:275f2b323909756b"
+      },
+      "deterministicComparator": {
+        "policyId": "deterministic-market-comparator@1",
+        "directionalPressure": "upward",
+        "marketRegime": "high_volatility",
+        "inputs": {
+          "candle_return_1m": "0.000398570274",
+          "candle_range_ratio": "0.002554726243",
+          "candle_body_ratio": "0.000326184837",
+          "volume": "366.6915"
+        },
+        "inputDigest": "fnv1a64:2db22f971d073e9f"
+      },
+      "observation": {
+        "observationId": "shadow-observation:48a429e1869144f8",
+        "requestId": "r2-shadow-snapshot:275f2b323909756b-principal",
+        "snapshotId": "shadow-snapshot:275f2b323909756b",
+        "correlationId": "r2-2026-09-22T14:39:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.52,
+            "probabilities": {
+              "sufficient": 0.01,
+              "insufficient": 0.3,
+              "partial": 0.6900000000000001
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.31,
+            "probabilities": {
+              "range": 0.44,
+              "trending": 0.06,
+              "uncertain": 0.33,
+              "noisy": 0.16,
+              "high_volatility": 0.01
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "upward",
+            "confidence": 0.79,
+            "probabilities": {
+              "downward": 0,
+              "uncertain": 0.06,
+              "neutral": 0.09,
+              "upward": 0.85
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.97",
+            "confidence": 0.29,
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.53,
+              "2": 0.22
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:40:02.205Z",
+            "completedAt": "2026-09-22T14:40:03.501Z",
+            "latencyMs": 1295,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 1295,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 176
+        },
+        "observedAt": "2026-09-22T14:40:03.501Z",
+        "inputDigest": "fnv1a64:48a429e1869144f8"
+      },
+      "outcomeProvenance": "MARKET_DERIVED_COUNTERFACTUAL",
+      "outcome": {
+        "outcomeId": "market-outcome:fnv1a64:7d5a5c61a47adaa6",
+        "observationAt": "2026-09-22T14:39:59.999Z",
+        "provenance": "MARKET_DERIVED_COUNTERFACTUAL",
+        "horizonPolicyId": "outcome-horizons@1",
+        "referencePriceType": "CANDLE_CLOSE",
+        "calculationVersion": "market-derived-outcome@1",
+        "horizons": [
+          {
+            "horizonMinutes": 1,
+            "outcomeAt": "2026-09-22T14:40:59.999Z",
+            "referencePriceAtT0": "85874.3",
+            "referencePriceAtOutcome": "85868.1",
+            "forwardReturn": "-0.00007219855",
+            "maximumFavorableExcursion": "0.001766535505",
+            "maximumAdverseExcursion": "-0.000737123912",
+            "realizedRange": "0.002503659418",
+            "regimeOutcome": "RANGE",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790087940000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088000000"
+            ]
+          },
+          {
+            "horizonMinutes": 3,
+            "outcomeAt": "2026-09-22T14:42:59.999Z",
+            "referencePriceAtT0": "85874.3",
+            "referencePriceAtOutcome": "85806.7",
+            "forwardReturn": "-0.0007871971",
+            "maximumFavorableExcursion": "0.001766535505",
+            "maximumAdverseExcursion": "-0.0007871971",
+            "realizedRange": "0.002553732606",
+            "regimeOutcome": "DOWNWARD",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790087940000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088000000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088120000"
+            ]
+          }
+        ],
+        "inputDigest": "fnv1a64:7d5a5c61a47adaa6"
+      }
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "hypothesis": "H2_MARKET_STATE_READER",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+      "marketStateRef": "market-r2-2026-09-22T14:40:59.999Z",
+      "capturedAt": "2026-09-22T14:40:59.999Z",
+      "samplingTrigger": "CLOSED_CANDLE_INTERVAL",
+      "windowId": "r3e-window-m-20260922",
+      "snapshot": {
+        "observationKind": "MARKET_STATE",
+        "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+        "correlationId": "r2-2026-09-22T14:40:59.999Z",
+        "capturedAt": "2026-09-22T14:40:59.999Z",
+        "environment": "PAPER",
+        "strategyId": "market-reader",
+        "strategyRevisionId": "market-reader@1",
+        "instrument": "BTCUSDT",
+        "marketStateRef": "market-r2-2026-09-22T14:40:59.999Z",
+        "marketStateDigest": "fnv1a64:52af81e59cdd3004",
+        "experiment": {
+          "experimentId": "jev-paper-shadow-r3-expanded-market-reading",
+          "experimentVersion": "1"
+        },
+        "questionSet": {
+          "questionSetId": "jev-paper-r2-market-reader",
+          "questionSetVersion": "1"
+        },
+        "requestedProvider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "providerState": {
+          "task": "paper-shadow-r2-market-state-reading",
+          "sampling": {
+            "trigger": "CLOSED_CANDLE_INTERVAL",
+            "samplingPolicyId": "paper-r2-sampling@1",
+            "featurePolicyId": "paper-r2-candle-features@1",
+            "outcomeHorizonPolicyId": "outcome-horizons@1",
+            "referencePricePolicyId": "candle-close@1"
+          },
+          "market": {
+            "instrument": "BTCUSDT",
+            "venue": "binance-usdm-futures-testnet-public",
+            "timeframe": "1m",
+            "marketTime": "2026-09-22T14:40:59.999Z",
+            "observedAt": "2026-09-22T14:40:59.999Z",
+            "freshness": "historical",
+            "completeness": "partial",
+            "qualityStatus": "valid",
+            "sequenceStatus": "sequenced",
+            "features": [
+              {
+                "featureId": "reference_close",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "85862.40",
+                "unit": "USDT",
+                "computedAt": "2026-09-22T14:40:59.999Z"
+              },
+              {
+                "featureId": "candle_return_1m",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "-0.000138574637",
+                "unit": null,
+                "computedAt": "2026-09-22T14:40:59.999Z"
+              },
+              {
+                "featureId": "candle_range_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.00250400641",
+                "unit": null,
+                "computedAt": "2026-09-22T14:40:59.999Z"
+              },
+              {
+                "featureId": "candle_body_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "-0.000138593843",
+                "unit": null,
+                "computedAt": "2026-09-22T14:40:59.999Z"
+              },
+              {
+                "featureId": "volume",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "2290.8559",
+                "unit": "base",
+                "computedAt": "2026-09-22T14:40:59.999Z"
+              }
+            ]
+          }
+        },
+        "inputDigest": "fnv1a64:6e80f1e1536bfcd5"
+      },
+      "deterministicComparator": {
+        "policyId": "deterministic-market-comparator@1",
+        "directionalPressure": "neutral",
+        "marketRegime": "high_volatility",
+        "inputs": {
+          "candle_return_1m": "-0.000138574637",
+          "candle_range_ratio": "0.00250400641",
+          "candle_body_ratio": "-0.000138593843",
+          "volume": "2290.8559"
+        },
+        "inputDigest": "fnv1a64:3895797352171afa"
+      },
+      "observation": {
+        "observationId": "shadow-observation:4ce6250533c41f31",
+        "requestId": "r2-shadow-snapshot:6e80f1e1536bfcd5-principal",
+        "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+        "correlationId": "r2-2026-09-22T14:40:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.56,
+            "probabilities": {
+              "sufficient": 0.02,
+              "partial": 0.7,
+              "insufficient": 0.28
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.36,
+            "probabilities": {
+              "trending": 0.02,
+              "uncertain": 0.21,
+              "range": 0.48,
+              "high_volatility": 0.01,
+              "noisy": 0.28
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.92,
+            "probabilities": {
+              "upward": 0,
+              "downward": 0.94,
+              "neutral": 0.04,
+              "uncertain": 0.02
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.97",
+            "confidence": 0.3,
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.53,
+              "2": 0.22
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:41:02.448Z",
+            "completedAt": "2026-09-22T14:41:03.675Z",
+            "latencyMs": 1226,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 1226,
+        "usage": {
+          "inputTokens": 1392,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:41:03.675Z",
+        "inputDigest": "fnv1a64:4ce6250533c41f31"
+      },
+      "outcomeProvenance": "MARKET_DERIVED_COUNTERFACTUAL",
+      "outcome": {
+        "outcomeId": "market-outcome:fnv1a64:700ee415c663ed8f",
+        "observationAt": "2026-09-22T14:40:59.999Z",
+        "provenance": "MARKET_DERIVED_COUNTERFACTUAL",
+        "horizonPolicyId": "outcome-horizons@1",
+        "referencePriceType": "CANDLE_CLOSE",
+        "calculationVersion": "market-derived-outcome@1",
+        "horizons": [
+          {
+            "horizonMinutes": 1,
+            "outcomeAt": "2026-09-22T14:41:59.999Z",
+            "referencePriceAtT0": "85868.1",
+            "referencePriceAtOutcome": "85813.4",
+            "forwardReturn": "-0.000637023527",
+            "maximumFavorableExcursion": "0.000195648908",
+            "maximumAdverseExcursion": "-0.000664973371",
+            "realizedRange": "0.000860622279",
+            "regimeOutcome": "DOWNWARD",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790088000000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000"
+            ]
+          },
+          {
+            "horizonMinutes": 3,
+            "outcomeAt": "2026-09-22T14:43:59.999Z",
+            "referencePriceAtT0": "85868.1",
+            "referencePriceAtOutcome": "85765.1",
+            "forwardReturn": "-0.001199514138",
+            "maximumFavorableExcursion": "0.000196813484",
+            "maximumAdverseExcursion": "-0.001204172445",
+            "realizedRange": "0.00140098593",
+            "regimeOutcome": "DOWNWARD",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790088000000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088120000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088180000"
+            ]
+          }
+        ],
+        "inputDigest": "fnv1a64:700ee415c663ed8f"
+      }
+    },
+    {
+      "cohort": "PRINCIPAL",
+      "hypothesis": "H2_MARKET_STATE_READER",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:0861b958c657ea92",
+      "marketStateRef": "market-r2-2026-09-22T14:41:59.999Z",
+      "capturedAt": "2026-09-22T14:41:59.999Z",
+      "samplingTrigger": "CLOSED_CANDLE_INTERVAL",
+      "windowId": "r3e-window-m-20260922",
+      "snapshot": {
+        "observationKind": "MARKET_STATE",
+        "snapshotId": "shadow-snapshot:0861b958c657ea92",
+        "correlationId": "r2-2026-09-22T14:41:59.999Z",
+        "capturedAt": "2026-09-22T14:41:59.999Z",
+        "environment": "PAPER",
+        "strategyId": "market-reader",
+        "strategyRevisionId": "market-reader@1",
+        "instrument": "BTCUSDT",
+        "marketStateRef": "market-r2-2026-09-22T14:41:59.999Z",
+        "marketStateDigest": "fnv1a64:ac1888571faa0a0b",
+        "experiment": {
+          "experimentId": "jev-paper-shadow-r3-expanded-market-reading",
+          "experimentVersion": "1"
+        },
+        "questionSet": {
+          "questionSetId": "jev-paper-r2-market-reader",
+          "questionSetVersion": "1"
+        },
+        "requestedProvider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "providerState": {
+          "task": "paper-shadow-r2-market-state-reading",
+          "sampling": {
+            "trigger": "CLOSED_CANDLE_INTERVAL",
+            "samplingPolicyId": "paper-r2-sampling@1",
+            "featurePolicyId": "paper-r2-candle-features@1",
+            "outcomeHorizonPolicyId": "outcome-horizons@1",
+            "referencePricePolicyId": "candle-close@1"
+          },
+          "market": {
+            "instrument": "BTCUSDT",
+            "venue": "binance-usdm-futures-testnet-public",
+            "timeframe": "1m",
+            "marketTime": "2026-09-22T14:41:59.999Z",
+            "observedAt": "2026-09-22T14:41:59.999Z",
+            "freshness": "historical",
+            "completeness": "partial",
+            "qualityStatus": "valid",
+            "sequenceStatus": "sequenced",
+            "features": [
+              {
+                "featureId": "reference_close",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "85813.40",
+                "unit": "USDT",
+                "computedAt": "2026-09-22T14:41:59.999Z"
+              },
+              {
+                "featureId": "candle_return_1m",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "-0.000637023527",
+                "unit": null,
+                "computedAt": "2026-09-22T14:41:59.999Z"
+              },
+              {
+                "featureId": "candle_range_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "0.000861170866",
+                "unit": null,
+                "computedAt": "2026-09-22T14:41:59.999Z"
+              },
+              {
+                "featureId": "candle_body_ratio",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "-0.000637429585",
+                "unit": null,
+                "computedAt": "2026-09-22T14:41:59.999Z"
+              },
+              {
+                "featureId": "volume",
+                "featureVersion": "paper-r2-candle-features@1",
+                "value": "3008.2525",
+                "unit": "base",
+                "computedAt": "2026-09-22T14:41:59.999Z"
+              }
+            ]
+          }
+        },
+        "inputDigest": "fnv1a64:0861b958c657ea92"
+      },
+      "deterministicComparator": {
+        "policyId": "deterministic-market-comparator@1",
+        "directionalPressure": "downward",
+        "marketRegime": "trending",
+        "inputs": {
+          "candle_return_1m": "-0.000637023527",
+          "candle_range_ratio": "0.000861170866",
+          "candle_body_ratio": "-0.000637429585",
+          "volume": "3008.2525"
+        },
+        "inputDigest": "fnv1a64:0fd1d651fe8ac302"
+      },
+      "observation": {
+        "observationId": "shadow-observation:b07adf52dc1cac49",
+        "requestId": "r2-shadow-snapshot:0861b958c657ea92-principal",
+        "snapshotId": "shadow-snapshot:0861b958c657ea92",
+        "correlationId": "r2-2026-09-22T14:41:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.55,
+            "probabilities": {
+              "sufficient": 0.01,
+              "insufficient": 0.29,
+              "partial": 0.7
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.31,
+            "probabilities": {
+              "range": 0.45,
+              "trending": 0.04,
+              "uncertain": 0.28,
+              "noisy": 0.22,
+              "high_volatility": 0.01
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.95,
+            "probabilities": {
+              "downward": 0.96,
+              "uncertain": 0.02,
+              "neutral": 0.02,
+              "upward": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.96",
+            "confidence": 0.24,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.5,
+              "2": 0.23
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:02.235Z",
+            "completedAt": "2026-09-22T14:42:03.084Z",
+            "latencyMs": 849,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 849,
+        "usage": {
+          "inputTokens": 1393,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:03.084Z",
+        "inputDigest": "fnv1a64:b07adf52dc1cac49"
+      },
+      "outcomeProvenance": "MARKET_DERIVED_COUNTERFACTUAL",
+      "outcome": {
+        "outcomeId": "market-outcome:fnv1a64:afd29d9bc8f251d3",
+        "observationAt": "2026-09-22T14:41:59.999Z",
+        "provenance": "MARKET_DERIVED_COUNTERFACTUAL",
+        "horizonPolicyId": "outcome-horizons@1",
+        "referencePriceType": "CANDLE_CLOSE",
+        "calculationVersion": "market-derived-outcome@1",
+        "horizons": [
+          {
+            "horizonMinutes": 1,
+            "outcomeAt": "2026-09-22T14:42:59.999Z",
+            "referencePriceAtT0": "85813.4",
+            "referencePriceAtOutcome": "85806.7",
+            "forwardReturn": "-0.000078076384",
+            "maximumFavorableExcursion": "0.000834368525",
+            "maximumAdverseExcursion": "-0.000078076384",
+            "realizedRange": "0.000912444909",
+            "regimeOutcome": "RANGE",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088120000"
+            ]
+          },
+          {
+            "horizonMinutes": 3,
+            "outcomeAt": "2026-09-22T14:44:59.999Z",
+            "referencePriceAtT0": "85813.4",
+            "referencePriceAtOutcome": "85760.5",
+            "forwardReturn": "-0.00061645384",
+            "maximumFavorableExcursion": "0.000834368525",
+            "maximumAdverseExcursion": "-0.00061645384",
+            "realizedRange": "0.001450822365",
+            "regimeOutcome": "DOWNWARD",
+            "sourceRefs": [
+              "binance-testnet-kline:BTCUSDT:1m:1790088060000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088120000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088180000",
+              "binance-testnet-kline:BTCUSDT:1m:1790088240000"
+            ]
+          }
+        ],
+        "inputDigest": "fnv1a64:afd29d9bc8f251d3"
+      }
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+      "marketStateRef": "market-r2-2026-09-22T14:38:59.999Z",
+      "capturedAt": "2026-09-22T14:38:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:8c2bf88d50a796d8",
+        "requestId": "r2-shadow-snapshot:32a2e09711bcecf6-stability-1",
+        "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+        "correlationId": "r2-2026-09-22T14:38:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.55,
+            "probabilities": {
+              "partial": 0.7,
+              "sufficient": 0.02,
+              "insufficient": 0.28
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.34,
+            "probabilities": {
+              "range": 0.48,
+              "uncertain": 0.25,
+              "noisy": 0.25,
+              "high_volatility": 0.01,
+              "trending": 0.01
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.91,
+            "probabilities": {
+              "uncertain": 0.03,
+              "upward": 0,
+              "neutral": 0.03,
+              "downward": 0.94
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.9",
+            "confidence": 0.26,
+            "probabilities": {
+              "0": 0.29,
+              "1": 0.51,
+              "2": 0.2
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:03.085Z",
+            "completedAt": "2026-09-22T14:42:07.567Z",
+            "latencyMs": 4481,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 4481,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:07.567Z",
+        "inputDigest": "fnv1a64:8c2bf88d50a796d8"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+      "marketStateRef": "market-r2-2026-09-22T14:38:59.999Z",
+      "capturedAt": "2026-09-22T14:38:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:381b6aeefd42df76",
+        "requestId": "r2-shadow-snapshot:32a2e09711bcecf6-stability-2",
+        "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+        "correlationId": "r2-2026-09-22T14:38:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.53,
+            "probabilities": {
+              "sufficient": 0.01,
+              "partial": 0.69,
+              "insufficient": 0.3
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.22,
+            "probabilities": {
+              "range": 0.37,
+              "uncertain": 0.3,
+              "trending": 0.01,
+              "noisy": 0.3,
+              "high_volatility": 0.02
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.91,
+            "probabilities": {
+              "neutral": 0.03,
+              "uncertain": 0.03,
+              "downward": 0.9400000000000001,
+              "upward": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.96",
+            "confidence": 0.26,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.51,
+              "2": 0.22
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:07.568Z",
+            "completedAt": "2026-09-22T14:42:08.799Z",
+            "latencyMs": 1230,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 1230,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:08.799Z",
+        "inputDigest": "fnv1a64:381b6aeefd42df76"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+      "marketStateRef": "market-r2-2026-09-22T14:38:59.999Z",
+      "capturedAt": "2026-09-22T14:38:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:55a1db8e713d4322",
+        "requestId": "r2-shadow-snapshot:32a2e09711bcecf6-stability-3",
+        "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+        "correlationId": "r2-2026-09-22T14:38:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.52,
+            "probabilities": {
+              "insufficient": 0.31,
+              "partial": 0.68,
+              "sufficient": 0.01
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.3,
+            "probabilities": {
+              "uncertain": 0.27,
+              "high_volatility": 0.02,
+              "noisy": 0.26,
+              "trending": 0.01,
+              "range": 0.44
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.91,
+            "probabilities": {
+              "uncertain": 0.03,
+              "upward": 0,
+              "neutral": 0.04,
+              "downward": 0.93
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.97",
+            "confidence": 0.31,
+            "probabilities": {
+              "0": 0.24,
+              "1": 0.54,
+              "2": 0.22
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:08.800Z",
+            "completedAt": "2026-09-22T14:42:09.160Z",
+            "latencyMs": 359,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 359,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:09.160Z",
+        "inputDigest": "fnv1a64:55a1db8e713d4322"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:275f2b323909756b",
+      "marketStateRef": "market-r2-2026-09-22T14:39:59.999Z",
+      "capturedAt": "2026-09-22T14:39:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:4854dec8ca4f49c0",
+        "requestId": "r2-shadow-snapshot:275f2b323909756b-stability-1",
+        "snapshotId": "shadow-snapshot:275f2b323909756b",
+        "correlationId": "r2-2026-09-22T14:39:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.48,
+            "probabilities": {
+              "sufficient": 0.01,
+              "insufficient": 0.33,
+              "partial": 0.66
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.31,
+            "probabilities": {
+              "range": 0.45,
+              "high_volatility": 0.01,
+              "uncertain": 0.29,
+              "trending": 0.06,
+              "noisy": 0.19
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "upward",
+            "confidence": 0.8,
+            "probabilities": {
+              "upward": 0.85,
+              "uncertain": 0.06,
+              "downward": 0,
+              "neutral": 0.09
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.97",
+            "confidence": 0.24,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.49,
+              "2": 0.24
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:09.161Z",
+            "completedAt": "2026-09-22T14:42:09.537Z",
+            "latencyMs": 375,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 375,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 176
+        },
+        "observedAt": "2026-09-22T14:42:09.537Z",
+        "inputDigest": "fnv1a64:4854dec8ca4f49c0"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:275f2b323909756b",
+      "marketStateRef": "market-r2-2026-09-22T14:39:59.999Z",
+      "capturedAt": "2026-09-22T14:39:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:9850f97995623159",
+        "requestId": "r2-shadow-snapshot:275f2b323909756b-stability-2",
+        "snapshotId": "shadow-snapshot:275f2b323909756b",
+        "correlationId": "r2-2026-09-22T14:39:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.53,
+            "probabilities": {
+              "partial": 0.69,
+              "sufficient": 0.01,
+              "insufficient": 0.3
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.28,
+            "probabilities": {
+              "uncertain": 0.34,
+              "noisy": 0.16,
+              "high_volatility": 0.01,
+              "range": 0.42,
+              "trending": 0.07
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "upward",
+            "confidence": 0.81,
+            "probabilities": {
+              "uncertain": 0.06,
+              "downward": 0,
+              "neutral": 0.08,
+              "upward": 0.86
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.96",
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.26,
+              "1": 0.52,
+              "2": 0.22
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:09.538Z",
+            "completedAt": "2026-09-22T14:42:09.933Z",
+            "latencyMs": 395,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 395,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 176
+        },
+        "observedAt": "2026-09-22T14:42:09.933Z",
+        "inputDigest": "fnv1a64:9850f97995623159"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:275f2b323909756b",
+      "marketStateRef": "market-r2-2026-09-22T14:39:59.999Z",
+      "capturedAt": "2026-09-22T14:39:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:77f19a46131b41cd",
+        "requestId": "r2-shadow-snapshot:275f2b323909756b-stability-3",
+        "snapshotId": "shadow-snapshot:275f2b323909756b",
+        "correlationId": "r2-2026-09-22T14:39:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.52,
+            "probabilities": {
+              "sufficient": 0.02,
+              "insufficient": 0.31,
+              "partial": 0.67
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.26,
+            "probabilities": {
+              "trending": 0.08,
+              "high_volatility": 0.01,
+              "range": 0.39999999999999997,
+              "uncertain": 0.35,
+              "noisy": 0.16
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "upward",
+            "confidence": 0.82,
+            "probabilities": {
+              "upward": 0.87,
+              "neutral": 0.08,
+              "uncertain": 0.05,
+              "downward": 0
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.91",
+            "confidence": 0.27,
+            "probabilities": {
+              "0": 0.29,
+              "1": 0.51,
+              "2": 0.2
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:09.934Z",
+            "completedAt": "2026-09-22T14:42:10.332Z",
+            "latencyMs": 397,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 397,
+        "usage": {
+          "inputTokens": 1390,
+          "outputTokens": 176
+        },
+        "observedAt": "2026-09-22T14:42:10.332Z",
+        "inputDigest": "fnv1a64:77f19a46131b41cd"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+      "marketStateRef": "market-r2-2026-09-22T14:40:59.999Z",
+      "capturedAt": "2026-09-22T14:40:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:bdec03ac416ff690",
+        "requestId": "r2-shadow-snapshot:6e80f1e1536bfcd5-stability-1",
+        "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+        "correlationId": "r2-2026-09-22T14:40:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.54,
+            "probabilities": {
+              "insufficient": 0.3,
+              "partial": 0.69,
+              "sufficient": 0.01
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.4,
+            "probabilities": {
+              "range": 0.51,
+              "trending": 0.02,
+              "uncertain": 0.24,
+              "noisy": 0.22,
+              "high_volatility": 0.01
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.92,
+            "probabilities": {
+              "upward": 0,
+              "neutral": 0.04,
+              "uncertain": 0.02,
+              "downward": 0.94
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.94",
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.52,
+              "2": 0.21
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:10.332Z",
+            "completedAt": "2026-09-22T14:42:10.722Z",
+            "latencyMs": 389,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 389,
+        "usage": {
+          "inputTokens": 1392,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:10.722Z",
+        "inputDigest": "fnv1a64:bdec03ac416ff690"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+      "marketStateRef": "market-r2-2026-09-22T14:40:59.999Z",
+      "capturedAt": "2026-09-22T14:40:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:17a117e928002f90",
+        "requestId": "r2-shadow-snapshot:6e80f1e1536bfcd5-stability-2",
+        "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+        "correlationId": "r2-2026-09-22T14:40:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.55,
+            "probabilities": {
+              "insufficient": 0.28,
+              "sufficient": 0.02,
+              "partial": 0.7
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.46,
+            "probabilities": {
+              "high_volatility": 0.01,
+              "range": 0.57,
+              "noisy": 0.2,
+              "trending": 0.01,
+              "uncertain": 0.21
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.91,
+            "probabilities": {
+              "downward": 0.93,
+              "neutral": 0.05,
+              "upward": 0,
+              "uncertain": 0.02
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.91",
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.28,
+              "1": 0.52,
+              "2": 0.2
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:10.722Z",
+            "completedAt": "2026-09-22T14:42:11.255Z",
+            "latencyMs": 532,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 532,
+        "usage": {
+          "inputTokens": 1392,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:11.255Z",
+        "inputDigest": "fnv1a64:17a117e928002f90"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    },
+    {
+      "cohort": "STABILITY_PROBE",
+      "hypothesis": "PROVIDER_STABILITY",
+      "instrument": "BTCUSDT",
+      "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+      "marketStateRef": "market-r2-2026-09-22T14:40:59.999Z",
+      "capturedAt": "2026-09-22T14:40:59.999Z",
+      "samplingTrigger": "STABILITY_REPRESENTATIVE_STATE",
+      "observation": {
+        "observationId": "shadow-observation:4c4ae06ce4a8233d",
+        "requestId": "r2-shadow-snapshot:6e80f1e1536bfcd5-stability-3",
+        "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+        "correlationId": "r2-2026-09-22T14:40:59.999Z",
+        "provider": "typesafe-jev",
+        "requestedModel": "jev-1.13.0",
+        "resolvedModel": "jev-1.13.0",
+        "status": "SUCCEEDED",
+        "answers": [
+          {
+            "questionId": "state_sufficiency",
+            "type": "CHOICE",
+            "value": "partial",
+            "confidence": 0.54,
+            "probabilities": {
+              "sufficient": 0.02,
+              "insufficient": 0.29,
+              "partial": 0.69
+            }
+          },
+          {
+            "questionId": "market_regime",
+            "type": "CHOICE",
+            "value": "range",
+            "confidence": 0.43,
+            "probabilities": {
+              "high_volatility": 0.01,
+              "range": 0.54,
+              "uncertain": 0.21,
+              "noisy": 0.22,
+              "trending": 0.02
+            }
+          },
+          {
+            "questionId": "directional_pressure",
+            "type": "CHOICE",
+            "value": "downward",
+            "confidence": 0.91,
+            "probabilities": {
+              "upward": 0,
+              "downward": 0.93,
+              "uncertain": 0.02,
+              "neutral": 0.05
+            }
+          },
+          {
+            "questionId": "contextual_risk",
+            "type": "SCORE",
+            "value": "0.93",
+            "confidence": 0.29,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.53,
+              "2": 0.2
+            }
+          }
+        ],
+        "attemptCount": 1,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startedAt": "2026-09-22T14:42:11.255Z",
+            "completedAt": "2026-09-22T14:42:12.175Z",
+            "latencyMs": 919,
+            "outcome": "SUCCEEDED"
+          }
+        ],
+        "totalProviderWallTimeMs": 919,
+        "usage": {
+          "inputTokens": 1392,
+          "outputTokens": 177
+        },
+        "observedAt": "2026-09-22T14:42:12.175Z",
+        "inputDigest": "fnv1a64:4c4ae06ce4a8233d"
+      },
+      "outcomeProvenance": "NO_DEFENSIBLE_OUTCOME"
+    }
+  ],
+  "analysis": {
+    "status": "INSUFFICIENT_EVIDENCE_PRELIMINARY_DATASET",
+    "model": {
+      "requestedModel": "jev-1.13.0",
+      "resolvedModels": [
+        "jev-1.13.0"
+      ]
+    },
+    "volume": {
+      "principalObservations": 4,
+      "windowId": "r3e-window-m-20260922",
+      "completedOutcomes": 4,
+      "noDefensibleOutcome": 0,
+      "stabilityProbes": 9,
+      "abstentions": 0,
+      "failures": 0
+    },
+    "latencyMs": {
+      "n": 13,
+      "min": 359,
+      "p50": 849,
+      "p95": 1295,
+      "p99": 1295,
+      "max": 4481
+    },
+    "h2": {
+      "regimeDistribution": {
+        "range": 4
+      },
+      "directionalPressureDistribution": {
+        "downward": 3,
+        "upward": 1
+      },
+      "comparatorDirectionDistribution": {
+        "downward": 2,
+        "neutral": 1,
+        "upward": 1
+      },
+      "comparatorRegimeDistribution": {
+        "high_volatility": 3,
+        "trending": 1
+      },
+      "horizonReturns": {
+        "1m": {
+          "n": 4,
+          "positive": 1,
+          "negative": 3,
+          "rangeOutcomes": 2,
+          "avgForwardReturn": "0.000000129701"
+        },
+        "3m": {
+          "n": 4,
+          "positive": 1,
+          "negative": 3,
+          "rangeOutcomes": 1,
+          "avgForwardReturn": "-0.000631270649"
+        }
+      },
+      "comparatorComparison": {
+        "1": {
+          "horizonMinutes": 1,
+          "directionalOutcomes": 2,
+          "deterministicPredictions": 1,
+          "deterministicCorrect": 0,
+          "deterministicAbstentions": 1,
+          "jevPredictions": 2,
+          "jevCorrect": 1,
+          "jevAbstentions": 0,
+          "jointPredictions": 1,
+          "bothCorrect": 0,
+          "deterministicOnlyCorrect": 0,
+          "jevOnlyCorrect": 0,
+          "neitherCorrect": 1
+        },
+        "3": {
+          "horizonMinutes": 3,
+          "directionalOutcomes": 3,
+          "deterministicPredictions": 2,
+          "deterministicCorrect": 1,
+          "deterministicAbstentions": 1,
+          "jevPredictions": 3,
+          "jevCorrect": 2,
+          "jevAbstentions": 0,
+          "jointPredictions": 2,
+          "bothCorrect": 1,
+          "deterministicOnlyCorrect": 0,
+          "jevOnlyCorrect": 0,
+          "neitherCorrect": 1
+        }
+      },
+      "calibrationStatus": "NOT_SCORABLE_SMALL_N",
+      "incrementalInformationStatus": "DESCRIPTIVE_ONLY_UNTIL_DIVERSE_COHORT_AND_HOLDOUT"
+    },
+    "h1": {
+      "organicTradeProposalObservations": 0,
+      "disposition": "NOT_APPLICABLE_IN_R2_MARKET_READER_COHORT"
+    },
+    "stability": {
+      "snapshots": 3,
+      "observations": 9,
+      "perSnapshot": [
+        {
+          "snapshotId": "shadow-snapshot:32a2e09711bcecf6",
+          "n": 3,
+          "marketRegimeTopClasses": {
+            "range": 3
+          },
+          "maxMarketRegimeProbabilityDelta": 0.11
+        },
+        {
+          "snapshotId": "shadow-snapshot:275f2b323909756b",
+          "n": 3,
+          "marketRegimeTopClasses": {
+            "range": 3
+          },
+          "maxMarketRegimeProbabilityDelta": 0.06
+        },
+        {
+          "snapshotId": "shadow-snapshot:6e80f1e1536bfcd5",
+          "n": 3,
+          "marketRegimeTopClasses": {
+            "range": 3
+          },
+          "maxMarketRegimeProbabilityDelta": 0.06
+        }
+      ]
+    },
+    "cadence": {
+      "campaignDurationHours": 0.091728,
+      "observationsPerHourActualWallClock": 43.6072,
+      "marketSamplingWindowMinutes": 4,
+      "principalSamplingPolicy": "paper-r2-sampling@1"
+    },
+    "cost": {
+      "inputTokens": 18081,
+      "outputTokens": 2297,
+      "totalTokens": 20378,
+      "estimatedUsd": "0.00075940",
+      "estimatedUsdPerObservation": "0.00005842",
+      "projectedUsdPerDayAtObservedWallClock": "0.1987",
+      "projectedUsdPer30DaysAtObservedWallClock": "5.96"
+    },
+    "externalMutationCounters": {
+      "exchangeTestnetOrderPost": 0,
+      "exchangeTestnetOrderDelete": 0,
+      "exchangeMainnetOrderPost": 0,
+      "exchangeMainnetOrderDelete": 0,
+      "realCapitalMutation": 0
+    }
+  }
+}
