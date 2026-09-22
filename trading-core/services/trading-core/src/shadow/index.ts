@@ -16,3 +16,6 @@ export * from './MarketDerivedOutcome.js';
 export * from './DeterministicMarketComparator.js';
 export * from './PaperR3ComparatorAnalysis.js';
 export * from './HistoricalR3H.js';
+export * from './MockEconomicDecisionProvider.js';
+export * from './BenchmarkDatasetManifests.js';
+export * from './EconomicBenchmarkHarness.js';

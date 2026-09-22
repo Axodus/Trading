@@ -423,6 +423,13 @@
       "network": "none-or-local",
       "externalMutation": false,
       "reason": "No external exchange mutation found in FIX-IMP02-01 audit; uses mocks, local DB, static guards or deterministic fixtures"
+    },
+    {
+      "file": "imp-03a-economic-benchmark-foundations.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Provider-neutral economic benchmark foundations, mock providers, and quality floor evaluation"
     }
   ]
 }

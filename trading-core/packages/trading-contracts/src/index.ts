@@ -39,3 +39,4 @@ export * from './governance/strategyOperationalGovernance.js';
 export * from './safety/systemSafety.js';
 export * from './harness/harnessIntegration.js';
 export * from './shadow/decisionProvider.js';
+export * from './shadow/economicBenchmark.js';
