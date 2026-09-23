@@ -313,3 +313,7 @@ export * from './shadow/index.js';
 export * from './protection/PositionProtectionContracts.js';
 export * from './protection/BinanceConditionalProtectionAdapter.js';
 export * from './protection/PositionProtectionService.js';
+export * from './protection/DurablePositionProtectionContracts.js';
+export * from './protection/PostgresPositionProtectionRepository.js';
+export * from './protection/PostgresTradingSafetyStateRepository.js';
+export * from './protection/PositionProtectionRecoveryService.js';

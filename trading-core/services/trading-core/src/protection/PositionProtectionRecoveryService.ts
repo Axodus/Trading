@@ -1,20 +1,17 @@
 import type {
-  PositionProtectionPlanV1,
-  ProtectionRuleV1,
   TradeProtectionLifecycleStateV1,
-  ProtectionLifecycleStateV1,
   EmergencyCloseCommandV1,
   ProtectionReconciliationResultV1,
 } from './PositionProtectionContracts.js';
 import {
-  type DurablePositionProtectionPlanRecordV1,
   type ProtectionRecoveryClassificationV1,
-  type ProtectionRecoverySnapshotV1,
-  ProtectionRecoveryStateInvalidError,
 } from './DurablePositionProtectionContracts.js';
 import type { PostgresPositionProtectionRepository } from './PostgresPositionProtectionRepository.js';
 import type { PostgresTradingSafetyStateRepository } from './PostgresTradingSafetyStateRepository.js';
-import type { BinanceConditionalProtectionAdapter } from './BinanceConditionalProtectionAdapter.js';
+import type {
+  BinanceConditionalProtectionAdapter,
+  BinancePositionRiskItemV1,
+} from './BinanceConditionalProtectionAdapter.js';
 
 export interface PositionProtectionRecoveryParams {
   environment: string;
@@ -30,23 +27,10 @@ export interface ReconstructedProtectionStateV1 {
   lifecycleState: TradeProtectionLifecycleStateV1;
   isFullyArmed: boolean;
   classification: ProtectionRecoveryClassificationV1;
-  venuePositions: {
-    symbol: string;
-    positionAmt: string;
-    entryPrice: string;
-    unRealizedProfit: string;
-  }[];
-  activeVenueProtectionOrders: {
-    algoId: string;
-    clientAlgoId: string;
-    symbol: string;
-    orderType: string;
-    triggerPrice: string;
-    algoStatus: string;
-  }[];
+  venuePositions: BinancePositionRiskItemV1[];
+  activeVenueProtectionOrders: ProtectionReconciliationResultV1[];
   emergencyCloseRequired: boolean;
   emergencyCloseCommand?: EmergencyCloseCommandV1;
-  actionRequiredNote?: string;
 }
 
 export class PositionProtectionRecoveryService {
@@ -68,14 +52,13 @@ export class PositionProtectionRecoveryService {
   async recoverActiveProtectionPlans(
     params: PositionProtectionRecoveryParams,
   ): Promise<ReconstructedProtectionStateV1[]> {
-    const safetyState = await this.safetyStateRepo.getSafetyState(params.environment);
+    await this.safetyStateRepo.getSafetyState(params.environment);
     const activePlans = await this.protectionRepo.getActivePlans(params.environment, params.provider);
 
     const reconstructedStates: ReconstructedProtectionStateV1[] = [];
 
-    // Fetch live venue open positions and active conditional algo orders
-    const livePositions = await this.venueAdapter.fetchOpenPositions();
-    const liveAlgoOrders = await this.venueAdapter.fetchOpenAlgoOrders();
+    // Fetch live venue open positions
+    const livePositions = await this.venueAdapter.getPositionRisk();
 
     for (const plan of activePlans) {
       // Step 1: Acquire exclusive leased ownership
@@ -86,17 +69,17 @@ export class PositionProtectionRecoveryService {
         leaseDurationMs: params.leaseDurationMs,
       });
 
-      // Step 2: Classify venue position for this instrument
+      // Step 2: Fetch open protection orders for this symbol
+      const liveAlgoOrders = await this.venueAdapter.getOpenProtectionOrders(plan.instrument);
+
+      // Step 3: Classify venue position for this instrument
       const matchedPosition = livePositions.find(
-        (p) => p.symbol.toUpperCase() === plan.instrument.toUpperCase() && Number(p.positionAmt) !== 0,
+        (p: BinancePositionRiskItemV1) =>
+          p.symbol.toUpperCase() === plan.instrument.toUpperCase() &&
+          Number(p.positionAmt) !== 0,
       );
       const positionQuantity = matchedPosition ? matchedPosition.positionAmt : '0.0000';
       const isFlatOnVenue = !matchedPosition || Number(matchedPosition.positionAmt) === 0;
-
-      // Step 3: Match active venue algo protection orders
-      const matchedAlgoOrders = liveAlgoOrders.filter(
-        (o) => o.symbol.toUpperCase() === plan.instrument.toUpperCase(),
-      );
 
       let classification: ProtectionRecoveryClassificationV1 = 'POSITION_STATE_UNKNOWN';
       let emergencyCloseRequired = false;
@@ -107,31 +90,31 @@ export class PositionProtectionRecoveryService {
       if (isFlatOnVenue) {
         // Flat confirmed on venue
         classification = 'FLAT_CONFIRMED';
-        targetLifecycleState = 'FLAT';
+        targetLifecycleState = 'TERMINAL_CLOSED';
         isFullyArmed = false;
 
         // Clean up any dangling/orphaned algo orders on venue
-        for (const algo of matchedAlgoOrders) {
+        for (const algo of liveAlgoOrders) {
           try {
-            await this.venueAdapter.cancelProtectionOrder(plan.instrument, algo.clientAlgoId, algo.algoId);
+            await this.venueAdapter.cancelProtectionOrder(plan.instrument, algo.clientProtectionOrderId, algo.providerProtectionOrderId);
           } catch {
             // Best effort cancellation for flat state
           }
         }
       } else {
         // Venue has open position. Check if protection orders are active and matching.
-        const matchingRule = plan.rules.find((r) => r.canonicalStatus === 'ACTIVE' || r.canonicalStatus === 'CONFIRMED_LIVE');
-        const activeMatchingAlgo = matchedAlgoOrders.find(
-          (a) =>
-            (matchingRule?.providerAlgoId && a.algoId === matchingRule.providerAlgoId) ||
-            (matchingRule?.providerClientAlgoId && a.clientAlgoId === matchingRule.providerClientAlgoId),
+        const matchingRule = plan.rules.find((r) => r.canonicalStatus === 'RECONCILED_ACTIVE' || r.canonicalStatus === 'SUBMITTED');
+        const activeMatchingAlgo = liveAlgoOrders.find(
+          (a: ProtectionReconciliationResultV1) =>
+            (matchingRule?.providerAlgoId && a.providerProtectionOrderId === matchingRule.providerAlgoId) ||
+            (matchingRule?.providerClientAlgoId && a.clientProtectionOrderId === matchingRule.providerClientAlgoId),
         );
 
         if (activeMatchingAlgo) {
           classification = 'PROTECTED_POSITION_CONFIRMED';
           targetLifecycleState = 'TRADE_FULLY_ARMED';
           isFullyArmed = true;
-        } else if (matchedAlgoOrders.length > 0 && !matchingRule) {
+        } else if (liveAlgoOrders.length > 0 && !matchingRule) {
           classification = 'PROTECTION_ORPHANED';
           targetLifecycleState = 'UNPROTECTED_EXPOSURE';
           isFullyArmed = false;
@@ -146,14 +129,16 @@ export class PositionProtectionRecoveryService {
         if (emergencyCloseRequired) {
           emergencyCommand = {
             commandId: `cmd_emg_rec_${Date.now().toString(36)}`,
-            environment: plan.environment,
-            instrument: plan.instrument,
+            symbol: plan.instrument,
+            market: plan.instrument,
+            providerId: plan.provider,
+            positionSide: plan.positionSide,
             positionMode: plan.positionMode,
-            closeSide: Number(positionQuantity) > 0 ? 'SELL' : 'BUY',
             quantity: Math.abs(Number(positionQuantity)).toString(),
+            executionMode: 'CLOSE_ALL',
             reason: `Recovery classified as ${classification}. Venue position unhedged/unprotected without valid active stop order.`,
-            executionMode: 'MARKET_IOC',
-            triggeredAt: this.now(),
+            initiatedBy: 'safety-supervisor',
+            createdAt: this.now(),
           };
         }
       }
@@ -187,8 +172,8 @@ export class PositionProtectionRecoveryService {
         lifecycleState: targetLifecycleState,
         isFullyArmed,
         classification,
-        venuePositions: livePositions.filter((p) => p.symbol.toUpperCase() === plan.instrument.toUpperCase()),
-        activeVenueProtectionOrders: matchedAlgoOrders,
+        venuePositions: livePositions.filter((p: BinancePositionRiskItemV1) => p.symbol.toUpperCase() === plan.instrument.toUpperCase()),
+        activeVenueProtectionOrders: liveAlgoOrders,
         emergencyCloseRequired,
         emergencyCloseCommand: emergencyCommand,
       });

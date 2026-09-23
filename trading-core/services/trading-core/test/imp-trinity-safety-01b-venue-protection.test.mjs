@@ -34,8 +34,8 @@ function createMockTransport(handlers = {}) {
       return {
         status: 200,
         headers: {},
-        json: async () => ({ orderId: 888123456, clientOrderId: params.newClientOrderId, status: 'NEW' }),
-        text: async () => JSON.stringify({ orderId: 888123456, clientOrderId: params.newClientOrderId, status: 'NEW' }),
+        json: async () => ({ algoId: 888123456, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
+        text: async () => JSON.stringify({ algoId: 888123456, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
       };
     },
     async delete(url, params, headers, timeoutMs) {
@@ -46,8 +46,8 @@ function createMockTransport(handlers = {}) {
       return {
         status: 200,
         headers: {},
-        json: async () => ({ orderId: params.orderId ?? 888123456, status: 'CANCELED' }),
-        text: async () => JSON.stringify({ orderId: params.orderId ?? 888123456, status: 'CANCELED' }),
+        json: async () => ({ algoId: params.algoId ?? 888123456, status: 'CANCELED' }),
+        text: async () => JSON.stringify({ algoId: params.algoId ?? 888123456, status: 'CANCELED' }),
       };
     },
   };
@@ -57,7 +57,7 @@ function createMockCredentialSource() {
   return {
     async resolveEphemeralMaterial() {
       return {
-        apiKey: 'test-api-key-safe',
+        apiKey: '***',
         apiSecret: 'test-api-secret-safe-mock-value',
       };
     },
@@ -73,14 +73,14 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
         return {
           status: 200,
           headers: {},
-          json: async () => ({ orderId: 99112233, clientOrderId: params.newClientOrderId, status: 'NEW' }),
-          text: async () => JSON.stringify({ orderId: 99112233, clientOrderId: params.newClientOrderId, status: 'NEW' }),
+          json: async () => ({ algoId: 99112233, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
+          text: async () => JSON.stringify({ algoId: 99112233, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
         };
       },
       get: async () => ({
         status: 200,
         headers: {},
-        json: async () => [{ clientOrderId: capturedPostParams?.newClientOrderId, orderId: 99112233, type: 'STOP_MARKET', status: 'NEW' }],
+        json: async () => [{ clientAlgoId: capturedPostParams?.clientAlgoId, algoId: 99112233, type: 'STOP_MARKET', algoStatus: 'NEW' }],
         text: async () => '[]',
       }),
     });
@@ -117,14 +117,14 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
         return {
           status: 200,
           headers: {},
-          json: async () => ({ orderId: 99112244, clientOrderId: params.newClientOrderId, status: 'NEW' }),
-          text: async () => JSON.stringify({ orderId: 99112244, clientOrderId: params.newClientOrderId, status: 'NEW' }),
+          json: async () => ({ algoId: 99112244, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
+          text: async () => JSON.stringify({ algoId: 99112244, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
         };
       },
       get: async () => ({
         status: 200,
         headers: {},
-        json: async () => [{ clientOrderId: capturedPostParams?.newClientOrderId, orderId: 99112244, type: 'STOP_MARKET', status: 'NEW' }],
+        json: async () => [{ clientAlgoId: capturedPostParams?.clientAlgoId, algoId: 99112244, type: 'STOP_MARKET', algoStatus: 'NEW' }],
         text: async () => '[]',
       }),
     });
@@ -219,18 +219,18 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
       },
       get: async (url, params) => {
         getCalls += 1;
-        // In the lookup, the order actually succeeded on the exchange before timeout
-        if (params.origClientOrderId?.startsWith('axd_stp_')) {
+        // In the lookup, the algo order actually succeeded on the exchange before timeout
+        if (params.clientAlgoId?.startsWith('axd_stp_')) {
           return {
             status: 200,
             headers: {},
             json: async () => ({
-              orderId: 777666555,
-              clientOrderId: params.origClientOrderId,
+              algoId: 777666555,
+              clientAlgoId: params.clientAlgoId,
               symbol: 'ETHUSDT',
-              status: 'NEW',
-              stopPrice: '2200.0',
-              type: 'STOP_MARKET',
+              algoStatus: 'NEW',
+              triggerPrice: '2200.0',
+              orderType: 'STOP_MARKET',
             }),
             text: async () => '{}',
           };
@@ -312,17 +312,17 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
   it('Scenario 8: Protection reconciliation by provider order identity (orderId)', async () => {
     const transport = createMockTransport({
       get: async (url, params) => {
-        if (url.includes('/fapi/v1/openOrders')) {
+        if (url.includes('/fapi/v1/openAlgoOrders')) {
           return {
             status: 200,
             headers: {},
             json: async () => [{
-              clientOrderId: 'axd_stp_provider_id_match',
-              orderId: '88990011',
+              clientAlgoId: 'axd_stp_provider_id_match',
+              algoId: '88990011',
               symbol: 'ETHUSDT',
-              type: 'STOP_MARKET',
-              status: 'NEW',
-              stopPrice: '2150.0',
+              orderType: 'STOP_MARKET',
+              algoStatus: 'NEW',
+              triggerPrice: '2150.0',
             }],
             text: async () => '[]',
           };
@@ -354,8 +354,8 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
         return {
           status: 200,
           headers: {},
-          json: async () => ({ orderId: params.orderId, status: 'CANCELED' }),
-          text: async () => JSON.stringify({ orderId: params.orderId, status: 'CANCELED' }),
+          json: async () => ({ algoId: params.algoId, status: 'CANCELED' }),
+          text: async () => JSON.stringify({ algoId: params.algoId, status: 'CANCELED' }),
         };
       },
     });
@@ -367,36 +367,36 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
 
     assert.equal(cancelResult.success, true);
     assert.equal(capturedDeleteParams.symbol, 'SOLUSDT');
-    assert.equal(capturedDeleteParams.orderId, '778899');
-    assert.equal(capturedDeleteParams.origClientOrderId, 'axd_stp_cancel_target');
+    assert.equal(capturedDeleteParams.algoId, '778899');
+    assert.equal(capturedDeleteParams.clientAlgoId, 'axd_stp_cancel_target');
   });
 
   it('Scenario 10: Duplicate canonical protection command -> idempotent handling', async () => {
     let postCallCount = 0;
-    let capturedClientOrderId = null;
+    let capturedClientAlgoId = null;
     const transport = createMockTransport({
       post: async (url, params) => {
         postCallCount += 1;
-        capturedClientOrderId = params.newClientOrderId;
+        capturedClientAlgoId = params.clientAlgoId;
         return {
           status: 200,
           headers: {},
-          json: async () => ({ orderId: 445566, clientOrderId: params.newClientOrderId, status: 'NEW' }),
+          json: async () => ({ algoId: 445566, clientAlgoId: params.clientAlgoId, algoStatus: 'NEW' }),
           text: async () => '{}',
         };
       },
       get: async (url, params) => {
-        if (url.includes('/fapi/v1/openOrders')) {
+        if (url.includes('/fapi/v1/openAlgoOrders')) {
           return {
             status: 200,
             headers: {},
             json: async () => [{
-              clientOrderId: capturedClientOrderId,
-              orderId: 445566,
+              clientAlgoId: capturedClientAlgoId,
+              algoId: 445566,
               symbol: 'BTCUSDT',
-              type: 'STOP_MARKET',
-              status: 'NEW',
-              stopPrice: '84000.0',
+              orderType: 'STOP_MARKET',
+              algoStatus: 'NEW',
+              triggerPrice: '84000.0',
             }],
             text: async () => '[]',
           };
@@ -405,12 +405,12 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
           status: 200,
           headers: {},
           json: async () => ({
-            clientOrderId: params.origClientOrderId,
-            orderId: 445566,
+            clientAlgoId: params.clientAlgoId,
+            algoId: 445566,
             symbol: 'BTCUSDT',
-            type: 'STOP_MARKET',
-            status: 'NEW',
-            stopPrice: '84000.0',
+            orderType: 'STOP_MARKET',
+            algoStatus: 'NEW',
+            triggerPrice: '84000.0',
           }),
           text: async () => '{}',
         };
@@ -472,22 +472,22 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
     const transport = createMockTransport({
       post: async () => {
         postAttempts += 1;
-        // Simulates connection reset / network drop right after Binance accepted order
+        // Simulates connection reset / network drop right after Binance accepted algo order
         throw new Error('ECONNRESET');
       },
       get: async (url, params) => {
-        // Recovery finds the exact client order ID on the exchange
-        if (params.origClientOrderId) {
+        // Recovery finds the exact client algo ID on the exchange
+        if (params.clientAlgoId) {
           return {
             status: 200,
             headers: {},
             json: async () => ({
-              orderId: '55667788',
-              clientOrderId: params.origClientOrderId,
+              algoId: '55667788',
+              clientAlgoId: params.clientAlgoId,
               symbol: 'BTCUSDT',
-              status: 'NEW',
-              stopPrice: '83000.0',
-              type: 'STOP_MARKET',
+              algoStatus: 'NEW',
+              triggerPrice: '83000.0',
+              orderType: 'STOP_MARKET',
             }),
             text: async () => '{}',
           };
@@ -514,4 +514,3 @@ describe('AXODUS-TRADING-IMP-TRINITY-SAFETY-01B: Venue-Resident Position Protect
     assert.equal(recoveredResult.activeRule?.providerProtectionOrderId, '55667788');
   });
 });
-

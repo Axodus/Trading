@@ -5,6 +5,7 @@ import {
   VAL_04B2_BASE_URL,
   VAL_04B2_ORDER_PATH,
   VAL_04B2_OPEN_ORDERS_PATH,
+  VAL_04B2_POSITION_RISK_PATH,
   type Val04B2HttpResponse,
   type Val04B2Transport,
   signVal04B2Query,
@@ -31,6 +32,15 @@ const DEFAULT_BASE_URL = 'https://testnet.binancefuture.com';
 const VAL_04B2_POSITION_SIDE_DUAL_PATH = '/fapi/v1/positionSide/dual';
 export const VAL_04B2_ALGO_ORDER_PATH = '/fapi/v1/algoOrder';
 export const VAL_04B2_OPEN_ALGO_ORDERS_PATH = '/fapi/v1/openAlgoOrders';
+
+export interface BinancePositionRiskItemV1 {
+  symbol: string;
+  positionAmt: string;
+  entryPrice: string;
+  markPrice?: string;
+  unRealizedProfit?: string;
+  positionSide?: string;
+}
 
 export class BinanceConditionalProtectionAdapter {
   private readonly baseUrl: string;
@@ -74,6 +84,29 @@ export class BinanceConditionalProtectionAdapter {
     const record = body as Record<string, unknown>;
     const dualSidePosition = Boolean(record.dualSidePosition);
     return dualSidePosition ? 'HEDGE' : 'ONE_WAY';
+  }
+
+  async getPositionRisk(symbol?: string): Promise<BinancePositionRiskItemV1[]> {
+    const params: Record<string, string> = {
+      recvWindow: '5000',
+      timestamp: String(Date.now()),
+    };
+    if (symbol) {
+      params.symbol = symbol.toUpperCase();
+    }
+    const response = await this.privateRequest('GET', VAL_04B2_POSITION_RISK_PATH, params);
+    const body = await this.bodyOf(response);
+    if (response.status < 200 || response.status >= 300 || !Array.isArray(body)) {
+      throw new Error(`Failed to query position risk: HTTP ${response.status} - ${JSON.stringify(body)}`);
+    }
+    return (body as Array<Record<string, unknown>>).map((p) => ({
+      symbol: String(p.symbol ?? ''),
+      positionAmt: String(p.positionAmt ?? '0'),
+      entryPrice: String(p.entryPrice ?? '0'),
+      markPrice: p.markPrice !== undefined ? String(p.markPrice) : undefined,
+      unRealizedProfit: p.unRealizedProfit !== undefined ? String(p.unRealizedProfit) : undefined,
+      positionSide: p.positionSide !== undefined ? String(p.positionSide) : undefined,
+    }));
   }
 
   validateRulePreflight(rule: ProtectionRuleV1, plan: PositionProtectionPlanV1): void {

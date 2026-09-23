@@ -13,6 +13,7 @@ import {
   type TransitionPlanStateCasParams,
   type RegisterProviderIdentityParams,
   computeSemanticFingerprint,
+  ProtectionDurableStateError,
   ProtectionIdempotencyConflictError,
   ProtectionStateConflictError,
   ProtectionOwnershipConflictError,
