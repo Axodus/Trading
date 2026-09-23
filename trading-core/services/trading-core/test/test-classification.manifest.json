@@ -437,6 +437,13 @@
       "network": "none-or-local",
       "externalMutation": false,
       "reason": "Venue-resident position protection unit and adversarial invariant tests using mock transports and local fixtures"
+    },
+    {
+      "file": "imp-trinity-safety-01d-independent-supervisor.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Independent safety supervisor lifecycle, lease, reconciliation, and fail-closed tests using local fixtures and mock venue adapters"
     }
   ]
 }

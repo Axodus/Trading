@@ -1,0 +1,30 @@
+[Unit]
+Description=Axodus Trading Independent Autonomous Safety Supervisor (PID-isolated, zero-LLM protection runtime)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=mzfshark
+Group=mzfshark
+WorkingDirectory=/opt/Axodus/Trading/trading-core/services/trading-core
+ExecStart=/usr/bin/node --experimental-strip-types scripts/run-safety-supervisor.ts
+Restart=always
+RestartSec=3s
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=10s
+Environment=NODE_ENV=production
+Environment=AXODUS_TRADING_ENVIRONMENT=testnet
+Environment=AXODUS_SUPERVISOR_HEALTH_PORT=9108
+Environment=AXODUS_SUPERVISOR_LEASE_MS=15000
+Environment=AXODUS_SUPERVISOR_HEARTBEAT_MS=4000
+Environment=AXODUS_SUPERVISOR_RECONCILE_MS=5000
+
+# Security and Sandbox Restrictions
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

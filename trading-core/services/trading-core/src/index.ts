@@ -317,3 +317,6 @@ export * from './protection/DurablePositionProtectionContracts.js';
 export * from './protection/PostgresPositionProtectionRepository.js';
 export * from './protection/PostgresTradingSafetyStateRepository.js';
 export * from './protection/PositionProtectionRecoveryService.js';
+export * from './protection/IndependentSafetySupervisorContracts.js';
+export * from './protection/IndependentSafetySupervisor.js';
+export * from './protection/IndependentSafetySupervisorRunner.js';
