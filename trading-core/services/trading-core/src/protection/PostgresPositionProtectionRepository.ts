@@ -584,9 +584,9 @@ export class PostgresPositionProtectionRepository {
         `UPDATE trading_position_protection_plans SET
           lifecycle_state = $1,
           unprotected_reason = $2,
-          last_reconciled_at = COALESCE($3, last_reconciled_at),
+          last_reconciled_at = COALESCE($3::timestamptz, last_reconciled_at),
           version = version + 1,
-          updated_at = $4
+          updated_at = $4::timestamptz
          WHERE id = $5 AND version = $6 AND lifecycle_state = ANY($7)
          RETURNING *`,
         [
@@ -636,8 +636,8 @@ export class PostgresPositionProtectionRepository {
           provider_algo_id = $1,
           provider_status = COALESCE($2, provider_status),
           canonical_status = COALESCE($3, canonical_status),
-          last_provider_observation_at = COALESCE($4, $5),
-          updated_at = $5
+          last_provider_observation_at = COALESCE($4::timestamptz, $5::timestamptz),
+          updated_at = $5::timestamptz
          WHERE id = $6 AND protection_plan_id = $7`,
         [
           params.providerAlgoId,
