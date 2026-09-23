@@ -430,6 +430,13 @@
       "network": "none-or-local",
       "externalMutation": false,
       "reason": "Provider-neutral economic benchmark foundations, mock providers, and quality floor evaluation"
+    },
+    {
+      "file": "imp-trinity-safety-01b-venue-protection.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Venue-resident position protection unit and adversarial invariant tests using mock transports and local fixtures"
     }
   ]
 }

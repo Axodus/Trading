@@ -310,3 +310,6 @@ export * from './governance/operational/PostgresStrategyOperationalGovernanceRep
 export * from './safety/index.js';
 export * from './harness/index.js';
 export * from './shadow/index.js';
+export * from './protection/PositionProtectionContracts.js';
+export * from './protection/BinanceConditionalProtectionAdapter.js';
+export * from './protection/PositionProtectionService.js';
