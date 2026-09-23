@@ -104,3 +104,15 @@ export async function runSupervisorMain(): Promise<void> {
   await supervisor.start();
   console.log('[SafetySupervisor] Supervisor running.');
 }
+
+if (typeof globalThis !== 'undefined') {
+  const p = getRuntimeProcess() as unknown as { argv?: string[] };
+  if (p && p.argv && p.argv[1]) {
+    const currentScript = p.argv[1].replace(/\\/g, '/');
+    if (currentScript.endsWith('IndependentSafetySupervisorRunner.js') || currentScript.endsWith('IndependentSafetySupervisorRunner.ts')) {
+      void runSupervisorMain();
+    }
+  }
+}
+
+
