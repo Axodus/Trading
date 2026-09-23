@@ -153,49 +153,59 @@
         "first": "2026-09-22T18:38:59.999Z",
         "last": "2026-09-22T18:41:59.999Z"
       }
+    },
+    {
+      "file": "AXODUS-TRADING-IMP-02-PAPER-SHADOW-R3-r3e-window-o-20260922-RESULTS.json",
+      "windowId": "r3e-window-o-20260922",
+      "principalObservations": 4,
+      "completedOutcomes": 4,
+      "capturedAtRange": {
+        "first": "2026-09-22T22:39:59.999Z",
+        "last": "2026-09-22T22:42:59.999Z"
+      }
     }
   ],
   "volume": {
-    "windows": 14,
-    "principalObservations": 56,
-    "completedOutcomes": 56,
-    "stabilityObservations": 120,
+    "windows": 15,
+    "principalObservations": 60,
+    "completedOutcomes": 60,
+    "stabilityObservations": 129,
     "providerFailures": 4
   },
   "distributions": {
     "jevRegime": {
       "failure": 2,
       "noisy": 1,
-      "range": 38,
-      "uncertain": 15
+      "range": 41,
+      "uncertain": 16
     },
     "jevDirectionalPressure": {
       "downward": 21,
       "failure": 2,
-      "neutral": 5,
-      "upward": 28
+      "neutral": 7,
+      "upward": 30
     },
     "deterministicRegime": {
       "high_volatility": 9,
-      "range": 37,
-      "trending": 10
+      "range": 40,
+      "trending": 11
     },
     "deterministicDirectionalPressure": {
       "downward": 9,
-      "neutral": 35,
-      "upward": 12
+      "neutral": 38,
+      "upward": 13
     }
   },
   "comparatorComparison": {
     "1m": {
       "horizonMinutes": 1,
-      "directionalOutcomes": 19,
+      "directionalOutcomes": 20,
       "deterministicPredictions": 9,
       "deterministicCorrect": 5,
-      "deterministicAbstentions": 10,
+      "deterministicAbstentions": 11,
       "jevPredictions": 18,
       "jevCorrect": 13,
-      "jevAbstentions": 1,
+      "jevAbstentions": 2,
       "jointPredictions": 9,
       "bothCorrect": 5,
       "deterministicOnlyCorrect": 0,
@@ -204,13 +214,13 @@
     },
     "3m": {
       "horizonMinutes": 3,
-      "directionalOutcomes": 33,
+      "directionalOutcomes": 36,
       "deterministicPredictions": 13,
       "deterministicCorrect": 8,
-      "deterministicAbstentions": 20,
-      "jevPredictions": 32,
-      "jevCorrect": 19,
-      "jevAbstentions": 1,
+      "deterministicAbstentions": 23,
+      "jevPredictions": 33,
+      "jevCorrect": 20,
+      "jevAbstentions": 3,
       "jointPredictions": 13,
       "bothCorrect": 8,
       "deterministicOnlyCorrect": 0,
