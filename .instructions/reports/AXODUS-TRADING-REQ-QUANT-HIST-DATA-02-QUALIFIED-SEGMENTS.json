@@ -1,0 +1,205 @@
+{
+  "datasetId": "orderflow-binance-futures-14d-20260623-20260706-v1",
+  "window": {
+    "start": "2026-06-23T00:00:00Z",
+    "end": "2026-07-06T23:59:59.999Z"
+  },
+  "generatedAt": "2026-09-25T02:19:51Z",
+  "symbols": [
+    {
+      "symbol": "BTCUSDT",
+      "totalWindowSeconds": 1209600,
+      "qualifiedSeconds": 1209599.999,
+      "invalidSeconds": 0,
+      "qualifiedCoveragePct": 100.0,
+      "isQualifiedCoveragePct": 100.0,
+      "oosQualifiedCoveragePct": 100.0,
+      "segmentCount": 1,
+      "invalidIntervalCount": 0,
+      "largestQualifiedSegmentSec": 1209599.999,
+      "maxInvalidIntervalSec": 0,
+      "qualifiedSegments": [
+        {
+          "startTs": 1782172800000,
+          "endTs": 1783382399999,
+          "startPartition": "2026-06-23/00",
+          "endPartition": "2026-07-06/23",
+          "bootstrapSource": "PRE_WINDOW_BOOTSTRAP_CONTINUATION",
+          "terminalReason": "END_OF_WINDOW",
+          "durationSeconds": 1209599.999
+        }
+      ],
+      "invalidIntervals": []
+    },
+    {
+      "symbol": "ETHUSDC",
+      "totalWindowSeconds": 1209600,
+      "qualifiedSeconds": 821626.998,
+      "invalidSeconds": 387973.001,
+      "qualifiedCoveragePct": 67.9255,
+      "isQualifiedCoveragePct": 61.8059,
+      "oosQualifiedCoveragePct": 83.2245,
+      "segmentCount": 9,
+      "invalidIntervalCount": 9,
+      "largestQualifiedSegmentSec": 321885.048,
+      "maxInvalidIntervalSec": 85803.467,
+      "qualifiedSegments": [
+        {
+          "startTs": 1782172800000,
+          "endTs": 1782224292163,
+          "startPartition": "2026-06-23/00",
+          "endPartition": "2026-06-23/14",
+          "bootstrapSource": "PRE_WINDOW_BOOTSTRAP_CONTINUATION",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 51492.163
+        },
+        {
+          "startTs": 1782269476678,
+          "endTs": 1782269653561,
+          "startPartition": "2026-06-24/02",
+          "endPartition": "2026-06-24/02",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10879045825596",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 176.883
+        },
+        {
+          "startTs": 1782355404926,
+          "endTs": 1782418195127,
+          "startPartition": "2026-06-25/02",
+          "endPartition": "2026-06-25/20",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10887519643698",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 62790.201
+        },
+        {
+          "startTs": 1782503998594,
+          "endTs": 1782580255093,
+          "startPartition": "2026-06-26/19",
+          "endPartition": "2026-06-27/17",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10903645686005",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 76256.499
+        },
+        {
+          "startTs": 1782666019003,
+          "endTs": 1782666019055,
+          "startPartition": "2026-06-28/17",
+          "endPartition": "2026-06-28/17",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10915596067806",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 0.052
+        },
+        {
+          "startTs": 1782672001089,
+          "endTs": 1782672001125,
+          "startPartition": "2026-06-28/18",
+          "endPartition": "2026-06-28/18",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10916079222663",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 0.036
+        },
+        {
+          "startTs": 1782672600366,
+          "endTs": 1782895823694,
+          "startPartition": "2026-06-28/18",
+          "endPartition": "2026-07-01/08",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10916120733652",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 223223.328
+        },
+        {
+          "startTs": 1782916736057,
+          "endTs": 1783238621105,
+          "startPartition": "2026-07-01/14",
+          "endPartition": "2026-07-05/08",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10940811393497",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 321885.048
+        },
+        {
+          "startTs": 1783244393140,
+          "endTs": 1783330195928,
+          "startPartition": "2026-07-05/09",
+          "endPartition": "2026-07-06/09",
+          "bootstrapSource": "SNAPSHOT_REBOOT_10972000064344",
+          "terminalReason": "SEQUENCE_GAP",
+          "durationSeconds": 85802.788
+        }
+      ],
+      "invalidIntervals": [
+        {
+          "startTs": 1782224292163,
+          "endTs": 1782269476678,
+          "startPartition": "2026-06-23/14",
+          "endPartition": "2026-06-24/02",
+          "durationSeconds": 45184.515,
+          "recoverySnapshotId": 10879045825596
+        },
+        {
+          "startTs": 1782269653561,
+          "endTs": 1782355404926,
+          "startPartition": "2026-06-24/02",
+          "endPartition": "2026-06-25/02",
+          "durationSeconds": 85751.365,
+          "recoverySnapshotId": 10887519643698
+        },
+        {
+          "startTs": 1782418195127,
+          "endTs": 1782503998594,
+          "startPartition": "2026-06-25/20",
+          "endPartition": "2026-06-26/19",
+          "durationSeconds": 85803.467,
+          "recoverySnapshotId": 10903645686005
+        },
+        {
+          "startTs": 1782580255093,
+          "endTs": 1782666019003,
+          "startPartition": "2026-06-27/17",
+          "endPartition": "2026-06-28/17",
+          "durationSeconds": 85763.91,
+          "recoverySnapshotId": 10915596067806
+        },
+        {
+          "startTs": 1782666019055,
+          "endTs": 1782672001089,
+          "startPartition": "2026-06-28/17",
+          "endPartition": "2026-06-28/18",
+          "durationSeconds": 5982.034,
+          "recoverySnapshotId": 10916079222663
+        },
+        {
+          "startTs": 1782672001125,
+          "endTs": 1782672600366,
+          "startPartition": "2026-06-28/18",
+          "endPartition": "2026-06-28/18",
+          "durationSeconds": 599.241,
+          "recoverySnapshotId": 10916120733652
+        },
+        {
+          "startTs": 1782895823694,
+          "endTs": 1782916736057,
+          "startPartition": "2026-07-01/08",
+          "endPartition": "2026-07-01/14",
+          "durationSeconds": 20912.363,
+          "recoverySnapshotId": 10940811393497
+        },
+        {
+          "startTs": 1783238621105,
+          "endTs": 1783244393140,
+          "startPartition": "2026-07-05/08",
+          "endPartition": "2026-07-05/09",
+          "durationSeconds": 5772.035,
+          "recoverySnapshotId": 10972000064344
+        },
+        {
+          "startTs": 1783330195928,
+          "endTs": 1783382399999,
+          "startPartition": "2026-07-06/09",
+          "endPartition": "2026-07-06/23",
+          "durationSeconds": 52204.071,
+          "recoverySnapshotId": null
+        }
+      ]
+    }
+  ]
+}

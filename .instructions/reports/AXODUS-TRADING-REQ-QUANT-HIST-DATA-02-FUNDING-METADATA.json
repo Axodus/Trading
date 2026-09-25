@@ -1,0 +1,34 @@
+[
+  {
+    "symbol": "BTCUSDT",
+    "provider": "CryptoHFTData",
+    "product": "Binance USD-M Futures Mark Price & Funding",
+    "window": {
+      "start": "2026-06-23T00:00:00Z",
+      "end": "2026-07-06T23:59:59.999Z"
+    },
+    "persistedPath": "/run/media/mzfshark/Storage/Axodus/Trading/market-data/normalized/auxiliary/BTCUSDT_mark_price_14d.parquet",
+    "fileSizeBytes": 26897083,
+    "rowCount": 1208380,
+    "firstEventTs": 1782172800000,
+    "lastEventTs": 1783382399000,
+    "fundingEventCount": 1208380,
+    "coverageStatus": "PASS"
+  },
+  {
+    "symbol": "ETHUSDC",
+    "provider": "CryptoHFTData",
+    "product": "Binance USD-M Futures Mark Price & Funding",
+    "window": {
+      "start": "2026-06-23T00:00:00Z",
+      "end": "2026-07-06T23:59:59.999Z"
+    },
+    "persistedPath": "/run/media/mzfshark/Storage/Axodus/Trading/market-data/normalized/auxiliary/ETHUSDC_mark_price_14d.parquet",
+    "fileSizeBytes": 28233362,
+    "rowCount": 1208380,
+    "firstEventTs": 1782172800000,
+    "lastEventTs": 1783382399000,
+    "fundingEventCount": 1208380,
+    "coverageStatus": "PASS"
+  }
+]
