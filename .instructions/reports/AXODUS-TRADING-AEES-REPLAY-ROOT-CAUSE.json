@@ -1,0 +1,148 @@
+{
+  "status": "ROOT_CAUSE_RESOLVED_FULL_REPLAY_IN_PROGRESS",
+  "classification": "BUILDER_GROUPING_DEFECT",
+  "rawProviderComparison": {
+    "rawRows": 343,
+    "normalizedRows": 343,
+    "identicalAuthoritativeRows": true,
+    "rawObject": "raw/2026-06-23/00/BTCUSDT_orderbook.parquet.zst",
+    "rawSha256": "0a887e6604feb557d9077bfdf5c261ee221262d34b3589d300890af2ddf490fa",
+    "canonicalEventRowsHash": "14caf8b3319b9dbdfe5dc5f5767f5184d7a4835cde447b126b1fbaecc8bd5b72"
+  },
+  "canonicalEventIdentity": {
+    "event_time": 1782175087235,
+    "transaction_time": 1782175087234,
+    "event_type": "update",
+    "first_update_id": 10870485568957,
+    "final_update_id": 10870485587889,
+    "prev_final_update_id": 10870485568887,
+    "last_update_id": null
+  },
+  "rawRows": 343,
+  "canonicalEvents": 1,
+  "previous71RowClassification": "INCOMPLETE_EVENT",
+  "bookBefore": {
+    "bid": "63958.2",
+    "ask": "63958.3"
+  },
+  "bookAfter71Rows": {
+    "bid": "63958.2",
+    "ask": "63957.80"
+  },
+  "bookAfterCompleteEvent": {
+    "bid": "63957.7",
+    "ask": "63957.8"
+  },
+  "independentReference": {
+    "independentFromSnapshot": true,
+    "snapshotLastUpdateId": 10869949249143,
+    "target": 1782175087235,
+    "before": {
+      "bid": "63958.20",
+      "ask": "63958.30"
+    },
+    "after": {
+      "bid": "63957.70",
+      "ask": "63957.80"
+    },
+    "rows": 8342919,
+    "logicalEvents": 248064,
+    "runtimeSeconds": 81.5030148169999,
+    "top10Bids": [
+      [
+        "63957.70",
+        "0.002"
+      ],
+      [
+        "63957.60",
+        "0.002"
+      ],
+      [
+        "63957.20",
+        "0.001"
+      ],
+      [
+        "63957.00",
+        "0.005"
+      ],
+      [
+        "63956.90",
+        "0.010"
+      ],
+      [
+        "63956.70",
+        "0.002"
+      ],
+      [
+        "63956.40",
+        "0.002"
+      ],
+      [
+        "63956.30",
+        "0.001"
+      ],
+      [
+        "63956.10",
+        "0.002"
+      ],
+      [
+        "63956.00",
+        "0.002"
+      ]
+    ],
+    "top10Asks": [
+      [
+        "63957.80",
+        "21.668"
+      ],
+      [
+        "63957.90",
+        "0.011"
+      ],
+      [
+        "63958.00",
+        "4.271"
+      ],
+      [
+        "63958.10",
+        "2.377"
+      ],
+      [
+        "63958.20",
+        "6.929"
+      ],
+      [
+        "63958.30",
+        "2.181"
+      ],
+      [
+        "63958.40",
+        "0.008"
+      ],
+      [
+        "63958.60",
+        "0.004"
+      ],
+      [
+        "63958.70",
+        "0.001"
+      ],
+      [
+        "63958.80",
+        "0.002"
+      ]
+    ]
+  },
+  "datasetQualificationImpact": "NONE",
+  "providerBookProvenCrossed": false,
+  "fullReplayAcceptance": "PENDING",
+  "snapshotBridgeRegression": {
+    "timestamp": 1782666028988,
+    "lastUpdateId": 10915596935554,
+    "updateEventTime": 1782666028987,
+    "firstUpdateId": 10915596934734,
+    "finalUpdateId": 10915596935686,
+    "classification": "VALID_SNAPSHOT_BOOTSTRAP_BRIDGE",
+    "policy": "sequence inclusion authoritative; same-minute clock overlap only; all other timestamp regressions rejected"
+  }
+}

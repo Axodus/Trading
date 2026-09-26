@@ -1,0 +1,85 @@
+{
+  "status": "DIAGNOSTIC_INCOMPLETE",
+  "scope": "bounded first-cross diagnosis only",
+  "oos_accessed": false,
+  "mutations": 0,
+  "jev_calls": 0,
+  "reconstructed_book_crossed": true,
+  "provider_book_proven_crossed": false,
+  "first_invalid_event": {
+    "timestamp": "2026-06-23T00:38:07.235Z",
+    "partition": "normalized/canonical/2026-06-23/00/BTCUSDT_orderbook.parquet",
+    "sequence": {
+      "first_update_id": 10870485568957,
+      "final_update_id": 10870485587889,
+      "prev_final_update_id": 10870485568887
+    },
+    "identity_observed_in_prior_01C_evidence": {
+      "event_type": "update",
+      "event_time": 1782175087235,
+      "transaction_time": 1782175087234,
+      "rows": 71
+    },
+    "current_raw_filter_observation": {
+      "rows_at_event_time": 343,
+      "note": "same-timestamp raw rows do not yet prove one logical event; grouping reconciliation remains open"
+    },
+    "book_before": {
+      "best_bid": "63958.2",
+      "best_ask": "63958.3"
+    },
+    "book_after_prior_01C": {
+      "best_bid": "63958.2",
+      "best_ask": "63957.8"
+    },
+    "status": "reported_by_prior_01C_run_not_stably_reproduced_by_01D_diagnostic"
+  },
+  "raw_provider_evidence": {
+    "direct_parquet_path": "/run/media/mzfshark/Storage/Axodus/Trading/market-data/normalized/canonical/2026-06-23/00/BTCUSDT_orderbook.parquet",
+    "event_time_filter_rows": 343,
+    "raw_rows_dump": "not persisted because logical grouping identity is unresolved"
+  },
+  "grouping": {
+    "status": "FAIL",
+    "findings": [
+      "Prior 01C evidence reports 71 rows for the alleged logical event.",
+      "Direct Parquet filtering by event_time returns 343 rows at the same timestamp.",
+      "A same-timestamp slice is not sufficient to establish one provider event.",
+      "The difference prevents a provider-data attribution."
+    ]
+  },
+  "ordering": {
+    "status": "UNRESOLVED",
+    "authority": "prev_final_update_id/final_update_id must be evaluated after canonical event grouping"
+  },
+  "bootstrap": {
+    "status": "PARTIAL",
+    "snapshot_partition": "2026-06-22/22/BTCUSDT_orderbook.parquet",
+    "snapshot_last_update_id": 10869949249143,
+    "snapshot_replacement_semantics": "implemented in builder; independent 01D reproduction not completed"
+  },
+  "delete_semantics": {
+    "status": "UNRESOLVED",
+    "finding": "cannot complete suspicious-level lifecycle until event grouping is fixed"
+  },
+  "reference_replay": {
+    "status": "FAIL",
+    "same_state_as_optimized": "NOT_ESTABLISHED",
+    "reason": "bounded diagnostic did not reproduce the prior crossed state consistently"
+  },
+  "next_provider_snapshot": {
+    "status": "NOT_REACHED"
+  },
+  "root_cause_classification": "UNRESOLVED",
+  "dataset_qualification_impact": "REVIEW_REQUIRED",
+  "builder_fix_required": "NOT_YET_DETERMINED",
+  "performance_optimization": "DEFERRED",
+  "tests": {
+    "existing_focused_baseline": "43 passed",
+    "existing_builder_replay_baseline": "6 passed",
+    "existing_full_baseline": "88 passed",
+    "01D_specific_regression": "NOT_ADDED; diagnosis stopped at grouping ambiguity"
+  },
+  "commit": "NOT_PERFORMED",
+  "push": "NOT_PERFORMED"
+}
