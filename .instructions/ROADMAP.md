@@ -21,3 +21,9 @@
 - [ ] **AXODUS-TRADING-IMP-02 TESTNET SHADOW**: `NOT AUTHORIZED`.
 
 IMP-02 preserves SHADOW-only authority and does not authorize Advisory, Gated operation, Mainnet, real capital or production credentials. The previous System One / Evidence Judgment provider no-go remains unchanged.
+
+## 2026-09-27 — Quant Orderflow OOS
+
+- `AXODUS-TRADING-VAL-QUANT-ORDERFLOW-OOS-01`: `COMPLETE / CTO REVIEW READY`.
+- The frozen revision `freeze-2026-09-24-adapter-v1` has consumed the specified OOS holdout. Evidence is reusable as historical validation, but deployment routing remains blocked for every cell.
+- Any redesign prompted by negative OOS results must use a new strategy revision and a fresh holdout; do not mutate this evidence package.

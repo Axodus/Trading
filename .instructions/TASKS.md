@@ -17,3 +17,11 @@
 - `AXODUS-TRADING-EPIC-01`: `TECHNICALLY COMPLETE / CTO ACCEPTED`.
 - `VAL-FINAL-P0-001`: `CLOSED`.
 - `DEBT-AUD-A-03`: `RESOLVED / CTO ACCEPTED (FIX-02)`.
+
+## AXODUS-TRADING-VAL-QUANT-ORDERFLOW-OOS-01
+
+- **Status:** `COMPLETE / CTO REVIEW READY`.
+- **Scope:** Multi-symbol OOS evaluation for ZECUSDT, SUIUSDT, and WLDUSDT across Momentum Aggression, Absorption Fade, and CVD Divergence Reversal.
+- **Validation:** 9/9 deterministic cells; 170/170 Quants-Lab tests; Trading Core SAFE test graph passed; causal frame integrity passed for all symbols.
+- **Disposition:** 8 negative cells; WLD Absorption positive under unproven maker queue assumptions; all Testnet/Mainnet routing blocked.
+- **Next decision:** CTO review only. No commit or push authorized by this request.

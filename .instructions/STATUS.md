@@ -29,3 +29,12 @@
 - Jev exchange authority: `NONE`.
 - Push: `NOT AUTHORIZED`.
 - `DEBT-AUD-A-03`: `RESOLVED / CTO ACCEPTED (FIX-02)` — Durable PostgreSQL proposal decision idempotency implemented; real-capital readiness blocker removed.
+
+## 2026-09-27 — VAL-QUANT-ORDERFLOW-OOS-01
+
+- **AXODUS-TRADING-VAL-QUANT-ORDERFLOW-OOS-01:** `COMPLETE / CTO REVIEW READY`.
+- **Evidence:** 9/9 qualified pair × strategy cells evaluated on strict symbol-specific OOS windows; 45,320 causal frames; zero crossed/empty books and zero future-data violations; double-run determinism passed for all cells.
+- **Result:** 8 cells have negative OOS net economics; WLDUSDT × `orderflow.absorption.fade` is positive under `MAKER_ASSUMED / QUEUE_POSITION_UNKNOWN` and remains execution-model limited.
+- **Routing:** all cells `TESTNET_BLOCKED` and `MAINNET_BLOCKED`; `BLOCKER-01` remains open; no exchange, testnet, mainnet, JEV, credential, or capital mutation occurred.
+- **OOS contamination:** holdout consumed for `freeze-2026-09-24-adapter-v1`; redesign requires a new strategy revision and fresh OOS.
+- **Records:** `.instructions/reports/AXODUS-TRADING-ORDERFLOW-OOS-REPORT.md` and `.instructions/handoffs/Trading/2026-09-27T21-00-00Z-VAL-QUANT-ORDERFLOW-OOS-01.md`.

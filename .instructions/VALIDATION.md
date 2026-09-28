@@ -691,3 +691,14 @@ Preserved boundaries:
 - Mandatory cleanup
 
 Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
+
+## AXODUS-TRADING-VAL-QUANT-ORDERFLOW-OOS-01 — 2026-09-27
+
+- **Status:** `COMPLETE / CTO REVIEW READY`.
+- **Windows:** ZECUSDT OOS `2026-06-26T00:00:00Z`–`2026-07-06T23:59:59.999Z`; SUIUSDT/WLDUSDT OOS `2026-06-26T18:20:00Z`–`2026-07-06T23:59:59.999Z`.
+- **Frame integrity:** ZEC 15,840; SUI 14,740; WLD 14,740; all hashes and causal counters persisted in `quants-lab/research_notebooks/orderflow_backtest/runs/causal_oos_performance_validation/`.
+- **Replay:** 9/9 deterministic double-run PASS; signals/orders/fills/trades and aggregate artifacts persisted with hashes; all lifecycle discrepancies reconciled.
+- **Tests:** full Quants-Lab `170 passed`; focused OOS/reuse `15 passed`; Trading Core `npm test` SAFE graph passed.
+- **Security:** exchange/testnet/mainnet mutations `0`; JEV calls `0`; secrets exposed `false`; BTC VAL-02A artifacts untouched.
+- **Limitation:** WLD Absorption positive result remains `MAKER_ASSUMED / QUEUE_POSITION_UNKNOWN / EXECUTION_MODEL_LIMITATION`; no venue guarantee.
+- **Routing:** all cells `TESTNET_BLOCKED` and `MAINNET_BLOCKED`; `BLOCKER-01 OPEN / DO NOT USE`.
