@@ -702,3 +702,7 @@ Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
 - **Security:** exchange/testnet/mainnet mutations `0`; JEV calls `0`; secrets exposed `false`; BTC VAL-02A artifacts untouched.
 - **Limitation:** WLD Absorption positive result remains `MAKER_ASSUMED / QUEUE_POSITION_UNKNOWN / EXECUTION_MODEL_LIMITATION`; no venue guarantee.
 - **Routing:** all cells `TESTNET_BLOCKED` and `MAINNET_BLOCKED`; `BLOCKER-01 OPEN / DO NOT USE`.
+
+## 2026-09-29 — Canonical quant optimization
+
+LOCAL_VALIDATED / CTO REVIEW PENDING. Full Quants-Lab 226 PASS / 0 FAIL / 0 SKIP; optimization subset 50 PASS. Eight-trial known-historical certification resumed and replayed deterministically. No OOS/live-run input or exchange mutations. Legacy import environment unavailable; migration documented. See `quants-lab/docs/quant_optimization/FINAL_HANDOFF.md` and `.instructions/handoffs/Trading/20260929T200113Z-QUANT-OPTIMIZATION-verified.md`. No commit/push.

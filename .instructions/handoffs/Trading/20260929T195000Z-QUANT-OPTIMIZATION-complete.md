@@ -1,0 +1,12 @@
+# Global Coordination Handoff
+- Workspace: Trading/quants-lab
+- Request: AXODUS-TRADING-REQ-QUANT-OPTIMIZATION-TRIAL-ENGINE-01
+- Phase: COMPLETE; local status: implementation complete and audited.
+- Scope: Canonical quantitative optimization trial engine, replacing legacy optuna embeddings with deterministic causal evaluation, strict SEARCH/VALIDATION/OOS governance, fixed-decimal economics, and neighborhood robustness models.
+- Validation: 220 unit and integration tests passing; engineering certification probe executing successfully on local offline storage without mutation.
+- Changed local records: `core/quant_optimization/*`.
+- Dependencies: existing `core/quant_simulation`, `core/quant_validation`, `core/quant_foundations`, `core/quant_robustness`, `Optuna` 4.5.0.
+- Blockers / risks: none.
+- Priority impact: enables offline multi-symbol parameter optimization in future tasks.
+- Portfolio action: none.
+- Boundaries preserved: 0 Testnet mutations, 0 Mainnet mutations, 0 real capital, 0 live environment pollution, strategy `ema-5x9-v2` frozen, exact-decimal economics invariant maintained.

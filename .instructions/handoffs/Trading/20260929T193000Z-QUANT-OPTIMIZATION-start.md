@@ -1,0 +1,11 @@
+# Global Coordination Handoff
+- Workspace: Trading/quants-lab
+- Request: AXODUS-TRADING-REQ-QUANT-OPTIMIZATION-TRIAL-ENGINE-01
+- Phase: IN_PROGRESS; local status: implementation resumed from untracked partial domain.
+- Scope: canonical research trial engine, legacy audit, bounded offline certification.
+- Owner: Quants-Lab; consumers: research operators and downstream governed promotion.
+- Validation: canonical interpreter resolved; quant simulation baseline 5 passed.
+- Dependencies: existing Quant simulation, validation, robustness, promotion; Optuna 4.5.0.
+- Risks: partial runner incompatible with canonical simulator; replace incomplete integration, preserve legacy.
+- Boundaries: no orders, no live PAPER data or runtime changes, no OOS consumption, no commit/push.
+- Portfolio action: none before CTO review; priority unchanged.
