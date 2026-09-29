@@ -1,0 +1,18 @@
+servers: {}
+default_server: null
+admin_id: null
+users: {}
+server_access: {}
+chat_defaults: {}
+user_preferences:
+  7:
+    agent:
+      default_agent: claude-code
+      show_tool_calls: true
+      custom_providers: []
+      secret_notices: true
+      active_agent_key: openrouter:anthropic/claude-sonnet-4.5
+web_jwt_secret: null
+telemetry: {}
+sharing: {}
+version: 1
