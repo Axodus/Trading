@@ -706,3 +706,12 @@ Record: `.instructions/TRADING_REQ_13_EXTERNAL_READINESS_FREEZE.md`
 ## 2026-09-29 — Canonical quant optimization
 
 LOCAL_VALIDATED / CTO REVIEW PENDING. Full Quants-Lab 226 PASS / 0 FAIL / 0 SKIP; optimization subset 50 PASS. Eight-trial known-historical certification resumed and replayed deterministically. No OOS/live-run input or exchange mutations. Legacy import environment unavailable; migration documented. See `quants-lab/docs/quant_optimization/FINAL_HANDOFF.md` and `.instructions/handoffs/Trading/20260929T200113Z-QUANT-OPTIMIZATION-verified.md`. No commit/push.
+
+## 2026-09-30 — Microstructure foundation targeted closure
+
+- FIX-QUANT-MICROSTRUCTURE-FOUNDATION-01: LOCAL_VALIDATED / CTO_REVIEW_PENDING.
+- Canonical BBO derived; exact mark context; weighted-book microprice without silent fallback.
+- Full dedicated-runtime suite: 291 PASS / 0 FAIL; focused: 65 PASS.
+- BTC double replay: 2,488 events, 459 snapshots, matching feature/markout hashes; 72.819419 and 72.269352 events/s end-to-end. Prior 12,000–25,000/s claim withdrawn.
+- Evidence: `.instructions/handoffs/Trading/20260930-microstructure-fix-closure.md` and `quants-lab/docs/market_microstructure/benchmark/`.
+- No current paper/live mutation, orders, credentials, commit or push; no live/HFT capacity claim.

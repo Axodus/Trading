@@ -38,3 +38,12 @@
 - **Routing:** all cells `TESTNET_BLOCKED` and `MAINNET_BLOCKED`; `BLOCKER-01` remains open; no exchange, testnet, mainnet, JEV, credential, or capital mutation occurred.
 - **OOS contamination:** holdout consumed for `freeze-2026-09-24-adapter-v1`; redesign requires a new strategy revision and fresh OOS.
 - **Records:** `.instructions/reports/AXODUS-TRADING-ORDERFLOW-OOS-REPORT.md` and `.instructions/handoffs/Trading/2026-09-27T21-00-00Z-VAL-QUANT-ORDERFLOW-OOS-01.md`.
+
+## 2026-09-30 — Microstructure foundation targeted closure
+
+- FIX-QUANT-MICROSTRUCTURE-FOUNDATION-01: LOCAL_VALIDATED / CTO_REVIEW_PENDING.
+- Canonical BBO derived; exact mark context; weighted-book microprice without silent fallback.
+- Full dedicated-runtime suite: 291 PASS / 0 FAIL; focused: 65 PASS.
+- BTC double replay: 2,488 events, 459 snapshots, matching feature/markout hashes; 72.819419 and 72.269352 events/s end-to-end. Prior 12,000–25,000/s claim withdrawn.
+- Evidence: `.instructions/handoffs/Trading/20260930-microstructure-fix-closure.md` and `quants-lab/docs/market_microstructure/benchmark/`.
+- No current paper/live mutation, orders, credentials, commit or push; no live/HFT capacity claim.

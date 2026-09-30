@@ -1,0 +1,11 @@
+# Global Coordination Handoff
+- Workspace: Trading/quants-lab
+- Request: AXODUS-TRADING-REQ-QUANT-MICROSTRUCTURE-FOUNDATION-01
+- Phase: IN_PROGRESS; local status: IMPLEMENTING
+- Branch/HEAD: main / 95f2d8dbc0e46f20ae12996f8f118999e0c153cc (quants-lab)
+- Scope: offline event/feature infrastructure; reuse existing native book authority.
+- Validation: pending implementation and offline certification.
+- Dependencies: Quant Simulation and Optimization consume immutable research snapshots.
+- Risks: subsecond source coverage and throughput require measurement.
+- Priority impact: unchanged. Portfolio action: none until evidence handoff.
+- Boundaries: no live-run writes, services, credentials, execution, commits or pushes.
