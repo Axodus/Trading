@@ -1,0 +1,7 @@
+[2026-10-01T04:06:10Z] START paper(Top#1) BTCUSDT 8.0h tp=70.0bps sl=30.0bps ts=20m cooldown=20 spread>=10.0bps atr>=8.0bps fee=5.0bps/side notional=$1000.0 BE_WR=40.0% expected_trades=3.0
+[2026-10-01T04:06:11Z] warmup bars=200 (no trading during warmup)
+[2026-10-01T07:31:09Z] OPEN #1 SHORT entry=83436.56 tp=82852.50 sl=83686.87 atr=11.9bps spread=23.1bps
+[2026-10-01T07:34:05Z] CLOSE #1 SHORT TREND_REVERSAL px=83592.70 hold=3m gross=$-1.87 fees=$1.00 net=$-2.87
+[2026-10-01T09:46:30Z] poll error #1: <urlopen error [Errno -3] Temporary failure in name resolution>
+[2026-10-01T10:08:04Z] OPEN #2 SHORT entry=83550.43 tp=82965.58 sl=83801.09 atr=9.0bps spread=10.3bps
+[2026-10-01T10:10:09Z] CLOSE #2 SHORT TREND_REVERSAL px=83633.10 hold=2m gross=$-0.99 fees=$1.00 net=$-1.99

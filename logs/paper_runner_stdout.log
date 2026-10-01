@@ -1,0 +1,7 @@
+[2026-10-01T00:51:22Z] START paper session BTCUSDT duration=8.0h tp=35.0bps sl=25.0bps timestop=10m fees=5.0bps/side notional=$1000.0 break_even_wr=58.33%
+[2026-10-01T00:51:23Z] warmup bars=49 last_closed=1790815800000
+[2026-10-01T00:52:05Z] OPEN #1 SHORT entry=83479.74 tp=83187.56 sl=83688.44
+[2026-10-01T00:53:11Z] CLOSE #1 SHORT TREND_REVERSAL px=83489.50 hold=1 bars gross=$-0.12 fees=$1.00 net=$-1.12
+[2026-10-01T00:53:11Z] OPEN #2 LONG entry=83481.69 tp=83773.88 sl=83272.99
+[2026-10-01T00:53:50Z] signal 15 received; will stop after current bar
+[2026-10-01T00:53:53Z] END paper session status=stopped

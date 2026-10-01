@@ -1,0 +1,58 @@
+{
+  "status": "STOPPING",
+  "symbol": "BTCUSDT",
+  "mode": "paper",
+  "data_source": "binance-usdm-public-klines",
+  "strategy_source": "ema_strategy_dev/ema_5x9_pullback_scalper.py::ema-5x9-v2",
+  "config": {
+    "time_stop_min": 10,
+    "take_profit_bps": 35.0,
+    "stop_loss_bps": 25.0,
+    "taker_fee_bps_per_side": 5.0,
+    "touch_tolerance_bps": 2.0,
+    "notional_usd": 1000.0,
+    "round_trip_cost_usd": 1.0
+  },
+  "started_at": "2026-10-01T00:51:22.857522+00:00",
+  "ends_at": "2026-10-01T08:51:22.857522+00:00",
+  "elapsed_minutes": 2.5,
+  "bars_processed": 50,
+  "poll_errors": 0,
+  "open_position": {
+    "side": "LONG",
+    "entry_price": 83481.69446955841,
+    "take_profit": 83773.88040020186,
+    "stop_loss": 83272.99023338451
+  },
+  "metrics": {
+    "total_trades": 1,
+    "wins": 0,
+    "losses": 1,
+    "win_rate_pct": 0.0,
+    "gross_pnl": -0.12,
+    "fees_paid": 1.0,
+    "net_pnl": -1.12,
+    "expectancy_per_trade": -1.1169,
+    "exit_reason_counts": {
+      "TREND_REVERSAL": 1
+    },
+    "break_even_win_rate_pct": 58.33
+  },
+  "recent_trades": [
+    {
+      "id": 1,
+      "side": "SHORT",
+      "entry_bar_index": 49,
+      "exit_bar_index": 50,
+      "entry_time": 1790815920000,
+      "entry_price": 83479.743086948,
+      "exit_price": 83489.5,
+      "exit_reason": "TREND_REVERSAL",
+      "holding_bars": 1,
+      "gross_pnl": -0.11687761235481849,
+      "fees": 1.0000584388061775,
+      "net_pnl": -1.1169360511609958
+    }
+  ],
+  "updated_at": "2026-10-01T00:53:53.409053+00:00"
+}

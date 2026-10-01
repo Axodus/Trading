@@ -1,0 +1,89 @@
+{
+  "status": "RUNNING",
+  "symbol": "BTCUSDT",
+  "mode": "paper",
+  "data_source": "binance-usdm-public-klines",
+  "can_place_orders": false,
+  "config": {
+    "take_profit_bps": 70.0,
+    "stop_loss_bps": 30.0,
+    "time_stop_min": 20,
+    "cooldown_bars": 20,
+    "min_ema9_ema21_spread_bps": 10.0,
+    "min_atr14_bps": 8.0,
+    "ema_hierarchy": "9>21>50 long / 9<21<50 short",
+    "touch_tolerance_bps": 2.0,
+    "taker_fee_bps_per_side": 5.0,
+    "notional_usd": 1000.0,
+    "round_trip_cost_usd": 1.0
+  },
+  "provenance": {
+    "sweep_source": "/opt/Axodus/Trading/logs/structural_sweep_results.json",
+    "sweep_cells_evaluated": 864,
+    "selection": "in-sample top by net PnL at 5bps taker",
+    "holdout": "NONE - config selected on the same 14 days"
+  },
+  "started_at": "2026-10-01T04:06:10.829105+00:00",
+  "ends_at": "2026-10-01T12:06:10.829105+00:00",
+  "elapsed_minutes": 422.9,
+  "bars_processed": 622,
+  "poll_errors": 0,
+  "filter_rejections": {
+    "atr": 341,
+    "spread": 27,
+    "cooldown": 40,
+    "hierarchy": 0
+  },
+  "open_position": {
+    "side": null,
+    "entry_price": null,
+    "take_profit": null,
+    "stop_loss": null
+  },
+  "metrics": {
+    "total_trades": 2,
+    "wins": 0,
+    "losses": 2,
+    "win_rate_pct": 0.0,
+    "gross_pnl": -2.86,
+    "fees_paid": 2.0,
+    "net_pnl": -4.86,
+    "expectancy_per_trade": -2.4311,
+    "exit_reason_counts": {
+      "TREND_REVERSAL": 2
+    },
+    "bracket_break_even_win_rate_pct": 40.0,
+    "expected_trades_in_window": 3.0
+  },
+  "recent_trades": [
+    {
+      "id": 1,
+      "side": "SHORT",
+      "entry_bar_index": 404,
+      "exit_bar_index": 407,
+      "entry_price": 83436.55965552575,
+      "exit_price": 83592.7,
+      "exit_reason": "TREND_REVERSAL",
+      "holding_bars": 3,
+      "gross_pnl": -1.871366042882031,
+      "fees": 1.000935683021441,
+      "net_pnl": -2.8723017259034718,
+      "exit_time": 1790839980000
+    },
+    {
+      "id": 2,
+      "side": "SHORT",
+      "entry_bar_index": 561,
+      "exit_bar_index": 563,
+      "entry_price": 83550.43412665532,
+      "exit_price": 83633.1,
+      "exit_reason": "TREND_REVERSAL",
+      "holding_bars": 2,
+      "gross_pnl": -0.989412852354112,
+      "fees": 1.000494706426177,
+      "net_pnl": -1.989907558780289,
+      "exit_time": 1790849340000
+    }
+  ],
+  "updated_at": "2026-10-01T11:09:07.113050+00:00"
+}
