@@ -5,6 +5,13 @@
   "mutationOptInEnv": "AXODUS_TRADING_ALLOW_TESTNET_MUTATION",
   "classifications": [
     {
+      "file": "authority-context.test.mjs",
+      "classification": "SAFE",
+      "network": "none-or-local",
+      "externalMutation": false,
+      "reason": "Pure in-memory execution authority context verification; zero external exchange access or credential usage"
+    },
+    {
       "file": "epic-quant-req01-acs.test.mjs",
       "classification": "SAFE",
       "network": "none-or-local",

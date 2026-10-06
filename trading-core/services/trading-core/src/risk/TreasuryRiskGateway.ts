@@ -1,5 +1,5 @@
 import type { RiskCheckResult } from '../../../../packages/trading-contracts/src/index.js';
-import type { ExecutionIntent } from '../application/ExecutionIntent.js';
+import type { RiskCheckTarget } from './RiskCheckTarget.js';
 
 export interface TreasuryRiskState {
   requestedTreasuryExposure?: number;
@@ -12,7 +12,7 @@ export interface TreasuryRiskState {
 export class TreasuryRiskGateway {
   constructor(private readonly state: TreasuryRiskState = {}) {}
 
-  async check(intent: ExecutionIntent): Promise<RiskCheckResult> {
+  async check(intent: RiskCheckTarget): Promise<RiskCheckResult> {
     if (intent.context.executionDomain !== 'treasury') {
       return { requestId: intent.request.requestId, status: 'approved', violations: [] };
     }

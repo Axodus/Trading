@@ -756,3 +756,40 @@ Decision:
 
 Related blocker:
 - `AXODUS-TRADING-BLOCKER-01 — Hummingbot WebSocket Authentication Compatibility`
+
+---
+
+## AXODUS-TRADING-IMP-EXECUTION-AUTHORITY-CONTEXT-01 — Canonical Execution Authority Context
+
+Status:
+ACCEPTED / LOCAL_VALIDATED / CANONICAL WIRE CONTRACT FROZEN
+
+Decision:
+- every protected execution intent submitted to `ExecutionOrchestrator` must carry an immutable, validated `ExecutionAuthorityContext`
+- context structure answers without inference:
+  - `executionIntentId`: stable intent correlation id
+  - `tenantId`: canonical Core TenantId wire format (no fallback, no default)
+  - `principalRef`: explicit caller principal reference
+  - `action`: explicit canonical action identifier (`order.submit`)
+  - `resource`: explicit provider and market resource scope
+  - `requestedAt`: ISO-8601 timestamp with zone
+  - optional references: `governanceAuthorityRef`, `treasuryScopeRef`, `treasuryAuthorizationRef`
+- `AcsTradingAccessService` validates authority binding and tenant/principal match before publishing commands or forwarding to the orchestrator
+- `GovernanceExecutionGuard` verifies the structural authority context before evaluating treasury governance rules
+- legacy `governanceApproved: true` boolean cannot substitute for a missing authority context on protected execution paths
+- `RiskCheckTarget` decouples pure risk evaluation from protected execution intent creation to avoid minting premature authority
+- zero Core schema changes and zero cross-repository runtime coupling; nominal composition with Core SDKs occurs at composition time
+- CTO acceptance on 2026-10-06 resolves `BLOCKER_GOV_INT_01` at the local Trading implementation level
+- the remaining end-to-end dependency is `BLOCKER_GOV_INT_02`: executable Treasury authorization runtime is not implemented
+
+Integration debt:
+- `DEBT_TRADING_AUTH_01` remains OPEN / INTEGRATION_HARDENING
+- Trading currently transports tenant and Governance/Treasury references as validated wire-level strings because the canonical Core and Governance packages are not installed or linked inside the Trading package boundary
+- composition boundaries must parse and validate these wire values into canonical branded references before treating them as authority
+- Trading must not duplicate Core branded types to resolve this debt
+
+Boundaries preserved:
+- no real capital movement, no exchange mutation, no wallet signing, no DAO on-chain write
+- no Aragon resolver calls inside Trading
+- no Treasury capital authorization created inside Trading
+- fail-closed rejection on missing or mismatched context

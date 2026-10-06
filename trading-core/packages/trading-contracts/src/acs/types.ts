@@ -1,5 +1,6 @@
 import type { ExecutionRequest } from '../execution/types.js';
 import type { TradingExecutionContext } from '../runtime/types.js';
+import type { ExecutionAuthorityContext } from '../authority/types.js';
 
 export type AcsRuntimeCommandType =
   | 'request-execution'
@@ -42,6 +43,7 @@ export interface AcsTradingIntent {
   requestedBy: string;
   context: TradingExecutionContext;
   request: ExecutionRequest;
+  authorityContext: ExecutionAuthorityContext;
   recommendationId?: string;
 }
 

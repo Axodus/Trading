@@ -1,15 +1,18 @@
-import type {
+import {
   AcsRuntimeCommand,
   AcsRuntimeInspectionRequest,
   AcsTradingFeedbackEvent,
   AcsTradingIntent,
   AcsTradingRecommendation,
+  EXECUTION_ORDER_SUBMIT_ACTION,
   TradingEvent,
   TradingExecutionContext,
   UserRuntimeInstance,
+  executionOrderResource,
+  validateExecutionAuthorityBinding,
 } from '../../../../packages/trading-contracts/src/index.js';
 import type { TradingExecutionReceipt } from '../application/ExecutionIntent.js';
-import type { ExecutionOrchestrator } from '../application/ExecutionOrchestrator.js';
+import { ExecutionBlockedError, type ExecutionOrchestrator } from '../application/ExecutionOrchestrator.js';
 import type { RuntimeRecord, RuntimeLifecycleService } from '../runtime/RuntimeLifecycleService.js';
 import type { TradingEventBus } from '../telemetry/TradingEventBus.js';
 import type { TradingEventQueryService } from '../state/TradingEventQueryService.js';
@@ -42,6 +45,31 @@ export class AcsTradingAccessService {
 
   async requestExecution(intent: AcsTradingIntent): Promise<TradingExecutionReceipt> {
     this.assertTenantContext(intent.context);
+    if (intent.context.tenantId !== intent.tenantId) {
+      throw new ExecutionBlockedError(
+        'ACS execution tenant does not match the execution context tenant.',
+        'EXECUTION_TENANT_MISMATCH',
+      );
+    }
+    if (!intent.context.principalRef) {
+      throw new ExecutionBlockedError(
+        'ACS execution requires an explicit principal reference in the trusted execution context.',
+        'EXECUTION_PRINCIPAL_MISSING',
+      );
+    }
+    const authorityValidation = validateExecutionAuthorityBinding(intent.authorityContext, {
+      executionIntentId: intent.id,
+      tenantId: intent.tenantId,
+      principalRef: intent.requestedBy,
+      action: EXECUTION_ORDER_SUBMIT_ACTION,
+      resource: executionOrderResource(intent.request.providerId, intent.request.market),
+    });
+    if (!authorityValidation.valid) {
+      throw new ExecutionBlockedError(
+        authorityValidation.reasons.join('; '),
+        authorityValidation.code ?? 'EXECUTION_AUTHORITY_CONTEXT_MISSING',
+      );
+    }
     await this.publishAcsCommand(intent.id, intent.correlationId, intent.context, 'request-execution', intent.requestedBy);
 
     return this.deps.orchestrator.execute({
@@ -49,6 +77,7 @@ export class AcsTradingAccessService {
       correlationId: intent.correlationId,
       context: intent.context,
       request: intent.request,
+      authorityContext: intent.authorityContext,
     });
   }
 

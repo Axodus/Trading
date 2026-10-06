@@ -25,3 +25,13 @@
 - **Validation:** 9/9 deterministic cells; 170/170 Quants-Lab tests; Trading Core SAFE test graph passed; causal frame integrity passed for all symbols.
 - **Disposition:** 8 negative cells; WLD Absorption positive under unproven maker queue assumptions; all Testnet/Mainnet routing blocked.
 - **Next decision:** CTO review only. No commit or push authorized by this request.
+
+## AXODUS-TRADING-IMP-EXECUTION-AUTHORITY-CONTEXT-01
+
+- **Status:** `ACCEPTED / LOCAL_VALIDATED`; local commit authorized, push prohibited.
+- **Scope:** Canonical immutable execution authority context for the protected Trading execution boundary.
+- **Delivered:** explicit `executionIntentId`, `tenantId`, `principalRef`, `action`, `resource`, request time, optional Governance/Treasury references, validation, binding checks and ACS propagation.
+- **Preserved:** no Governance resolution, Treasury authorization, Core schema change, real order, capital movement, deployment or push.
+- **Blocker disposition:** `BLOCKER_GOV_INT_01` resolved at local implementation level; `BLOCKER_GOV_INT_02` remains open for executable Treasury authorization runtime.
+- **Integration debt:** `DEBT_TRADING_AUTH_01` remains open until composition boundaries parse wire values into canonical Core/Governance reference types without duplicating those types in Trading.
+- **Follow-up:** implement `AXODUS-TREASURY-IMP-EXECUTABLE-AUTHORITY-01`; resume `IMP-GOV-INTEGRATION-01` only after Treasury executable authority is available.

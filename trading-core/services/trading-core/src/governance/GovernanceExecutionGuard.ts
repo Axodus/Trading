@@ -1,5 +1,6 @@
 import type { ExecutionIntent } from '../application/ExecutionIntent.js';
 import type { GateDecision } from '../product/ProductExecutionGate.js';
+import { validateExecutionAuthorityContext } from '../../../../packages/trading-contracts/src/index.js';
 import { ConstitutionalStandingEvaluator, ConstitutionalStandingState } from './ConstitutionalStandingEvaluator.js';
 import { FederationExecutionEvaluator, FederationExecutionState } from './FederationExecutionEvaluator.js';
 import { TreasuryPolicyEvaluator, TreasuryPolicyState } from './TreasuryPolicyEvaluator.js';
@@ -50,6 +51,14 @@ export class GovernanceExecutionGuard {
   }
 
   async authorize(intent: ExecutionIntent): Promise<GateDecision> {
+    const authorityValidation = validateExecutionAuthorityContext(intent.authorityContext);
+    if (!authorityValidation.valid) {
+      return {
+        approved: false,
+        reason: authorityValidation.reasons.join('; '),
+      };
+    }
+
     if (intent.context.executionDomain !== 'treasury') {
       return { approved: true };
     }

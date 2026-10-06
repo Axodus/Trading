@@ -1,4 +1,10 @@
-import type { ExecutionProvider } from '../../../../packages/trading-contracts/src/index.js';
+import {
+  EXECUTION_ORDER_SUBMIT_ACTION,
+  executionOrderResource,
+  validateExecutionAuthorityContext,
+  type ExecutionAuthorityContextErrorCode,
+  type ExecutionProvider,
+} from '../../../../packages/trading-contracts/src/index.js';
 import type { ExecutionIntent, TradingExecutionReceipt } from './ExecutionIntent.js';
 import { ExecutionProviderRegistry } from '../execution/ExecutionProviderRegistry.js';
 import { GovernanceExecutionGuard } from '../governance/GovernanceExecutionGuard.js';
@@ -14,7 +20,8 @@ export class ExecutionBlockedError extends Error {
       | 'PRODUCT_GATE_BLOCKED'
       | 'GOVERNANCE_GATE_BLOCKED'
       | 'RISK_REJECTED'
-      | 'PROVIDER_NOT_FOUND',
+      | 'PROVIDER_NOT_FOUND'
+      | ExecutionAuthorityContextErrorCode,
   ) {
     super(message);
     this.name = 'ExecutionBlockedError';
@@ -160,6 +167,21 @@ export class ExecutionOrchestrator {
   }
 
   private assertValidIntent(intent: ExecutionIntent): void {
+    const authorityValidation = validateExecutionAuthorityContext(intent.authorityContext);
+    if (!authorityValidation.valid) {
+      throw new ExecutionBlockedError(
+        authorityValidation.reasons.join('; '),
+        authorityValidation.code ?? 'EXECUTION_AUTHORITY_CONTEXT_MISSING',
+      );
+    }
+    const authorityContext = intent.authorityContext;
+    if (!authorityContext) {
+      throw new ExecutionBlockedError(
+        'Execution authority context is required.',
+        'EXECUTION_AUTHORITY_CONTEXT_MISSING',
+      );
+    }
+
     if (!intent.context) {
       throw new ExecutionBlockedError('Execution context is required', 'INVALID_EXECUTION_CONTEXT');
     }
@@ -168,8 +190,58 @@ export class ExecutionOrchestrator {
       throw new ExecutionBlockedError('Execution context requires executionDomain and providerId', 'INVALID_EXECUTION_CONTEXT');
     }
 
+    if (!intent.context.tenantId) {
+      throw new ExecutionBlockedError(
+        'Execution context requires an explicit canonical tenant id.',
+        'EXECUTION_TENANT_MISSING',
+      );
+    }
+
+    if (!intent.context.principalRef) {
+      throw new ExecutionBlockedError(
+        'Execution context requires an explicit principal reference.',
+        'EXECUTION_PRINCIPAL_MISSING',
+      );
+    }
+
     if (!intent.request?.requestId || !intent.request.providerId) {
       throw new ExecutionBlockedError('Execution request requires requestId and providerId', 'INVALID_EXECUTION_CONTEXT');
+    }
+
+    if (authorityContext.executionIntentId !== intent.id) {
+      throw new ExecutionBlockedError(
+        'Execution authority context does not match the protected execution intent.',
+        'EXECUTION_AUTHORITY_CONTEXT_MISSING',
+      );
+    }
+
+    if (authorityContext.tenantId !== intent.context.tenantId) {
+      throw new ExecutionBlockedError(
+        'Execution authority tenant does not match the execution context tenant.',
+        'EXECUTION_TENANT_MISMATCH',
+      );
+    }
+
+    if (authorityContext.principalRef !== intent.context.principalRef) {
+      throw new ExecutionBlockedError(
+        'Execution authority principal does not match the execution context principal.',
+        'EXECUTION_PRINCIPAL_MISMATCH',
+      );
+    }
+
+    if (authorityContext.action !== EXECUTION_ORDER_SUBMIT_ACTION) {
+      throw new ExecutionBlockedError(
+        'Execution authority action does not match order submission.',
+        'EXECUTION_ACTION_MISMATCH',
+      );
+    }
+
+    const expectedResource = executionOrderResource(intent.request.providerId, intent.request.market);
+    if (authorityContext.resource !== expectedResource) {
+      throw new ExecutionBlockedError(
+        'Execution authority resource does not match the requested provider and market.',
+        'EXECUTION_RESOURCE_MISMATCH',
+      );
     }
   }
 }

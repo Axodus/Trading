@@ -1,5 +1,5 @@
 import type { RiskCheckResult } from '../../../../packages/trading-contracts/src/index.js';
-import type { ExecutionIntent } from '../application/ExecutionIntent.js';
+import type { RiskCheckTarget } from './RiskCheckTarget.js';
 
 export interface GlobalRiskState {
   emergencyShutdown?: boolean;
@@ -11,7 +11,7 @@ export interface GlobalRiskState {
 export class GlobalRiskGateway {
   constructor(private readonly state: GlobalRiskState = {}) {}
 
-  async check(intent: ExecutionIntent): Promise<RiskCheckResult> {
+  async check(intent: RiskCheckTarget): Promise<RiskCheckResult> {
     const violations: string[] = [];
     if (this.state.emergencyShutdown) {
       violations.push('Global emergency shutdown is active');

@@ -47,3 +47,17 @@
 - BTC double replay: 2,488 events, 459 snapshots, matching feature/markout hashes; 72.819419 and 72.269352 events/s end-to-end. Prior 12,000–25,000/s claim withdrawn.
 - Evidence: `.instructions/handoffs/Trading/20260930-microstructure-fix-closure.md` and `quants-lab/docs/market_microstructure/benchmark/`.
 - No current paper/live mutation, orders, credentials, commit or push; no live/HFT capacity claim.
+
+## 2026-10-06 — Execution Authority Context
+
+- `AXODUS-TRADING-IMP-EXECUTION-AUTHORITY-CONTEXT-01`: `ACCEPTED / LOCAL_VALIDATED`; local commit authorized, push prohibited.
+- Protected `ExecutionOrchestrator` and ACS execution ingress now require immutable execution intent, tenant, principal, action, resource and request-time context.
+- Legacy `governanceApproved` cannot satisfy the authority-context requirement.
+- Trading carries Core-compatible wire fields and references; no Core, Governance, Treasury or ACS repository changes were needed.
+- Core SDK nominal imports are intentionally deferred to composition: the Trading checkout does not install published Core SDK packages, and its TypeScript root boundary rejects direct source imports from `/opt/Axodus/Core`.
+- The `ContinuousExecutionRuntime` used by `IMP-05`/`VAL-05` remains a separately scoped validation harness with its own preflight envelope; it is not the protected `ExecutionOrchestrator` production ingress.
+- Validation: Trading contracts typecheck, Trading Core build/typecheck, focused authority tests, SAFE suite (`871 pass / 0 fail / 1 skip`), Core type/execution/treasury SDK checks, and Governance client typecheck all passed.
+- `BLOCKER_GOV_INT_01`: `RESOLVED_AT_LOCAL_IMPLEMENTATION_LEVEL`; this does not complete the executable authority chain.
+- `BLOCKER_GOV_INT_02`: `OPEN_AT_IMPLEMENTATION_LEVEL`; executable Treasury authorization runtime remains the critical dependency.
+- `DEBT_TRADING_AUTH_01`: `OPEN / INTEGRATION_HARDENING`; validated wire strings must be converted to canonical Core/Governance references at composition boundaries before becoming authoritative.
+- No order, Treasury, wallet, Governance, deployment or push action occurred.

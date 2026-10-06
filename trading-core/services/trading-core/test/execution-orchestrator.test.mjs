@@ -83,6 +83,9 @@ import {
   TradingTelemetryApi,
   TrinityObservabilityAdapter,
   TradingStateService,
+  createExecutionAuthorityContext,
+  EXECUTION_ORDER_SUBMIT_ACTION,
+  executionOrderResource,
   TenantObservabilityQueryService,
   TradingLocalE2eCommand,
   StrategyTelemetryAggregator,
@@ -106,11 +109,13 @@ import {
 } from '../../../../dist-test/trading-core/services/trading-core/src/index.js';
 
 function userIntent(overrides = {}) {
-  return {
+  const base = {
     id: 'intent-user-1',
     correlationId: 'corr-user-1',
     context: {
       executionDomain: 'user',
+      tenantId: 'tenant-user-1',
+      principalRef: 'principal:user-1',
       userId: 'user-1',
       strategyProductId: 'whiterabbit-scalper-futures',
       runtimeInstanceId: 'runtime-1',
@@ -125,16 +130,40 @@ function userIntent(overrides = {}) {
       orderType: 'market',
       quantity: '0.01',
     },
+  };
+  const intent = {
+    ...base,
     ...overrides,
+    context: {
+      ...base.context,
+      ...(overrides.context ?? {}),
+    },
+    request: {
+      ...base.request,
+      ...(overrides.request ?? {}),
+    },
+  };
+  return {
+    ...intent,
+    authorityContext: overrides.authorityContext ?? createExecutionAuthorityContext({
+      executionIntentId: intent.id,
+      tenantId: intent.context.tenantId,
+      principalRef: intent.context.principalRef,
+      action: EXECUTION_ORDER_SUBMIT_ACTION,
+      resource: executionOrderResource(intent.request.providerId, intent.request.market),
+      requestedAt: '2026-10-06T00:00:00.000Z',
+    }),
   };
 }
 
 function treasuryIntent(overrides = {}) {
-  return {
+  const base = {
     id: 'intent-treasury-1',
     correlationId: 'corr-treasury-1',
     context: {
       executionDomain: 'treasury',
+      tenantId: 'tenant-dao-1',
+      principalRef: 'principal:treasury-operator-1',
       daoId: 'dao-1',
       federationId: 'federation-1',
       providerId: 'simulation',
@@ -148,7 +177,29 @@ function treasuryIntent(overrides = {}) {
       orderType: 'market',
       quantity: '0.25',
     },
+  };
+  const intent = {
+    ...base,
     ...overrides,
+    context: {
+      ...base.context,
+      ...(overrides.context ?? {}),
+    },
+    request: {
+      ...base.request,
+      ...(overrides.request ?? {}),
+    },
+  };
+  return {
+    ...intent,
+    authorityContext: overrides.authorityContext ?? createExecutionAuthorityContext({
+      executionIntentId: intent.id,
+      tenantId: intent.context.tenantId,
+      principalRef: intent.context.principalRef,
+      action: EXECUTION_ORDER_SUBMIT_ACTION,
+      resource: executionOrderResource(intent.request.providerId, intent.request.market),
+      requestedAt: '2026-10-06T00:00:00.000Z',
+    }),
   };
 }
 
@@ -370,7 +421,7 @@ describe('ExecutionOrchestrator', () => {
       riskApproved: true,
     });
 
-    const invalidIntent = {
+    const invalidIntentWithoutAuthority = {
       id: 'intent-invalid-1',
       correlationId: 'corr-invalid-1',
       request: {
@@ -383,7 +434,30 @@ describe('ExecutionOrchestrator', () => {
       },
     };
 
-    await assertBlocked(orchestrator.execute(invalidIntent), 'INVALID_EXECUTION_CONTEXT');
+    await assertBlocked(orchestrator.execute(invalidIntentWithoutAuthority), 'EXECUTION_AUTHORITY_CONTEXT_MISSING');
+
+    const invalidIntentWithoutContext = {
+      id: 'intent-invalid-2',
+      correlationId: 'corr-invalid-2',
+      request: {
+        requestId: 'request-invalid-2',
+        providerId: 'simulation',
+        market: 'BTC-USDT',
+        side: 'buy',
+        orderType: 'market',
+        quantity: '0.01',
+      },
+      authorityContext: createExecutionAuthorityContext({
+        executionIntentId: 'intent-invalid-2',
+        tenantId: 'tenant-test',
+        principalRef: 'principal:test',
+        action: EXECUTION_ORDER_SUBMIT_ACTION,
+        resource: executionOrderResource('simulation', 'BTC-USDT'),
+        requestedAt: '2026-10-06T00:00:00.000Z',
+      }),
+    };
+
+    await assertBlocked(orchestrator.execute(invalidIntentWithoutContext), 'INVALID_EXECUTION_CONTEXT');
     assert.equal(simulationProvider.receivedExecutions.length, 0);
   });
 
@@ -3866,6 +3940,10 @@ describe('ACS trading access boundary', () => {
     const intent = userIntent({
       id: 'acs-intent-1',
       correlationId: 'corr-acs-1',
+      context: {
+        tenantId: 'tenant-1',
+        principalRef: 'acs-operator-1',
+      },
       request: {
         ...userIntent().request,
         requestId: 'request-acs-1',
@@ -3878,6 +3956,7 @@ describe('ACS trading access boundary', () => {
       requestedBy: 'acs-operator-1',
       context: intent.context,
       request: intent.request,
+      authorityContext: intent.authorityContext,
       ...overrides,
     };
   }

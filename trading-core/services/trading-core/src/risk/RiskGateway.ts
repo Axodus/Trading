@@ -1,8 +1,8 @@
 import type { RiskCheckResult } from '../../../../packages/trading-contracts/src/index.js';
-import type { ExecutionIntent } from '../application/ExecutionIntent.js';
 import { GlobalRiskGateway, GlobalRiskState } from './GlobalRiskGateway.js';
 import { TreasuryRiskGateway, TreasuryRiskState } from './TreasuryRiskGateway.js';
 import { UserRuntimeRiskGateway, UserRuntimeRiskState } from './UserRuntimeRiskGateway.js';
+import type { RiskCheckTarget } from './RiskCheckTarget.js';
 
 export interface RiskGatewayState {
   global?: GlobalRiskState;
@@ -49,7 +49,7 @@ export class RiskGateway {
     this.approveByDefault = false;
   }
 
-  async check(intent: ExecutionIntent): Promise<RiskCheckResult> {
+  async check(intent: RiskCheckTarget): Promise<RiskCheckResult> {
     if (this.globalRiskGateway || this.treasuryRiskGateway || this.userRuntimeRiskGateway) {
       const violations: string[] = [];
       for (const gateway of [

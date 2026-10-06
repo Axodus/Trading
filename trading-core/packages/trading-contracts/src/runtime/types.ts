@@ -26,6 +26,8 @@ export interface ExecutionLimits {
 
 export interface TradingExecutionContext {
   executionDomain: ExecutionDomain;
+  tenantId?: string;
+  principalRef?: string;
   daoId?: string;
   federationId?: string;
   userId?: string;

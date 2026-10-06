@@ -1,5 +1,5 @@
 import type { RiskCheckResult } from '../../../../packages/trading-contracts/src/index.js';
-import type { ExecutionIntent } from '../application/ExecutionIntent.js';
+import type { RiskCheckTarget } from './RiskCheckTarget.js';
 
 export interface UserRuntimeRiskState {
   requestedUserExposure?: number;
@@ -13,7 +13,7 @@ export interface UserRuntimeRiskState {
 export class UserRuntimeRiskGateway {
   constructor(private readonly state: UserRuntimeRiskState = {}) {}
 
-  async check(intent: ExecutionIntent): Promise<RiskCheckResult> {
+  async check(intent: RiskCheckTarget): Promise<RiskCheckResult> {
     if (intent.context.executionDomain !== 'user') {
       return { requestId: intent.request.requestId, status: 'approved', violations: [] };
     }
