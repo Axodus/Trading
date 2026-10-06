@@ -101,3 +101,31 @@ export interface TradingIntent {
   expiresAt: string;
   evidenceRefs: readonly string[];
 }
+
+export type GovernanceResolutionDecision = 'ALLOW' | 'DENY' | 'UNRESOLVED';
+export type GovernanceFinalityState = 'OBSERVED' | 'CONFIRMED' | 'FINALIZED' | 'REORGED' | 'UNRESOLVED';
+export type GovernanceFreshnessState = 'FRESH' | 'STALE' | 'UNKNOWN';
+
+export interface GovernanceAuthorityReference {
+  readonly resolutionId: string;
+  readonly resolutionDigest: string;
+  readonly decision: GovernanceResolutionDecision;
+  readonly evaluatedAt: string;
+  readonly tenantId: string;
+  readonly organizationId: string;
+  readonly governanceInstanceId: string;
+  readonly implementationBindingRevision: number;
+  readonly action: string;
+  readonly resource: string;
+  readonly policyRevisionRefs: readonly string[];
+  readonly permissionMappingRevision?: number;
+  readonly authoritySourceRefs: readonly string[];
+  readonly sourceStateDigest: string;
+  readonly finalityState: GovernanceFinalityState;
+  readonly freshnessState: GovernanceFreshnessState;
+  readonly evidenceRefs: readonly string[];
+  readonly validFrom?: string;
+  readonly validUntil?: string;
+  readonly reasonCodes: readonly string[];
+  readonly resolverRevision: string;
+}
