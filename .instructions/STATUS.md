@@ -61,3 +61,9 @@
 - `BLOCKER_GOV_INT_02`: `OPEN_AT_IMPLEMENTATION_LEVEL`; executable Treasury authorization runtime remains the critical dependency.
 - `DEBT_TRADING_AUTH_01`: `OPEN / INTEGRATION_HARDENING`; validated wire strings must be converted to canonical Core/Governance references at composition boundaries before becoming authoritative.
 - No order, Treasury, wallet, Governance, deployment or push action occurred.
+
+## 2026-11-18 — DEV Futures P0
+
+- `AXODUS-TRADING-REQ-DEV-OPERATION-PLANNING-01`: `P0_CTO_REVIEW_PENDING / REAL_EXECUTION_HOLD`. The [route inventory and contract proposals](reports/AXODUS-TRADING-DEV-FUTURES-P0.md) cover a single assisted Futures probe, requesting 50x, isolated margin and the smallest valid entry.
+- [Account feasibility](reports/AXODUS-TRADING-DEV-FUTURES-P0-RISK.md) remains blocked pending exact contract, eligibility, account evidence and approved loss envelope. Runtime implementation and all financial execution remain outside the P0 authorization.
+- Owner reported a personal Binance account with approximately USD 4 for testing and excluded ONEUSDT/BTCUSDT. Public-market observations are informational only; account status, applicable jurisdiction, Futures collateral, 50x eligibility and loss limit remain unverified.

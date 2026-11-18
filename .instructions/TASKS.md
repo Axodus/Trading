@@ -35,3 +35,9 @@
 - **Blocker disposition:** `BLOCKER_GOV_INT_01` resolved at local implementation level; `BLOCKER_GOV_INT_02` remains open for executable Treasury authorization runtime.
 - **Integration debt:** `DEBT_TRADING_AUTH_01` remains open until composition boundaries parse wire values into canonical Core/Governance reference types without duplicating those types in Trading.
 - **Follow-up:** implement `AXODUS-TREASURY-IMP-EXECUTABLE-AUTHORITY-01`; resume `IMP-GOV-INTEGRATION-01` only after Treasury executable authority is available.
+
+## AXODUS-TRADING-REQ-DEV-OPERATION-PLANNING-01 — Futures P0
+
+- **Status:** `P0_CTO_REVIEW_PENDING / REAL_EXECUTION_HOLD`.
+- **Delivered:** [static route inventory and contract proposals](reports/AXODUS-TRADING-DEV-FUTURES-P0.md), plus [account feasibility worksheet](reports/AXODUS-TRADING-DEV-FUTURES-P0-RISK.md).
+- **Next decision:** Binance personal account reported; select exact contract excluding ONEUSDT/BTCUSDT and establish jurisdiction, authorized account evidence, usable Futures collateral, capital/risk envelope and host disposition before CTO review. Public filters are not account eligibility. P1/P2/P3 implementation and the real-capital DEV-M0 gate require separate authority.
