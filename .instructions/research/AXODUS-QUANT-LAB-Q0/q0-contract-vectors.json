@@ -1,0 +1,1216 @@
+{
+  "description": "Synthetic contract vectors only; identity digests map to fixture evidence, not exchange or validation artifacts.",
+  "payloads": {
+    "manifest": {
+      "schemaVersion": "1",
+      "dataset": {
+        "id": "fixture:microprice",
+        "revision": "v1",
+        "contentDigest": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+      },
+      "origin": "SYNTHETIC_FIXTURE",
+      "instrument": {
+        "venue": "fixture",
+        "marketType": "PERPETUAL",
+        "symbol": "TESTUSDT",
+        "quoteCurrency": "USDT"
+      },
+      "coverage": {
+        "start": "2024-01-01T00:00:00.000Z",
+        "end": "2024-01-01T00:00:02.001Z"
+      },
+      "resolution": "EVENT",
+      "dataSchemaId": "fixture.market-state.v1",
+      "featureSchemaId": "microstructure-v1.1",
+      "featureIds": [
+        "best_ask",
+        "best_bid",
+        "book_validity",
+        "microprice_displacement_bps",
+        "microprice_valid",
+        "signed_queue_imbalance_L1",
+        "spread_bps"
+      ],
+      "sourceRef": "fixture:q0",
+      "lineageRefs": [
+        "fixture:q0"
+      ],
+      "quality": "VERIFIED",
+      "qualityEvidence": {
+        "id": "fixture:quality",
+        "schemaId": "fixture.quality.v1",
+        "digest": "13a96fd527ac1a46ec30ea1b369e7ff1350f2944756258e9e68f3f023e966d6a"
+      },
+      "partitions": [
+        {
+          "window": {
+            "start": "2024-01-01T00:00:00.000Z",
+            "end": "2024-01-01T00:00:02.001Z"
+          },
+          "artifact": {
+            "id": "fixture:states",
+            "schemaId": "fixture.market-state.v1",
+            "digest": "2949a6ef7ae8c3fa5d60ad5acb0478a379de41507efae60f60142b7550a6cb57"
+          },
+          "rowCount": 4
+        }
+      ],
+      "protectedWindows": []
+    },
+    "specification": {
+      "schemaVersion": "1",
+      "kind": "EXPLORATORY_BACKTEST",
+      "executionMode": "OFFLINE_SIMULATION",
+      "strategy": {
+        "id": "microstructure.microprice_displacement.scalper",
+        "revision": "microprice-disp-v1",
+        "implementationDigest": "1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770"
+      },
+      "engine": {
+        "id": "quants-lab.simulation",
+        "revision": "fixture-v1",
+        "adapterRevision": "fixture-v1",
+        "runtimeDigest": "7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0"
+      },
+      "dataset": {
+        "id": "fixture:microprice",
+        "revision": "v1",
+        "contentDigest": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+      },
+      "instrument": {
+        "venue": "fixture",
+        "marketType": "PERPETUAL",
+        "symbol": "TESTUSDT",
+        "quoteCurrency": "USDT"
+      },
+      "window": {
+        "start": "2024-01-01T00:00:00.000Z",
+        "end": "2024-01-01T00:00:02.001Z"
+      },
+      "inputWindow": {
+        "start": "2024-01-01T00:00:00.000Z",
+        "end": "2024-01-01T00:00:02.001Z"
+      },
+      "validationRegistryDigest": "94bc823faca7bccc5f2e1cb6f9b4a2b637ab8e948eff5f375a3b288cceb2514a",
+      "datasetManifestDigest": "4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59",
+      "effectiveParameters": {
+        "long_displacement_threshold_bps": "0.4",
+        "short_displacement_threshold_bps": "-1",
+        "long_queue_imbalance_threshold": "0.2",
+        "short_queue_imbalance_threshold": "-0.2",
+        "max_spread_bps": "5",
+        "quantity_or_notional": "1",
+        "holding_period_ms": 1000
+      },
+      "execution": {
+        "profileId": "ql-microprice-taker-v1",
+        "profileRevision": "1",
+        "effectiveAssumptions": {
+          "initialCapital": "1000",
+          "feeBps": "5",
+          "slippageBps": "1",
+          "latencySteps": 1,
+          "spreadBps": "0",
+          "fillRatio": "1",
+          "maxLeverage": "1"
+        }
+      },
+      "specificationDigest": "17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7"
+    },
+    "job": {
+      "schemaVersion": "1",
+      "jobId": "job:fixture-a",
+      "principalRef": "researcher:fixture",
+      "origin": "UI",
+      "idempotencyKey": "fixture-a",
+      "specification": {
+        "schemaVersion": "1",
+        "kind": "EXPLORATORY_BACKTEST",
+        "executionMode": "OFFLINE_SIMULATION",
+        "strategy": {
+          "id": "microstructure.microprice_displacement.scalper",
+          "revision": "microprice-disp-v1",
+          "implementationDigest": "1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770"
+        },
+        "engine": {
+          "id": "quants-lab.simulation",
+          "revision": "fixture-v1",
+          "adapterRevision": "fixture-v1",
+          "runtimeDigest": "7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0"
+        },
+        "dataset": {
+          "id": "fixture:microprice",
+          "revision": "v1",
+          "contentDigest": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+        },
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "window": {
+          "start": "2024-01-01T00:00:00.000Z",
+          "end": "2024-01-01T00:00:02.001Z"
+        },
+        "inputWindow": {
+          "start": "2024-01-01T00:00:00.000Z",
+          "end": "2024-01-01T00:00:02.001Z"
+        },
+        "validationRegistryDigest": "94bc823faca7bccc5f2e1cb6f9b4a2b637ab8e948eff5f375a3b288cceb2514a",
+        "datasetManifestDigest": "4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59",
+        "effectiveParameters": {
+          "long_displacement_threshold_bps": "0.4",
+          "short_displacement_threshold_bps": "-1",
+          "long_queue_imbalance_threshold": "0.2",
+          "short_queue_imbalance_threshold": "-0.2",
+          "max_spread_bps": "5",
+          "quantity_or_notional": "1",
+          "holding_period_ms": 1000
+        },
+        "execution": {
+          "profileId": "ql-microprice-taker-v1",
+          "profileRevision": "1",
+          "effectiveAssumptions": {
+            "initialCapital": "1000",
+            "feeBps": "5",
+            "slippageBps": "1",
+            "latencySteps": 1,
+            "spreadBps": "0",
+            "fillRatio": "1",
+            "maxLeverage": "1"
+          }
+        },
+        "specificationDigest": "17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7"
+      },
+      "submittedAt": "2026-11-18T12:00:00.000Z",
+      "state": {
+        "status": "SUCCEEDED",
+        "startedAt": "2026-11-18T12:00:01.000Z",
+        "finishedAt": "2026-11-18T12:00:02.000Z",
+        "result": {
+          "id": "result:fixture-a",
+          "schemaId": "quant-lab.result.v1",
+          "digest": "caf76e90e6465e1f960c222f6c4ba622517498064993a8fda055377deba74725"
+        }
+      }
+    },
+    "result": {
+      "schemaVersion": "1",
+      "resultId": "result:fixture-a",
+      "dataOrigin": "SYNTHETIC_FIXTURE",
+      "provenance": {
+        "origin": "LAB_JOB",
+        "kind": "EXPLORATORY_BACKTEST",
+        "jobId": "job:fixture-a",
+        "specification": {
+          "schemaVersion": "1",
+          "kind": "EXPLORATORY_BACKTEST",
+          "executionMode": "OFFLINE_SIMULATION",
+          "strategy": {
+            "id": "microstructure.microprice_displacement.scalper",
+            "revision": "microprice-disp-v1",
+            "implementationDigest": "1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770"
+          },
+          "engine": {
+            "id": "quants-lab.simulation",
+            "revision": "fixture-v1",
+            "adapterRevision": "fixture-v1",
+            "runtimeDigest": "7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0"
+          },
+          "dataset": {
+            "id": "fixture:microprice",
+            "revision": "v1",
+            "contentDigest": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+          },
+          "instrument": {
+            "venue": "fixture",
+            "marketType": "PERPETUAL",
+            "symbol": "TESTUSDT",
+            "quoteCurrency": "USDT"
+          },
+          "window": {
+            "start": "2024-01-01T00:00:00.000Z",
+            "end": "2024-01-01T00:00:02.001Z"
+          },
+          "inputWindow": {
+            "start": "2024-01-01T00:00:00.000Z",
+            "end": "2024-01-01T00:00:02.001Z"
+          },
+          "validationRegistryDigest": "94bc823faca7bccc5f2e1cb6f9b4a2b637ab8e948eff5f375a3b288cceb2514a",
+          "datasetManifestDigest": "4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59",
+          "effectiveParameters": {
+            "long_displacement_threshold_bps": "0.4",
+            "short_displacement_threshold_bps": "-1",
+            "long_queue_imbalance_threshold": "0.2",
+            "short_queue_imbalance_threshold": "-0.2",
+            "max_spread_bps": "5",
+            "quantity_or_notional": "1",
+            "holding_period_ms": 1000
+          },
+          "execution": {
+            "profileId": "ql-microprice-taker-v1",
+            "profileRevision": "1",
+            "effectiveAssumptions": {
+              "initialCapital": "1000",
+              "feeBps": "5",
+              "slippageBps": "1",
+              "latencySteps": 1,
+              "spreadBps": "0",
+              "fillRatio": "1",
+              "maxLeverage": "1"
+            }
+          },
+          "specificationDigest": "17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7"
+        }
+      },
+      "strategy": {
+        "id": "microstructure.microprice_displacement.scalper",
+        "revision": "microprice-disp-v1",
+        "implementationDigest": "1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770"
+      },
+      "engine": {
+        "id": "quants-lab.simulation",
+        "revision": "fixture-v1",
+        "adapterRevision": "fixture-v1",
+        "runtimeDigest": "7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0"
+      },
+      "dataset": {
+        "id": "fixture:microprice",
+        "revision": "v1",
+        "contentDigest": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+      },
+      "instrument": {
+        "venue": "fixture",
+        "marketType": "PERPETUAL",
+        "symbol": "TESTUSDT",
+        "quoteCurrency": "USDT"
+      },
+      "window": {
+        "start": "2024-01-01T00:00:00.000Z",
+        "end": "2024-01-01T00:00:02.001Z"
+      },
+      "nativeEvidence": [
+        {
+          "id": "fixture:native",
+          "schemaId": "fixture.run.v1",
+          "digest": "39f0238375d0a8c8f6124a1c4fd6bf48412cc27d53546b2d49fc1ad35054ae6c"
+        }
+      ],
+      "limitations": [],
+      "positionAtEnd": "FLAT",
+      "economics": {
+        "reportingUnit": {
+          "kind": "ASSET",
+          "code": "USDT"
+        },
+        "realizedCoverage": "COMPLETE",
+        "grossBasis": "SIMULATED_FILL_PRICES",
+        "realizedGross": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.9599"
+        },
+        "realizedNet": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.85940005"
+        },
+        "realizedFees": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.10049995"
+        },
+        "totalFillFees": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.10049995"
+        },
+        "spreadCost": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.02"
+        },
+        "slippageCost": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "0.0201"
+        },
+        "netFundingCost": {
+          "status": "NOT_MODELED",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "reason": "PROFILE_HAS_NO_FUNDING"
+        },
+        "initialEquity": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "1000"
+        },
+        "finalEquity": {
+          "status": "KNOWN",
+          "unit": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "value": "1000.85940005"
+        },
+        "costPlacement": {
+          "fees": "APPLIED_AFTER_GROSS",
+          "spread": "IN_GROSS",
+          "slippage": "IN_GROSS",
+          "funding": "NOT_MODELED"
+        }
+      },
+      "ledgers": {
+        "orders": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:orders",
+            "schemaId": "quant-lab.orders.v1",
+            "digest": "415b920decceda15c73e5787e480c3e631945b346b1130178027425ff60a6470"
+          },
+          "rowCount": 2
+        },
+        "fills": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:fills",
+            "schemaId": "quant-lab.fills.v1",
+            "digest": "897ba0d39b4f17cd4d47a9057a6cecfff58f6fb9e6f857a824e3c34dbba0155e"
+          },
+          "rowCount": 2
+        },
+        "closedTrades": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:closed-trades",
+            "schemaId": "quant-lab.closed-trades.v1",
+            "digest": "6fd5a753787f8834394f14ce0cc26f0eb5a72d97fa751c0c3aa16441d7505594"
+          },
+          "rowCount": 1
+        }
+      },
+      "series": {
+        "GROSS_REALIZED": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:series.gross-realized",
+            "schemaId": "quant-lab.series.gross-realized.v1",
+            "digest": "183f6e7426114d527c157d24cb15425d2d2748efe0e1b4732cfd9bf1059471bc"
+          },
+          "rowCount": 1
+        },
+        "NET_REALIZED": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:series.net-realized",
+            "schemaId": "quant-lab.series.net-realized.v1",
+            "digest": "bff120dc76687b85b5e9edecf0646992034d49b1498bd71eb8b20ca03680e0dd"
+          },
+          "rowCount": 1
+        },
+        "CUMULATIVE_FEES": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:series.cumulative-fees",
+            "schemaId": "quant-lab.series.cumulative-fees.v1",
+            "digest": "cb8a967a69c77d6c3aedd7db4291e44844f9a88bb7cf21f273f604cce9dd983d"
+          },
+          "rowCount": 2
+        },
+        "EQUITY_MTM": {
+          "status": "AVAILABLE",
+          "artifact": {
+            "id": "fixture:series.equity-mtm",
+            "schemaId": "quant-lab.series.equity-mtm.v1",
+            "digest": "70ac0f5f2492aea4a1375c232b93fc9819e041e3caab10e04d48b48393df93f6"
+          },
+          "rowCount": 4
+        }
+      },
+      "replayDigest": "6d9c03ebd433daafc4f7a85af226f6d241779be39f628b5b1356e67d30d72f34",
+      "resultDigest": "caf76e90e6465e1f960c222f6c4ba622517498064993a8fda055377deba74725"
+    },
+    "artifacts": {
+      "orders": {
+        "schemaId": "quant-lab.orders.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:00.500Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "order:entry"
+            ],
+            "orderId": "order:entry",
+            "side": "BUY",
+            "quantity": {
+              "asset": "TEST",
+              "value": "1"
+            },
+            "status": "FILLED"
+          },
+          {
+            "ordinal": 1,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "order:exit"
+            ],
+            "orderId": "order:exit",
+            "side": "SELL",
+            "quantity": {
+              "asset": "TEST",
+              "value": "1"
+            },
+            "status": "FILLED"
+          }
+        ]
+      },
+      "fills": {
+        "schemaId": "quant-lab.fills.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:00.500Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "fill:entry"
+            ],
+            "fillId": "fill:entry",
+            "orderId": "order:entry",
+            "side": "BUY",
+            "quantity": {
+              "asset": "TEST",
+              "value": "1"
+            },
+            "price": {
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "100.02"
+            },
+            "fees": [
+              {
+                "original": {
+                  "unit": {
+                    "kind": "ASSET",
+                    "code": "USDT"
+                  },
+                  "value": "0.05001"
+                },
+                "reporting": {
+                  "status": "KNOWN",
+                  "unit": {
+                    "kind": "ASSET",
+                    "code": "USDT"
+                  },
+                  "value": "0.05001"
+                }
+              }
+            ],
+            "feeCoverage": "COMPLETE",
+            "spreadCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.01"
+            },
+            "slippageCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.01"
+            }
+          },
+          {
+            "ordinal": 1,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "fill:exit"
+            ],
+            "fillId": "fill:exit",
+            "orderId": "order:exit",
+            "side": "SELL",
+            "quantity": {
+              "asset": "TEST",
+              "value": "1"
+            },
+            "price": {
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "100.9799"
+            },
+            "fees": [
+              {
+                "original": {
+                  "unit": {
+                    "kind": "ASSET",
+                    "code": "USDT"
+                  },
+                  "value": "0.05048995"
+                },
+                "reporting": {
+                  "status": "KNOWN",
+                  "unit": {
+                    "kind": "ASSET",
+                    "code": "USDT"
+                  },
+                  "value": "0.05048995"
+                }
+              }
+            ],
+            "feeCoverage": "COMPLETE",
+            "spreadCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.01"
+            },
+            "slippageCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.0101"
+            }
+          }
+        ]
+      },
+      "closed-trades": {
+        "schemaId": "quant-lab.closed-trades.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "trade:fixture"
+            ],
+            "tradeId": "trade:fixture",
+            "side": "LONG",
+            "openedAt": "2024-01-01T00:00:00.500Z",
+            "quantity": {
+              "asset": "TEST",
+              "value": "1"
+            },
+            "fillIds": [
+              "fill:entry",
+              "fill:exit"
+            ],
+            "entryPrice": {
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "100.02"
+            },
+            "exitPrice": {
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "100.9799"
+            },
+            "grossBasis": "SIMULATED_FILL_PRICES",
+            "gross": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.9599"
+            },
+            "fees": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.10049995"
+            },
+            "spreadCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.02"
+            },
+            "slippageCost": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.0201"
+            },
+            "netFundingCost": {
+              "status": "NOT_MODELED",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "reason": "PROFILE_HAS_NO_FUNDING"
+            },
+            "net": {
+              "status": "KNOWN",
+              "unit": {
+                "kind": "ASSET",
+                "code": "USDT"
+              },
+              "value": "0.85940005"
+            }
+          }
+        ]
+      },
+      "series.gross-realized": {
+        "schemaId": "quant-lab.series.gross-realized.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "DERIVED_FROM_LEDGER",
+            "sourceRowIds": [
+              "trade:fixture"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.9599",
+            "semantic": "GROSS_REALIZED",
+            "recognition": "CLOSED_TRADE_FINALIZATION"
+          }
+        ]
+      },
+      "series.net-realized": {
+        "schemaId": "quant-lab.series.net-realized.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "DERIVED_FROM_LEDGER",
+            "sourceRowIds": [
+              "trade:fixture"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.85940005",
+            "semantic": "NET_REALIZED",
+            "recognition": "CLOSED_TRADE_FINALIZATION"
+          }
+        ]
+      },
+      "series.cumulative-fees": {
+        "schemaId": "quant-lab.series.cumulative-fees.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:00.500Z",
+            "source": "DERIVED_FROM_LEDGER",
+            "sourceRowIds": [
+              "fill:entry"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.05001",
+            "semantic": "CUMULATIVE_FEES",
+            "recognition": "FILL"
+          },
+          {
+            "ordinal": 1,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "DERIVED_FROM_LEDGER",
+            "sourceRowIds": [
+              "fill:exit"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.10049995",
+            "semantic": "CUMULATIVE_FEES",
+            "recognition": "FILL"
+          }
+        ]
+      },
+      "series.equity-mtm": {
+        "schemaId": "quant-lab.series.equity-mtm.v1",
+        "instrument": {
+          "venue": "fixture",
+          "marketType": "PERPETUAL",
+          "symbol": "TESTUSDT",
+          "quoteCurrency": "USDT"
+        },
+        "dataOrigin": "SYNTHETIC_FIXTURE",
+        "rows": [
+          {
+            "ordinal": 0,
+            "time": "2024-01-01T00:00:00.000Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "mark:0"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "1000",
+            "semantic": "EQUITY_MTM",
+            "recognition": "MARK"
+          },
+          {
+            "ordinal": 1,
+            "time": "2024-01-01T00:00:00.500Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "mark:1"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "999.92999",
+            "semantic": "EQUITY_MTM",
+            "recognition": "MARK"
+          },
+          {
+            "ordinal": 2,
+            "time": "2024-01-01T00:00:01.500Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "mark:2"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "999.92999",
+            "semantic": "EQUITY_MTM",
+            "recognition": "MARK"
+          },
+          {
+            "ordinal": 3,
+            "time": "2024-01-01T00:00:02.000Z",
+            "source": "ENGINE_RECORDED",
+            "sourceRowIds": [
+              "mark:3"
+            ],
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "1000.85940005",
+            "semantic": "EQUITY_MTM",
+            "recognition": "MARK"
+          }
+        ]
+      }
+    }
+  },
+  "hashVectors": {
+    "datasetContent": {
+      "canonicalUtf8": "[{\"digest\":\"2949a6ef7ae8c3fa5d60ad5acb0478a379de41507efae60f60142b7550a6cb57\",\"rowCount\":4,\"schemaId\":\"fixture.market-state.v1\",\"window\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"}}]",
+      "sha256": "b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c"
+    },
+    "datasetManifest": {
+      "canonicalUtf8": "{\"coverage\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"},\"dataSchemaId\":\"fixture.market-state.v1\",\"dataset\":{\"contentDigest\":\"b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c\",\"id\":\"fixture:microprice\",\"revision\":\"v1\"},\"featureIds\":[\"best_ask\",\"best_bid\",\"book_validity\",\"microprice_displacement_bps\",\"microprice_valid\",\"signed_queue_imbalance_L1\",\"spread_bps\"],\"featureSchemaId\":\"microstructure-v1.1\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"lineageRefs\":[\"fixture:q0\"],\"origin\":\"SYNTHETIC_FIXTURE\",\"partitions\":[{\"artifact\":{\"digest\":\"2949a6ef7ae8c3fa5d60ad5acb0478a379de41507efae60f60142b7550a6cb57\",\"id\":\"fixture:states\",\"schemaId\":\"fixture.market-state.v1\"},\"rowCount\":4,\"window\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"}}],\"protectedWindows\":[],\"quality\":\"VERIFIED\",\"qualityEvidence\":{\"digest\":\"13a96fd527ac1a46ec30ea1b369e7ff1350f2944756258e9e68f3f023e966d6a\",\"id\":\"fixture:quality\",\"schemaId\":\"fixture.quality.v1\"},\"resolution\":\"EVENT\",\"schemaVersion\":\"1\",\"sourceRef\":\"fixture:q0\"}",
+      "sha256": "4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59"
+    },
+    "specification": {
+      "canonicalUtf8": "{\"dataset\":{\"contentDigest\":\"b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c\",\"id\":\"fixture:microprice\",\"revision\":\"v1\"},\"datasetManifestDigest\":\"4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59\",\"effectiveParameters\":{\"holding_period_ms\":1000,\"long_displacement_threshold_bps\":\"0.4\",\"long_queue_imbalance_threshold\":\"0.2\",\"max_spread_bps\":\"5\",\"quantity_or_notional\":\"1\",\"short_displacement_threshold_bps\":\"-1\",\"short_queue_imbalance_threshold\":\"-0.2\"},\"engine\":{\"adapterRevision\":\"fixture-v1\",\"id\":\"quants-lab.simulation\",\"revision\":\"fixture-v1\",\"runtimeDigest\":\"7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0\"},\"execution\":{\"effectiveAssumptions\":{\"feeBps\":\"5\",\"fillRatio\":\"1\",\"initialCapital\":\"1000\",\"latencySteps\":1,\"maxLeverage\":\"1\",\"slippageBps\":\"1\",\"spreadBps\":\"0\"},\"profileId\":\"ql-microprice-taker-v1\",\"profileRevision\":\"1\"},\"executionMode\":\"OFFLINE_SIMULATION\",\"inputWindow\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"},\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"kind\":\"EXPLORATORY_BACKTEST\",\"schemaVersion\":\"1\",\"strategy\":{\"id\":\"microstructure.microprice_displacement.scalper\",\"implementationDigest\":\"1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770\",\"revision\":\"microprice-disp-v1\"},\"validationRegistryDigest\":\"94bc823faca7bccc5f2e1cb6f9b4a2b637ab8e948eff5f375a3b288cceb2514a\",\"window\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"}}",
+      "sha256": "17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7"
+    },
+    "result": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"dataset\":{\"contentDigest\":\"b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c\",\"id\":\"fixture:microprice\",\"revision\":\"v1\"},\"economics\":{\"costPlacement\":{\"fees\":\"APPLIED_AFTER_GROSS\",\"funding\":\"NOT_MODELED\",\"slippage\":\"IN_GROSS\",\"spread\":\"IN_GROSS\"},\"finalEquity\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000.85940005\"},\"grossBasis\":\"SIMULATED_FILL_PRICES\",\"initialEquity\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000\"},\"netFundingCost\":{\"reason\":\"PROFILE_HAS_NO_FUNDING\",\"status\":\"NOT_MODELED\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"}},\"realizedCoverage\":\"COMPLETE\",\"realizedFees\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"},\"realizedGross\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.9599\"},\"realizedNet\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.85940005\"},\"reportingUnit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"slippageCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.0201\"},\"spreadCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.02\"},\"totalFillFees\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"}},\"engine\":{\"adapterRevision\":\"fixture-v1\",\"id\":\"quants-lab.simulation\",\"revision\":\"fixture-v1\",\"runtimeDigest\":\"7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0\"},\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"ledgers\":{\"closedTrades\":{\"artifact\":{\"digest\":\"6fd5a753787f8834394f14ce0cc26f0eb5a72d97fa751c0c3aa16441d7505594\",\"id\":\"fixture:closed-trades\",\"schemaId\":\"quant-lab.closed-trades.v1\"},\"rowCount\":1,\"status\":\"AVAILABLE\"},\"fills\":{\"artifact\":{\"digest\":\"897ba0d39b4f17cd4d47a9057a6cecfff58f6fb9e6f857a824e3c34dbba0155e\",\"id\":\"fixture:fills\",\"schemaId\":\"quant-lab.fills.v1\"},\"rowCount\":2,\"status\":\"AVAILABLE\"},\"orders\":{\"artifact\":{\"digest\":\"415b920decceda15c73e5787e480c3e631945b346b1130178027425ff60a6470\",\"id\":\"fixture:orders\",\"schemaId\":\"quant-lab.orders.v1\"},\"rowCount\":2,\"status\":\"AVAILABLE\"}},\"limitations\":[],\"nativeEvidence\":[{\"digest\":\"39f0238375d0a8c8f6124a1c4fd6bf48412cc27d53546b2d49fc1ad35054ae6c\",\"id\":\"fixture:native\",\"schemaId\":\"fixture.run.v1\"}],\"positionAtEnd\":\"FLAT\",\"provenance\":{\"jobId\":\"job:fixture-a\",\"kind\":\"EXPLORATORY_BACKTEST\",\"origin\":\"LAB_JOB\",\"specification\":{\"dataset\":{\"contentDigest\":\"b927b147e654f88d513b7df956be2583922d8da8ff3161ebed46751cb8dfe03c\",\"id\":\"fixture:microprice\",\"revision\":\"v1\"},\"datasetManifestDigest\":\"4cb1eee7c68f28687605f6aaf4f17260b221262f2fb59d91a81d06b4685bbe59\",\"effectiveParameters\":{\"holding_period_ms\":1000,\"long_displacement_threshold_bps\":\"0.4\",\"long_queue_imbalance_threshold\":\"0.2\",\"max_spread_bps\":\"5\",\"quantity_or_notional\":\"1\",\"short_displacement_threshold_bps\":\"-1\",\"short_queue_imbalance_threshold\":\"-0.2\"},\"engine\":{\"adapterRevision\":\"fixture-v1\",\"id\":\"quants-lab.simulation\",\"revision\":\"fixture-v1\",\"runtimeDigest\":\"7c63829baa2f5451c23789c5085b4de0627e5208b6c4bb2483217998f8cc38f0\"},\"execution\":{\"effectiveAssumptions\":{\"feeBps\":\"5\",\"fillRatio\":\"1\",\"initialCapital\":\"1000\",\"latencySteps\":1,\"maxLeverage\":\"1\",\"slippageBps\":\"1\",\"spreadBps\":\"0\"},\"profileId\":\"ql-microprice-taker-v1\",\"profileRevision\":\"1\"},\"executionMode\":\"OFFLINE_SIMULATION\",\"inputWindow\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"},\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"kind\":\"EXPLORATORY_BACKTEST\",\"schemaVersion\":\"1\",\"specificationDigest\":\"17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7\",\"strategy\":{\"id\":\"microstructure.microprice_displacement.scalper\",\"implementationDigest\":\"1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770\",\"revision\":\"microprice-disp-v1\"},\"validationRegistryDigest\":\"94bc823faca7bccc5f2e1cb6f9b4a2b637ab8e948eff5f375a3b288cceb2514a\",\"window\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"}}},\"replayDigest\":\"6d9c03ebd433daafc4f7a85af226f6d241779be39f628b5b1356e67d30d72f34\",\"resultId\":\"result:fixture-a\",\"schemaVersion\":\"1\",\"series\":{\"CUMULATIVE_FEES\":{\"artifact\":{\"digest\":\"cb8a967a69c77d6c3aedd7db4291e44844f9a88bb7cf21f273f604cce9dd983d\",\"id\":\"fixture:series.cumulative-fees\",\"schemaId\":\"quant-lab.series.cumulative-fees.v1\"},\"rowCount\":2,\"status\":\"AVAILABLE\"},\"EQUITY_MTM\":{\"artifact\":{\"digest\":\"70ac0f5f2492aea4a1375c232b93fc9819e041e3caab10e04d48b48393df93f6\",\"id\":\"fixture:series.equity-mtm\",\"schemaId\":\"quant-lab.series.equity-mtm.v1\"},\"rowCount\":4,\"status\":\"AVAILABLE\"},\"GROSS_REALIZED\":{\"artifact\":{\"digest\":\"183f6e7426114d527c157d24cb15425d2d2748efe0e1b4732cfd9bf1059471bc\",\"id\":\"fixture:series.gross-realized\",\"schemaId\":\"quant-lab.series.gross-realized.v1\"},\"rowCount\":1,\"status\":\"AVAILABLE\"},\"NET_REALIZED\":{\"artifact\":{\"digest\":\"bff120dc76687b85b5e9edecf0646992034d49b1498bd71eb8b20ca03680e0dd\",\"id\":\"fixture:series.net-realized\",\"schemaId\":\"quant-lab.series.net-realized.v1\"},\"rowCount\":1,\"status\":\"AVAILABLE\"}},\"strategy\":{\"id\":\"microstructure.microprice_displacement.scalper\",\"implementationDigest\":\"1a8c21eedd83291b73f61a61b0c521fe84bac0011987c49f818cfbcf522bc770\",\"revision\":\"microprice-disp-v1\"},\"window\":{\"end\":\"2024-01-01T00:00:02.001Z\",\"start\":\"2024-01-01T00:00:00.000Z\"}}",
+      "sha256": "caf76e90e6465e1f960c222f6c4ba622517498064993a8fda055377deba74725"
+    },
+    "replay": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"economics\":{\"costPlacement\":{\"fees\":\"APPLIED_AFTER_GROSS\",\"funding\":\"NOT_MODELED\",\"slippage\":\"IN_GROSS\",\"spread\":\"IN_GROSS\"},\"finalEquity\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000.85940005\"},\"grossBasis\":\"SIMULATED_FILL_PRICES\",\"initialEquity\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000\"},\"netFundingCost\":{\"reason\":\"PROFILE_HAS_NO_FUNDING\",\"status\":\"NOT_MODELED\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"}},\"realizedCoverage\":\"COMPLETE\",\"realizedFees\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"},\"realizedGross\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.9599\"},\"realizedNet\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.85940005\"},\"reportingUnit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"slippageCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.0201\"},\"spreadCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.02\"},\"totalFillFees\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"}},\"ledgers\":{\"closedTrades\":{\"digest\":\"6fd5a753787f8834394f14ce0cc26f0eb5a72d97fa751c0c3aa16441d7505594\",\"rowCount\":1,\"schemaId\":\"quant-lab.closed-trades.v1\",\"status\":\"AVAILABLE\"},\"fills\":{\"digest\":\"897ba0d39b4f17cd4d47a9057a6cecfff58f6fb9e6f857a824e3c34dbba0155e\",\"rowCount\":2,\"schemaId\":\"quant-lab.fills.v1\",\"status\":\"AVAILABLE\"},\"orders\":{\"digest\":\"415b920decceda15c73e5787e480c3e631945b346b1130178027425ff60a6470\",\"rowCount\":2,\"schemaId\":\"quant-lab.orders.v1\",\"status\":\"AVAILABLE\"}},\"limitations\":[],\"positionAtEnd\":\"FLAT\",\"schemaVersion\":\"1\",\"series\":{\"CUMULATIVE_FEES\":{\"digest\":\"cb8a967a69c77d6c3aedd7db4291e44844f9a88bb7cf21f273f604cce9dd983d\",\"rowCount\":2,\"schemaId\":\"quant-lab.series.cumulative-fees.v1\",\"status\":\"AVAILABLE\"},\"EQUITY_MTM\":{\"digest\":\"70ac0f5f2492aea4a1375c232b93fc9819e041e3caab10e04d48b48393df93f6\",\"rowCount\":4,\"schemaId\":\"quant-lab.series.equity-mtm.v1\",\"status\":\"AVAILABLE\"},\"GROSS_REALIZED\":{\"digest\":\"183f6e7426114d527c157d24cb15425d2d2748efe0e1b4732cfd9bf1059471bc\",\"rowCount\":1,\"schemaId\":\"quant-lab.series.gross-realized.v1\",\"status\":\"AVAILABLE\"},\"NET_REALIZED\":{\"digest\":\"bff120dc76687b85b5e9edecf0646992034d49b1498bd71eb8b20ca03680e0dd\",\"rowCount\":1,\"schemaId\":\"quant-lab.series.net-realized.v1\",\"status\":\"AVAILABLE\"}},\"specificationDigest\":\"17e476abaa98b027b5b3bd63958895ff3c973c6032ee1c5500a4ef5b00436bc7\"}",
+      "sha256": "6d9c03ebd433daafc4f7a85af226f6d241779be39f628b5b1356e67d30d72f34"
+    },
+    "orders": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"orderId\":\"order:entry\",\"ordinal\":0,\"quantity\":{\"asset\":\"TEST\",\"value\":\"1\"},\"side\":\"BUY\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"order:entry\"],\"status\":\"FILLED\",\"time\":\"2024-01-01T00:00:00.500Z\"},{\"orderId\":\"order:exit\",\"ordinal\":1,\"quantity\":{\"asset\":\"TEST\",\"value\":\"1\"},\"side\":\"SELL\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"order:exit\"],\"status\":\"FILLED\",\"time\":\"2024-01-01T00:00:02.000Z\"}],\"schemaId\":\"quant-lab.orders.v1\"}",
+      "sha256": "415b920decceda15c73e5787e480c3e631945b346b1130178027425ff60a6470"
+    },
+    "fills": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"feeCoverage\":\"COMPLETE\",\"fees\":[{\"original\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.05001\"},\"reporting\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.05001\"}}],\"fillId\":\"fill:entry\",\"orderId\":\"order:entry\",\"ordinal\":0,\"price\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"100.02\"},\"quantity\":{\"asset\":\"TEST\",\"value\":\"1\"},\"side\":\"BUY\",\"slippageCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.01\"},\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"fill:entry\"],\"spreadCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.01\"},\"time\":\"2024-01-01T00:00:00.500Z\"},{\"feeCoverage\":\"COMPLETE\",\"fees\":[{\"original\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.05048995\"},\"reporting\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.05048995\"}}],\"fillId\":\"fill:exit\",\"orderId\":\"order:exit\",\"ordinal\":1,\"price\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"100.9799\"},\"quantity\":{\"asset\":\"TEST\",\"value\":\"1\"},\"side\":\"SELL\",\"slippageCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.0101\"},\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"fill:exit\"],\"spreadCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.01\"},\"time\":\"2024-01-01T00:00:02.000Z\"}],\"schemaId\":\"quant-lab.fills.v1\"}",
+      "sha256": "897ba0d39b4f17cd4d47a9057a6cecfff58f6fb9e6f857a824e3c34dbba0155e"
+    },
+    "closed-trades": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"entryPrice\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"100.02\"},\"exitPrice\":{\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"100.9799\"},\"fees\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"},\"fillIds\":[\"fill:entry\",\"fill:exit\"],\"gross\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.9599\"},\"grossBasis\":\"SIMULATED_FILL_PRICES\",\"net\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.85940005\"},\"netFundingCost\":{\"reason\":\"PROFILE_HAS_NO_FUNDING\",\"status\":\"NOT_MODELED\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"}},\"openedAt\":\"2024-01-01T00:00:00.500Z\",\"ordinal\":0,\"quantity\":{\"asset\":\"TEST\",\"value\":\"1\"},\"side\":\"LONG\",\"slippageCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.0201\"},\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"trade:fixture\"],\"spreadCost\":{\"status\":\"KNOWN\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.02\"},\"time\":\"2024-01-01T00:00:02.000Z\",\"tradeId\":\"trade:fixture\"}],\"schemaId\":\"quant-lab.closed-trades.v1\"}",
+      "sha256": "6fd5a753787f8834394f14ce0cc26f0eb5a72d97fa751c0c3aa16441d7505594"
+    },
+    "series.gross-realized": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"ordinal\":0,\"recognition\":\"CLOSED_TRADE_FINALIZATION\",\"semantic\":\"GROSS_REALIZED\",\"source\":\"DERIVED_FROM_LEDGER\",\"sourceRowIds\":[\"trade:fixture\"],\"time\":\"2024-01-01T00:00:02.000Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.9599\"}],\"schemaId\":\"quant-lab.series.gross-realized.v1\"}",
+      "sha256": "183f6e7426114d527c157d24cb15425d2d2748efe0e1b4732cfd9bf1059471bc"
+    },
+    "series.net-realized": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"ordinal\":0,\"recognition\":\"CLOSED_TRADE_FINALIZATION\",\"semantic\":\"NET_REALIZED\",\"source\":\"DERIVED_FROM_LEDGER\",\"sourceRowIds\":[\"trade:fixture\"],\"time\":\"2024-01-01T00:00:02.000Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.85940005\"}],\"schemaId\":\"quant-lab.series.net-realized.v1\"}",
+      "sha256": "bff120dc76687b85b5e9edecf0646992034d49b1498bd71eb8b20ca03680e0dd"
+    },
+    "series.cumulative-fees": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"ordinal\":0,\"recognition\":\"FILL\",\"semantic\":\"CUMULATIVE_FEES\",\"source\":\"DERIVED_FROM_LEDGER\",\"sourceRowIds\":[\"fill:entry\"],\"time\":\"2024-01-01T00:00:00.500Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.05001\"},{\"ordinal\":1,\"recognition\":\"FILL\",\"semantic\":\"CUMULATIVE_FEES\",\"source\":\"DERIVED_FROM_LEDGER\",\"sourceRowIds\":[\"fill:exit\"],\"time\":\"2024-01-01T00:00:02.000Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"0.10049995\"}],\"schemaId\":\"quant-lab.series.cumulative-fees.v1\"}",
+      "sha256": "cb8a967a69c77d6c3aedd7db4291e44844f9a88bb7cf21f273f604cce9dd983d"
+    },
+    "series.equity-mtm": {
+      "canonicalUtf8": "{\"dataOrigin\":\"SYNTHETIC_FIXTURE\",\"instrument\":{\"marketType\":\"PERPETUAL\",\"quoteCurrency\":\"USDT\",\"symbol\":\"TESTUSDT\",\"venue\":\"fixture\"},\"rows\":[{\"ordinal\":0,\"recognition\":\"MARK\",\"semantic\":\"EQUITY_MTM\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"mark:0\"],\"time\":\"2024-01-01T00:00:00.000Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000\"},{\"ordinal\":1,\"recognition\":\"MARK\",\"semantic\":\"EQUITY_MTM\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"mark:1\"],\"time\":\"2024-01-01T00:00:00.500Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"999.92999\"},{\"ordinal\":2,\"recognition\":\"MARK\",\"semantic\":\"EQUITY_MTM\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"mark:2\"],\"time\":\"2024-01-01T00:00:01.500Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"999.92999\"},{\"ordinal\":3,\"recognition\":\"MARK\",\"semantic\":\"EQUITY_MTM\",\"source\":\"ENGINE_RECORDED\",\"sourceRowIds\":[\"mark:3\"],\"time\":\"2024-01-01T00:00:02.000Z\",\"unit\":{\"code\":\"USDT\",\"kind\":\"ASSET\"},\"value\":\"1000.85940005\"}],\"schemaId\":\"quant-lab.series.equity-mtm.v1\"}",
+      "sha256": "70ac0f5f2492aea4a1375c232b93fc9819e041e3caab10e04d48b48393df93f6"
+    },
+    "unicode": {
+      "canonicalUtf8": "{\"a\":\"café\\n\",\"\":\"BMP\",\"𐀀\":\"supplementary\"}",
+      "sha256": "754c11d45397de21ca9c59418e7e85049cef34a7df2cdb06eee4b6f53537d7b1"
+    }
+  },
+  "cases": {
+    "fees": [
+      {
+        "id": "same-unit",
+        "fillTime": "2024-01-01T00:00:00.500Z",
+        "fee": {
+          "original": {
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.05001"
+          },
+          "reporting": {
+            "status": "KNOWN",
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.05001"
+          }
+        },
+        "expected": true
+      },
+      {
+        "id": "foreign-verified",
+        "fillTime": "2024-01-01T00:00:00.500Z",
+        "fee": {
+          "original": {
+            "unit": {
+              "kind": "ASSET",
+              "code": "BNB"
+            },
+            "value": "0.001"
+          },
+          "reporting": {
+            "status": "KNOWN",
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.3"
+          },
+          "conversion": {
+            "rate": "300",
+            "asOf": "2024-01-01T00:00:00.000Z",
+            "evidenceDigest": "bc8226b1e180bb2c78411fb555e32b4530d5a4c97dc696c7901e7e96b0ae3640",
+            "evidenceRecordId": "fx:fixture"
+          }
+        },
+        "evidence": {
+          "from": {
+            "kind": "ASSET",
+            "code": "BNB"
+          },
+          "to": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "rate": "300",
+          "asOf": "2024-01-01T00:00:00.000Z",
+          "recordId": "fx:fixture"
+        },
+        "expected": true
+      },
+      {
+        "id": "foreign-unavailable",
+        "fillTime": "2024-01-01T00:00:00.500Z",
+        "fee": {
+          "original": {
+            "unit": {
+              "kind": "ASSET",
+              "code": "BNB"
+            },
+            "value": "0.001"
+          },
+          "reporting": {
+            "status": "UNAVAILABLE",
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "reason": "NO_FX_EVIDENCE"
+          }
+        },
+        "expected": true
+      },
+      {
+        "id": "foreign-parity-assumed",
+        "fillTime": "2024-01-01T00:00:00.500Z",
+        "fee": {
+          "original": {
+            "unit": {
+              "kind": "ASSET",
+              "code": "BNB"
+            },
+            "value": "0.001"
+          },
+          "reporting": {
+            "status": "KNOWN",
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.001"
+          }
+        },
+        "expected": false
+      },
+      {
+        "id": "foreign-future-fx",
+        "fillTime": "2024-01-01T00:00:00.000Z",
+        "fee": {
+          "original": {
+            "unit": {
+              "kind": "ASSET",
+              "code": "BNB"
+            },
+            "value": "0.001"
+          },
+          "reporting": {
+            "status": "KNOWN",
+            "unit": {
+              "kind": "ASSET",
+              "code": "USDT"
+            },
+            "value": "0.3"
+          },
+          "conversion": {
+            "rate": "300",
+            "asOf": "2024-01-01T00:00:00.000Z",
+            "evidenceDigest": "bc8226b1e180bb2c78411fb555e32b4530d5a4c97dc696c7901e7e96b0ae3640",
+            "evidenceRecordId": "fx:fixture"
+          }
+        },
+        "evidence": {
+          "from": {
+            "kind": "ASSET",
+            "code": "BNB"
+          },
+          "to": {
+            "kind": "ASSET",
+            "code": "USDT"
+          },
+          "rate": "300",
+          "asOf": "2024-01-01T00:00:00.000Z",
+          "recordId": "fx:fixture"
+        },
+        "overrideEvidenceTime": "2024-01-01T00:00:00.500Z",
+        "expected": false
+      }
+    ],
+    "lineage": [
+      {
+        "id": "renamed-transitive-child",
+        "dataset": "renamed",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:00.000Z",
+          "end": "2024-01-01T00:00:02.001Z"
+        },
+        "snapshot": "current",
+        "expected": "OOS_OVERLAP"
+      },
+      {
+        "id": "touches-end",
+        "dataset": "renamed",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:02.000Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "snapshot": "current",
+        "expected": "ALLOW"
+      },
+      {
+        "id": "warm-up-overlap",
+        "dataset": "renamed",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:01.500Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "evaluationWindow": {
+          "start": "2024-01-01T00:00:02.000Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "snapshot": "current",
+        "expected": "OOS_OVERLAP"
+      },
+      {
+        "id": "unresolved-lineage",
+        "dataset": "unknown",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:02.000Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "snapshot": "current",
+        "expected": "LINEAGE_UNVERIFIED"
+      },
+      {
+        "id": "stale-registry",
+        "dataset": "renamed",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:02.000Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "snapshot": "stale",
+        "expected": "REGISTRY_UNVERIFIED"
+      },
+      {
+        "id": "cyclic-lineage",
+        "dataset": "cycle-a",
+        "inputWindow": {
+          "start": "2024-01-01T00:00:02.000Z",
+          "end": "2024-01-01T00:00:03.000Z"
+        },
+        "snapshot": "current",
+        "expected": "LINEAGE_UNVERIFIED"
+      }
+    ],
+    "realization": [
+      {
+        "id": "flat-complete",
+        "positionAtEnd": "FLAT",
+        "nativeAllEvents": false,
+        "noOtherRealizationProven": true,
+        "finalizedLedgerComplete": true,
+        "expected": "COMPLETE"
+      },
+      {
+        "id": "partial-unfinalized",
+        "positionAtEnd": "OPEN",
+        "nativeAllEvents": false,
+        "noOtherRealizationProven": false,
+        "finalizedLedgerComplete": true,
+        "expected": "FINALIZED_TRADES_ONLY"
+      },
+      {
+        "id": "insufficient-evidence",
+        "positionAtEnd": "UNKNOWN",
+        "nativeAllEvents": false,
+        "noOtherRealizationProven": false,
+        "finalizedLedgerComplete": false,
+        "expected": "UNAVAILABLE"
+      }
+    ]
+  },
+  "lineageFixture": {
+    "currentSnapshot": "current",
+    "parents": {
+      "source": [],
+      "resliced": [
+        "source"
+      ],
+      "renamed": [
+        "resliced"
+      ],
+      "cycle-a": [
+        "cycle-b"
+      ],
+      "cycle-b": [
+        "cycle-a"
+      ]
+    },
+    "protected": {
+      "source": {
+        "start": "2024-01-01T00:00:01.000Z",
+        "end": "2024-01-01T00:00:02.000Z"
+      }
+    }
+  }
+}

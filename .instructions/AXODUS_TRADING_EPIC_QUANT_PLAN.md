@@ -393,6 +393,8 @@ This section provides the mandatory input for the cross-EPIC Shared Contract Fre
 | P2 | GAP-QUANT-08 | Automated distributed compute scaling (Ray/Celery cluster management). | Defer to post-baseline scaling; utilize local multi-process pool for Phase 1. | Quant Lab / Infra |
 | P2 | GAP-QUANT-09 | Research visualization UI / Dashboard integration. | Utilize Optuna dashboard / Streamlit / Jupyter for exploratory EDA; keep evidence storage headless. | Quant Lab |
 
+GAP-QUANT-09 contract gate: the CTO accepted Q0 with corrections; [Q0-CONTRACT-CORRECTIONS-01](research/AXODUS-QUANT-LAB-Q0/Q0-CONTRACT-CORRECTIONS-01.md) is submitted for freeze review. Implementation of Q1 is not authorized.
+
 ---
 
 ## 14. Phased Implementation Decomposition
