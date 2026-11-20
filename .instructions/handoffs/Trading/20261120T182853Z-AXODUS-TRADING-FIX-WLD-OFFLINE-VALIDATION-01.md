@@ -260,8 +260,8 @@ wallet_actions: 0
 capital_movement: 0
 quants_lab_commit: e46bdc7
 quants_lab_push: verified_origin_main
-trading_parent_commit: pending
-trading_parent_push: pending
+trading_integration_commit: eb5f254
+trading_integration_push: verified_origin_dev
 merge: 0
 deploy: 0
 ```
